@@ -1,0 +1,10 @@
+/* todo.wxss */
+.topics{
+  display: flex;
+  flex-direction: column;
+}
+.topics-item{
+  padding: 8px 20px;
+  font-size: 14px;
+  border-bottom: 1px dashed #ccc;
+}

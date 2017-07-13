@@ -1,0 +1,27 @@
+<!--import {navigation} from '../components/nav.wxml'-->
+<import src="../components/nav.wxml"/>
+<!--index.wxml-->
+<view class="container">
+  <view  bindtap="bindViewTap" class="userinfo">
+    <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+    <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+  </view>
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}</text>
+  </view>
+  <template is="navigation" data="{{navs: nav}}"></template>
+  <view style="margin:20px;">
+    <navigator url="../modules/clock/clock">生命钟</navigator>
+  </view>
+  <view class="test">
+    <view>测试了内容昂贵</view>
+    <view>测试了内容昂贵</view>
+    <view>测试了内容昂贵</view>
+    <view>测试了内容昂贵</view>
+  </view>
+  <view class="clock">
+    <canvas style="width: 360px; height: 360px" canvas-id="clockCanvas"></canvas>
+  </view>
+  <view class="box-test"></view>
+</view>
+

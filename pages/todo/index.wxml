@@ -1,0 +1,3 @@
+<view class="topics">
+  <view class="topics-item" wx:for="{{topicsList}}">{{item.title}}</view>
+</view>

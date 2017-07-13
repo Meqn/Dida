@@ -1,0 +1,6 @@
+<template name="navigation">
+<view>
+  <text>测试内容</text>
+  <view wx:for="{{navs}}" wx:key="{{item.url}}"><navigator url="{{item.url}}">{{item.text}}</navigator></view>
+</view>
+</template>

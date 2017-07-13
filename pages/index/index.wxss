@@ -1,0 +1,52 @@
+/**index.wxss**/
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 5rpx 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.usermotto {
+  margin-top: 200px;
+}
+
+.test {
+  width: 80%;
+  border: 1px solid #000;
+}
+
+@media all and (max-width: 380px) {
+  .test {
+    width: 50%;
+  }
+}
+
+.clock{
+  width: 360px;
+  height: 360px;
+  overflow: hidden;
+  -webkit-transform: scale(0.5);
+  transform: scale(0.5);
+}
+
+.clock canvas{
+  -webkit-transform: scale(0.5);
+  transform: scale(0.5)
+}
+
+.box-test{
+  width: 320px; height: 320px;
+  background-color: #f00;
+  -webkit-transform: scale(0.5);
+  transform: scale(0.5);
+}

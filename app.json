@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/modules/clock/clock",
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/todo/index",
+    "pages/components/nav"
+    
+  ],
+  "window": {
+    "navigationBarTitleText": "滴答",
+    "backgroundTextStyle": "black",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTextStyle": "black"
+  },
+  "debug": true
+}

@@ -1,0 +1,12 @@
+<!--clock.wxml-->
+<view class="clock-box">
+  <div class="clock">
+    <view class="time">
+     <i wx:for="{{timedots}}" class="{{item.classname}}" style="top:{{item.y}}px;left:{{item.x}}px"></i> 
+    </view>
+     <i class="hour"></i> 
+    <i class="minute"></i>
+    <i class="second"></i>
+    <i class="dot"></i>
+  </div>
+</view>
