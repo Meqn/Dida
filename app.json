@@ -2,7 +2,8 @@
   "pages": [
     "pages/modules/clock/index",
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/logs/logs",
+    "pages/todo/list/list"
   ],
   "window": {
     "backgroundTextStyle": "light",
