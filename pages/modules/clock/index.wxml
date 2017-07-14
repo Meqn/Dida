@@ -1,0 +1,19 @@
+<view class="container">
+  <view class="clock-box">
+    <view class="clock">
+      <view class="time-point">
+        <view wx:for="{{points}}" class="d {{item.classname}}" style="top: {{item.y}}px; left: {{item.x}}px;"></view>
+      </view>
+      <view class="hour" style="-webkit-transform: rotate({{hourRotate}}deg); transform: rotate({{hourRotate}})deg;"></view>
+      <view class="minute" style="-webkit-transform: rotate({{minuteRotate}}deg); transform: rotate({{minuteRotate}})deg;"></view>
+      <view class="second" style="-webkit-transform: rotate({{secondRotate}}deg); transform: rotate({{secondRotate}})deg;"></view>
+      <view class="dot"></view>
+    </view>
+  </view>
+  <view class="current-time">当前时间： {{hour > 9 ? hour : '0'+ hour}} : {{minute}} : {{second > 9 ? second : '0'+ second}}</view>
+
+  <picker mode="date" value="{{date}}" start="2015-09-01" end="2017-09-01" bindchange="bindDateChange">
+    <view class="weui-input">{{date}}</view>
+  </picker>
+
+</view>
