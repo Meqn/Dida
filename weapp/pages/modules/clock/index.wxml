@@ -1,0 +1,36 @@
+<view class="container">
+  <!-- 初始化 loading -->
+  <view class="loading-mask"></view>
+
+  <view class="clock-box">
+    <view class="clock">
+      <view class="time-point">
+        <view wx:for="{{points}}" class="d {{item.classname}}" style="top: {{item.y}}px; left: {{item.x}}px;" wx:key="{{item.x+','+item.y}}"></view>
+      </view>
+      <view class="hour" style="-webkit-transform: rotate({{clock.hourRotate}}deg); transform: rotate({{clock.hourRotate}})deg;"></view>
+      <view class="minute" style="-webkit-transform: rotate({{clock.minuteRotate}}deg); transform: rotate({{clock.minuteRotate}})deg;"></view>
+      <view class="second" style="-webkit-transform: rotate({{clock.secondRotate}}deg); transform: rotate({{clock.secondRotate}})deg;"></view>
+      <view class="dot"></view>
+    </view>
+  </view>
+
+  <view>
+    <view>我的人生我做主</view>
+    <view>
+      出生日期：
+      <picker mode="date" value="2016-07-16" start="1900-01-01" end="2017-12-31" bindchange="setBornDate">
+        <view class="weui-input">{{bornAt === 0 ? '选择' : bornAt}}</view>
+      </picker>
+    </view>
+    <view>
+      还想再活：
+      <picker mode="selector" value="{{timeLeft.index}}" range="{{timeLeft.value}}" bindchange="setDieDate">
+        <view>{{dieAt === 0 ? '500' : timeLeft.value[timeLeft.index]}}年</view>
+      </picker>
+    </view>
+  </view>
+
+
+
+
+</view>

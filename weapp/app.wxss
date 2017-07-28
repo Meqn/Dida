@@ -1,0 +1,17 @@
+/**app.wxss**/
+@import "./libs/styles/weui.min.wxss";
+page{
+  display: block;
+  min-height: 100%;
+  background-color: #f7f7f9;
+}
+
+button[type="primary"] {
+  background-color: #20a0ff;
+}
+.button-hover[type="primary"] {
+  background-color: #33a8ff;
+}
+
+
+

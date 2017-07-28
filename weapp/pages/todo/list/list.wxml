@@ -1,0 +1,8 @@
+<view class="container">
+  <view class="user">
+    <view class="avatar">
+      <image src="{{user.avatarUrl}}" mode="aspectFit"></image>
+    </view>
+    <text>{{user.nickName}}</text>
+  </view>
+</view>

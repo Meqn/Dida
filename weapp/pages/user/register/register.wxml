@@ -1,0 +1,27 @@
+<text>注册</text>
+
+<view class="weui-cells weui-cells_after-title">
+  <view class="weui-cell weui-cell_input">
+    <view class="weui-cell__bd">
+      <input class="weui-input" id="username" placeholder="用户名 [字母或数字]" bindblur="bindInput" />
+    </view>
+  </view>
+</view>
+<view class="weui-cells weui-cells_after-title">
+  <view class="weui-cell weui-cell_input">
+    <view class="weui-cell__bd">
+      <input class="weui-input" id="password" placeholder="密码 [6-18位字符]" bindblur="bindInput" />
+    </view>
+  </view>
+</view>
+<view>
+  <button class="weui-btn" type="default" open-type="getUserInfo" bindgetuserinfo="register">授权并注册</button>
+</view>
+
+<view wx:if="{{authDeny}}">
+  <text>你的生命又少了10秒 [➡️允许授权]</text>
+</view>
+<view wx:if="{{valid.length > 0}}" style="border-bottom:2px solid #ddd; color: #f00;">
+  <text>错误信息：</text>
+  <view wx:for="{{valid}}"><text>{{item}}</text></view>
+</view>

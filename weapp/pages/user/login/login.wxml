@@ -1,0 +1,24 @@
+<text>登录</text>
+
+<view class="weui-cells weui-cells_after-title">
+  <view class="weui-cell weui-cell_input">
+    <view class="weui-cell__bd">
+      <input class="weui-input" id="username" placeholder="用户名" bindblur="bindInput" auto-focus />
+    </view>
+  </view>
+</view>
+<view class="weui-cells weui-cells_after-title">
+  <view class="weui-cell weui-cell_input">
+    <view class="weui-cell__bd">
+      <input class="weui-input" id="password" placeholder="密码" bindblur="bindInput" />
+    </view>
+  </view>
+</view>
+<view class="btn-area">
+  <button type="primary" bindtap="register">提交</button>
+</view>
+<view>
+  <navigator url="/pages/user/login/login">登录</navigator>
+  <navigator url="/pages/user/register/register">注册</navigator>
+  <navigator url="/pages/modules/clock/index">Hello</navigator>
+</view>

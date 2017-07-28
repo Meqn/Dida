@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/modules/clock/index",
+    "pages/user/register/register",
+    "pages/index/index",
+    "pages/todo/list/list",
+    "pages/logs/logs",
+    "pages/user/login/login"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#f7f7f9",
+    "navigationBarTitleText": "Dida",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f7f7f9"
+  }
+}
