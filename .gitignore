@@ -1,1 +1,11 @@
+*.swp
+*.swo
 node_modules
+weapp/config.js
+
+
+.package/
+.sass-cache/
+.DS_Store
+.vscode
+*.orig
