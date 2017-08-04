@@ -1,0 +1,37 @@
+{
+  "name": "dida",
+  "version": "1.0.0",
+  "description": "dida weapp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mengqing723/Dida.git"
+  },
+  "keywords": [
+    "weapp",
+    "wechat",
+    "todo"
+  ],
+  "author": "lmq",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mengqing723/Dida/issues"
+  },
+  "homepage": "https://github.com/mengqing723/Dida#readme",
+  "devDependencies": {
+    "autoprefixer": "^7.1.2",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-connect": "^5.0.0",
+    "gulp-connect-proxy": "^0.3.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-postcss": "^7.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.6.1",
+    "gulp-sass": "^3.1.0",
+    "yargs": "^8.0.2"
+  }
+}
