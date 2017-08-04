@@ -1,0 +1,82 @@
+
+%center{
+  position: absolute; top: 50%; left: 50%;
+}
+@mixin absolute ($top: 0, $right: 0, $bottom: 0, $left: 0) {
+  position: absolute; top: $top+px; left: $left+ px;
+  @if $right {right: $right+ px}
+  @if $bottom {bottom: $bottom+ px}
+}
+
+.clock{
+  margin: 0 auto;
+  position: relative;
+  box-sizing: border-box;
+  width: 360rpx; height: 360rpx;
+  min-width: 180px; min-height: 180px;
+  overflow: hidden;
+}
+
+.clock-inner{
+  position: absolute; top: 50%; left: 50%; margin: -160px 0 0 -160px;
+  width: 320px; height: 320px;
+  font-size: 0;
+  border-right: 1px solid #eee;
+  border-top: 1px solid #eee;
+  border-radius: 50%;
+  background-color: #eee;
+  background-image: linear-gradient(235deg, rgb(120, 120, 120), rgb(30, 30, 30) 40%);
+  box-shadow: -5px 4px 8px rgba(0, 0, 0, .16);
+  transform: rotate(-90deg) scale(0.5);
+
+  &::before{
+    content: "";
+    @include absolute(10, 10, 10, 10);
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: inset 0 0 8px 2px rgba(0, 0, 0, .38);
+  }
+
+  .hour{
+    @extend %center; margin: -4px 0 0 -12px;
+    width: calc(25% + 10px); height: 8px;
+    background-color: rgb(0, 0, 0);
+    border-radius: 5px;
+    transform-origin: 12px 50%;
+  }
+  .minute{
+    @extend %center;
+    width: calc(50% - 20px); height: 6px; margin: -3px 0 0 -18px;
+    background-color: rgb(0, 0, 0);
+    border-radius: 3px;
+    transform-origin: 18px 50%;
+  }
+  .second{
+    @extend %center;
+    width: 50%; height: 2px; margin: -1px 0 0 -25px;
+    background-color: rgb(200, 0, 0);
+    border-radius: 1px;
+    transform-origin: 25px 50%;
+  }
+  .dot{
+    @extend %center;
+    transform: translate3d(-50%, -50%, 0);
+    width: 6px; height: 6px;
+    background-color: #fff;
+    border-radius: 50%;
+  }
+  .clock-point{
+    @include absolute();
+    transform: scale(.92);
+    .d{
+      position: absolute;
+      width: 4px; height: 4px;
+      background-color: #f6f6f6;
+      border-radius: 50%;
+      &.h{
+        width: 6px; height: 6px;
+        background-color: #ccc;
+      }
+    }
+  }
+}

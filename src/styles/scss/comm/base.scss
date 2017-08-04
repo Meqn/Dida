@@ -1,0 +1,25 @@
+@import 'var.scss';
+
+body{
+  display: block;
+  min-height: 100%;
+  background-color: $bgcolor;
+}
+
+
+page{
+  display: block;
+  min-height: 100%;
+  color: #424242; font-size: 14px;
+  background-color: $bgcolor;
+}
+
+.green{color: $green;}
+.red{color: $red;}
+.tal{text-align: left;}
+.tac{text-align: center;}
+.tar{text-align: right;}
+.radius{border-radius: 50%;}
+
+
+

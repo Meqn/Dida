@@ -1,0 +1,97 @@
+
+// 旋转
+.q-anite-rotate{
+  animation: rotate360 .5s linear infinite;
+}
+@keyframes rotate360 {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 通用
+.q-anite-fadein{
+  animation: fadein .3s ease;
+}
+.q-anite-fadeout{
+  animation: fadeout .3s ease;
+}
+.q-anite-slideInLeft{
+  animation: inLeft .6s ease;
+}
+.q-anite-slideInRight{
+  animation: inRight .6s ease;
+}
+.q-anite-slideInTop{
+  animation: inTop .6s ease;
+}
+.q-anite-slideInBottom{
+  animation: inBottom .6s ease;
+}
+
+
+@keyframes fadein{
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeout{
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes inLeft{
+  from{
+    transform: translate3d(-60rpx, 0, 0); opacity: 0;
+  }
+  to{
+    transform: translate3d(0, 0, 0); opacity: 1;
+  }
+}
+@keyframes inRight{
+  from{
+    transform: translate3d(60rpx, 0, 0); opacity: 0;
+  }
+  to{
+    transform: translate3d(0, 0, 0); opacity: 1;
+  }
+}
+@keyframes inTop{
+  from{
+    transform: translate3d(0, -60rpx, 0); opacity: 0;
+  }
+  to{
+    transform: translate3d(0, 0, 0); opacity: 1;
+  }
+}
+@keyframes inBottom{
+  from{
+    transform: translate3d(0, 60rpx, 0); opacity: 0;
+  }
+  to{
+    transform: translate3d(0, 0, 0); opacity: 1;
+  }
+}
+
+
+// 自定义
+.q-anite-pageIn{
+  animation: pageIn .3s ease-in;
+}
+@keyframes pageIn {
+  from {
+    transform: translateY(35%) scale(.4); opacity: .5;
+  }
+  to {
+    transform: translateY(0) scale(1); opacity: 1;
+  }
+}

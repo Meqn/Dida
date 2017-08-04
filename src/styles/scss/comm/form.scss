@@ -1,0 +1,40 @@
+@import 'var';
+
+
+
+button{
+  font-size: 16px;
+}
+
+button[loading][type="primary"],button[type="primary"]{
+  background-color: $btnBgColor;
+}
+.button-hover[loading][type="primary"],.button-hover[type="primary"]{
+  background-color: $btnBgColorHover;
+}
+
+.weui-input{
+  font-size: 14px;
+}
+.input-placeholder{
+  color: $grey;
+}
+  
+.weui-cell:before {
+  -webkit-transform-origin: 0 0;
+          transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+          transform: scaleY(0.5);
+}
+
+
+
+.q-btn-mini{
+  font-size: 14px;
+  border:1px solid $grey300; border-radius: 40rpx;
+
+  &::after{
+    display: none;
+  }
+}
+  

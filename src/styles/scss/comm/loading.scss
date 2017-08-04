@@ -1,0 +1,19 @@
+
+@import 'var';
+
+
+.q-page-loading{
+  position: absolute; top: 50%; left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  text-align: center; color: $grey; font-size: 16px;
+
+  &-icon{
+    display: inline-block; box-sizing: border-box;
+    width: 24px; height: 24px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-left-color: rgba(0, 0, 0, .4);
+    border-radius: 50%;
+    animation: rotate360 .5s linear infinite;
+  }
+}
+

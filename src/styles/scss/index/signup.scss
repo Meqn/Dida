@@ -1,0 +1,31 @@
+@import '../comm/var';
+
+.signup{
+  margin: 10% 8% 0;
+
+  .signup-error{
+    color: $red; font-size: 14px;
+  }
+  .signup-error-item{
+    margin-left: 20rpx;
+  }
+  .weui-cells__title{
+    margin-bottom: 50rpx;
+    text-align: center;
+  }
+  .weui-cells{
+    &:before,&:after{
+      display: none;
+    }
+  }
+  .weui-cell{
+    &:before{
+      left: 0;
+    }
+  }
+  .weui-btn-area{
+    margin: 80rpx 0;
+  }
+}
+
+
