@@ -1,17 +1,45 @@
 {
   "pages": [
+    "pages/index/index",
+    "pages/user/home/home",
     "pages/modules/clock/index",
     "pages/user/register/register",
-    "pages/index/index",
+    "pages/user/login/login",
     "pages/todo/list/list",
     "pages/logs/logs",
-    "pages/user/login/login"
+    "pages/todo/home",
+    "pages/modules/home/home"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#f7f7f9",
-    "navigationBarTitleText": "Dida",
+    "navigationBarBackgroundColor": "#fafafa",
+    "navigationBarTitleText": "我事多",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#f7f7f9"
+    "backgroundColor": "#fafafa"
+  },
+  "tabBar": {
+    "color": "#212121",
+    "selectedColor": "#212121",
+    "backgroundColor": "#fafafa",
+    "list": [
+      {
+        "pagePath": "pages/modules/home/home",
+        "text": "多",
+        "iconPath": "assets/images/apps.png",
+        "selectedIconPath": "assets/images/apps_hover.png"
+      },
+      {
+        "pagePath": "pages/todo/home",
+        "text": "事",
+        "iconPath": "assets/images/todo.png",
+        "selectedIconPath": "assets/images/todo_hover.png"
+      },
+      {
+        "pagePath": "pages/user/home/home",
+        "text": "我",
+        "iconPath": "assets/images/me.png",
+        "selectedIconPath": "assets/images/me_hover.png"
+      }
+    ]
   }
 }

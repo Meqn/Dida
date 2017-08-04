@@ -1,0 +1,17 @@
+
+  <view>
+    <view>我的人生我做主</view>
+    <view>
+      出生日期：
+      <picker mode="date" value="2016-07-16" start="1900-01-01" end="2017-12-31" bindchange="setBornDate">
+        <view class="weui-input">{{bornAt === 0 ? '选择' : bornAt}}</view>
+      </picker>
+    </view>
+    <view>
+      还想再活：
+      <picker mode="selector" value="{{timeLeft.index}}" range="{{timeLeft.value}}" bindchange="setDieDate">
+        <view>{{dieAt === 0 ? '500' : timeLeft.value[timeLeft.index]}}年</view>
+      </picker>
+    </view>
+    <button bindtap="getMyinfo">获取个人信息</button>
+  </view>

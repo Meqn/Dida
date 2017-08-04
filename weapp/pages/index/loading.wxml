@@ -1,0 +1,6 @@
+  <view class="q-page-full">
+    <view class="q-page-loading">
+      <view class="q-page-loading-icon"></view>
+      <view class="q-page-loading-text">Loading...</view>
+    </view>
+  </view>

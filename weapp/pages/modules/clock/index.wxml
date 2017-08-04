@@ -1,6 +1,4 @@
 <view class="container">
-  <!-- 初始化 loading -->
-  <view class="loading-mask"></view>
 
   <view class="clock-box">
     <view class="clock">
@@ -28,6 +26,8 @@
         <view>{{dieAt === 0 ? '500' : timeLeft.value[timeLeft.index]}}年</view>
       </picker>
     </view>
+    <button bindtap="getMyinfo">获取个人信息</button>
+    <navigator url="../../index/index">返回首页</navigator>
   </view>
 
 

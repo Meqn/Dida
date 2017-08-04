@@ -1,5 +1,6 @@
 const app = getApp()
-import { checkUser, updateUser, saveLocalUser } from '../../../utils/user'
+import Util from '../../../utils/util'
+import User, { checkUser, updateUser, saveLocalUser } from '../../../utils/user'
 
 Page({
 
@@ -131,25 +132,23 @@ Page({
       }
     })
   },
-  setBornDate (e) {
+  setBornDate(e) {
     console.log(e)
     this.setData({
       bornAt: e.detail.value
     })
-    const {hour, minute, second} = this.data.clock
-    const bornAt = e.detail.value + ' ' + hour + ':' + minute + ':' + second
+    const { hour, minute, second } = this.data.clock
+    const bornAt = {
+      '__type': 'Date',
+      'iso': new Date(e.detail.value + ' ' + hour + ':' + minute + ':' + second)
+    }
     updateUser({
       id: app.globalData.user.objectId,
-      data: {
-        bornAt: {
-          '__type': 'Date',
-          'iso': new Date(bornAt)
-        }
-      },
+      data: { bornAt },
       success(res) {
         if (res.statusCode === 200) {
           console.log('res : ', res)
-          let _data = Object.assign({}, app.globalData.user, {bornAt})
+          let _data = Object.assign({}, app.globalData.user, { bornAt })
           saveLocalUser(_data)
         } else {
           console.error('更新失败 : ', res)

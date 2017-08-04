@@ -34,7 +34,7 @@ const saveLocalUser = function (data) {
 // 用户微信登录，并获取 openid
 const getWxUser = function () {
   return new Promise((resolve, reject) => {
-    wx.login({
+     wx.login({
       success(res) {
         console.log('微信登录 ： ', res)
         if (res.code) {
@@ -64,7 +64,7 @@ const getWxUser = function () {
         console.error('微信登录 : ', error)
         reject(error)
       }
-    })
+    }) 
   })
 }
 
@@ -74,8 +74,9 @@ const getWxUser = function () {
  *  存在 -> 自动登录
  *  不存在 -> 去注册
  */
-const checkUser = function ({success, fail}) {
+const checkUser = function ({register, success, fail}) {
   getWxUser().then(data => {
+    console.log(' .... : ',data)
     getUsers({
       where: {openId: data['openid']},
       keys: 'username,umm'
@@ -93,10 +94,13 @@ const checkUser = function ({success, fail}) {
           })
         } else {
           // 注册
-          wx.navigateTo({
+          /* wx.navigateTo({
             url: '/pages/user/register/register',
-          })
+          }) */
+          typeof register === 'function' && register()
         }
+      } else {
+        console.error('获取用户失败 ', user)
       }
     }).catch(error => {
       console.error('获取用户 error ', error)

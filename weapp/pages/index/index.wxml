@@ -1,11 +1,6 @@
-<!--index.wxml-->
 <view class="container">
-  <view class="userinfo">
-    <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
-    <text class="userinfo-nickname">{{userInfo.username}}</text>
-  </view>
-  <button type="default" open-type="getUserInfo" bindgetuserinfo="getinfo">get user info</button>
-  <view class="usermotto" bindtap="setBorn">
-    <text class="user-motto">{{motto}}</text>
-  </view>
+  <include src="loading.wxml" wx:if="{{status === 'loading'}}" />
+  <include src="register.wxml" wx:if="{{status === 'register'}}" />
+  <include src="clock.wxml" />
+  <include src="setDate.wxml" wx:if="{{status === 'date'}}" />
 </view>
