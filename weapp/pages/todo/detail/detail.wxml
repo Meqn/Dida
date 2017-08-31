@@ -1,0 +1,62 @@
+<view class="container todo-detail">
+  <view class="q-cells q-cells--avatar q-cells--avatar-l q-cell--dark todo-detail-hd bg-blue">
+    <view class="q-cell">
+      <view class="q-cell__hd">
+        <image mode="aspectFill" src="http://static.mengqing.org/src/pic_360_360@1.jpg" />
+      </view>
+      <view class="q-cell__bd">
+        <view class="q-cell__text">Morven 创建</view>
+        <view class="q-cell__text--sub text">2人参与</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="q-cells">
+    <view class="q-cell todo-title" hover-class="q-cell-hover">
+      <view class="q-cell__bd">今天把Todo添加分类功能完善，并进一步优化</view>
+    </view>
+    <view class="q-cell" hover-class="q-cell-hover">
+      <view class="q-cell__bd">这里就随便填写的啥。了撒旦减肥拉萨江东父老；阿水江东父老；阿水减肥；拉萨剪短发撒开就好地方卡撒地方看见啊时刻地方撒地方啊圣诞节发三六九等粉啦时间大幅拉升拉屎</view>
+    </view>
+  </view>
+
+  <view class="q-cells">
+    <view class="q-cell q-cell--hd" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-time" />
+      </view>
+      <view class="q-cell__bd">2017/08/23 周五 16:25</view>
+    </view>
+    <view class="q-cell q-cell--hd" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-flag" />
+      </view>
+      <view class="q-cell__bd">紧急且重要</view>
+    </view>
+  </view>
+
+  <view class="q-cells q-cells--min">
+    <navigator url="/pages/todo/detail/users" class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-group" />
+      </view>
+      <view class="q-cell__bd">1人参与</view>
+      <view class="q-cell__ft q-cell__avatars">
+        <image mode="aspectFill" src="http://static.mengqing.org/src/pic_360_360@1.jpg" />
+        <image mode="aspectFill" src="http://static.mengqing.org/src/pic_300_450@2.jpg" />
+        <image mode="aspectFill" src="http://static.mengqing.org/src/pic_360_360@4.jpg" />
+      </view>
+    </navigator>
+  </view>
+
+  <view class="q-bottom">
+    <view class="q-bottom-btn" hover-class="q-bottom-btn-hover">
+      <text class="icon icon-invite blue" />
+      <text>邀请</text>
+    </view>
+    <view class="q-bottom-btn" hover-class="q-bottom-btn-hover">
+      <text class="icon icon-editor blue" />
+      <text>编辑</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,172 @@
+@import 'comm/var';
+.ellipsis{overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+
+.todo-calendar{
+  padding: 24rpx 32rpx;
+  text-align: center;
+  background-color: white;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, .07);
+
+  .month{
+    margin-bottom: 16rpx;
+    font-size: 15px; color: $color-title; font-weight: bold;
+  }
+  .week{
+    font-size: 13px;
+  }
+  .day{
+    color: $color-sub;
+    
+    .before{
+      color: $color-disabled;
+    }
+    .today{
+      color: $blue;
+    }
+  }
+}
+
+.todo-scroll{
+  width: 100%; height: 100%;
+  -webkit-overflow-scrolling: touch;
+
+  .todo-head{
+    &::after{
+      display: none;
+    }
+    .q-cell__bd{
+      font-size: 15px; color: $color-title;
+    }
+  }
+  .q-radio{
+    &.p1::before{
+      border-color: $color-p1;
+    }
+    &.p2::before{
+      border-color: $color-p2;
+    }
+    &.p3::before{
+      border-color: $color-p3;
+    }
+  }
+  .line{
+    position: absolute; top: 0; bottom: 0; left: 0;
+    width: 1rpx;
+    font-size: 0;
+  }
+  .title{
+    font-size: 16px;
+    @extend .ellipsis;
+  }
+  .time{
+    font-size: 12px;
+  }
+  .q-cell{
+    &.do{
+      //
+    }
+    .done{
+      .title, .time{
+        color: $color-disabled; text-decoration: line-through;
+      }
+    }
+    .expired{
+      .time{
+        color: #ed3f14;
+      }
+    }
+  }
+}
+
+.todo-class{
+  &-title{
+    font-size: 16px; color: $color-title;
+  }
+  .todo-invite{
+    margin-top: 40rpx;
+  }
+  .count{
+    color: $color-disabled;
+  }
+  
+
+  &-add{
+    .name{
+      margin-bottom: 40rpx;
+      border-bottom: 1px solid $color-border;
+    }
+    .color{
+      display: flex;
+      justify-content: space-between;
+
+      .q-radio{
+        &::before{
+          border: none;
+          background-color: $color-disabled;
+        }
+        &.red::before{
+          background-color: $red;
+        }
+        &.orange::before{
+          background-color: $orange;
+        }
+        &.yellow::before{
+          background-color: $yellow;
+        }
+        &.green::before{
+          background-color: $green;
+        }
+        &.blue::before{
+          background-color: $blue;
+        }
+        &.indigo::before{
+          background-color: $indigo;
+        }
+        &.purple::before{
+          background-color: $purple;
+        }
+        &.pink::before{
+          background-color: $pink;
+        }
+        &.teal::before{
+          background-color: $teal;
+        }
+        &.brown::before{
+          background-color: $brown;
+        }
+      }
+    }
+    .error{
+      text-align: left; color: $color-error;
+    }
+  }
+}
+
+.todo-create{
+  .todoTime{
+    display: flex; align-items: center;
+    .line{
+      width: 50rpx;
+      color: $color-border; text-align: center;
+    }
+  }
+  .q-cell__ft{
+    .q-radio-text{
+      margin-left: 16rpx;
+    }
+  }
+}
+
+.todo-detail{
+  .todo-title{
+    color: $color-title; font-size: 18px;
+  }
+
+  &-hd{
+    padding: 10rpx 0;
+    
+    image{
+      border:1rpx solid rgba(255, 255, 255, .89);
+    }
+  }
+}

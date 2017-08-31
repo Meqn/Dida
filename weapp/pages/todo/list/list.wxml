@@ -1,8 +1,25 @@
 <view class="container">
-  <view class="user">
-    <view class="avatar">
-      <image src="{{user.avatarUrl}}" mode="aspectFit"></image>
+  <scroll-view class="todo-scroll" enable-back-to-top="true">
+    <view class="q-cell todo-head">
+      <view class="q-cell__bd">进行中</view>
     </view>
-    <text>{{user.nickName}}</text>
+    <include src="../includes/list.wxml" />
+    <view class="q-cell todo-head">
+      <view class="q-cell__bd">已过期</view>
+    </view>
+    <include src="../includes/list.wxml" />
+    <view class="q-cell todo-head">
+      <view class="q-cell__bd">已完成</view>
+    </view>
+    <include src="../includes/list.wxml" />
+  </scroll-view>
+
+  <view class="q-fab-wrap">
+    <navigator class="q-fab" url="/pages/todo/create/index">
+      <text class="icon icon-add" />
+    </navigator>
+    <navigator class="q-fab" url="/pages/todo/class/index">
+      <text class="icon icon-sort" />
+    </navigator>
   </view>
 </view>

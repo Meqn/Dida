@@ -19,9 +19,7 @@ function tick() {
   let secondRotate = second * 6,  // second * (360/60)
     minuteRotate = minute * 6,
     hourRotate = hour * 30 + minute / 2;  // hour * (360/12) + minute / 2 
-
-  this.setData({
-    clock: {
+  return {
       hour,
       minute,
       second,
@@ -29,7 +27,6 @@ function tick() {
       minuteRotate,
       secondRotate
     }
-  })
 }
 
 module.exports = {

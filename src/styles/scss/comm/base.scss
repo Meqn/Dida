@@ -3,23 +3,22 @@
 body{
   display: block;
   min-height: 100%;
-  background-color: $bgcolor;
+  background-color: $color-background;
 }
-
 
 page{
   display: block;
   min-height: 100%;
-  color: #424242; font-size: 14px;
-  background-color: $bgcolor;
+  color: $color-content; font-size: 14px;
+  background-color: $color-background;
+}
+image{
+  vertical-align: middle;
 }
 
-.green{color: $green;}
-.red{color: $red;}
 .tal{text-align: left;}
 .tac{text-align: center;}
 .tar{text-align: right;}
 .radius{border-radius: 50%;}
 
-
-
+.ellipsis{overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}

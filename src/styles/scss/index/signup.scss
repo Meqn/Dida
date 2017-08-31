@@ -11,9 +11,11 @@
   }
   .weui-cells__title{
     margin-bottom: 50rpx;
-    text-align: center;
+    text-align: center; color: $color-content;
   }
   .weui-cells{
+    border-radius: 5px;
+    
     &:before,&:after{
       display: none;
     }

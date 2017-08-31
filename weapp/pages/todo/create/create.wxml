@@ -1,0 +1,85 @@
+<view class="container todo-create">
+  <view class="q-cells">
+    <view class="q-cell">
+      <input id="title" class="weui-input" type="text" placeholder="希望做什么？" bindblur="bindInput" />
+    </view>
+    <view class="q-cell">
+      <textarea id="content" class="weui-textarea" auto-height maxlength="-1" placeholder="可以写点描述..." bindblur="bindInput" />
+    </view>
+  </view>
+
+  <view class="q-cells">
+    <view class="q-cell q-cell--hd" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-time indigo" />
+      </view>
+      <view class="q-cell__bd">开始时间</view>
+      <view class="q-cell__ft todoTime">
+        <picker value="{{post.dateTime.start.index}}" range="{{post.dateTime.date.text}}" data-type="start" bindchange="bindDate">
+          <view>{{post.dateTime.date.val[post.dateTime.start.index]}}</view>
+        </picker>
+        <view class="line">|</view>
+        <picker mode="time" value="{{post.dateTime.start.time}}" data-type="start" bindchange="bindTime">
+          <view class="time">{{post.dateTime.start.time}}</view>
+        </picker>
+      </view>
+    </view>
+    <view class="q-cell q-cell--hd" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-end blue" />
+      </view>
+      <view class="q-cell__bd">完成时间</view>
+      <view class="q-cell__ft todoTime">
+        <picker value="{{post.dateTime.end.index}}" range="{{post.dateTime.date.text}}" data-type="end" bindchange="bindDate">
+          <view>{{post.dateTime.date.val[post.dateTime.end.index]}}</view>
+        </picker>
+        <view class="line">|</view>
+        <picker mode="time" value="{{post.dateTime.end.time}}" data-type="end" bindchange="bindTime">
+          <view class="time">{{post.dateTime.end.time}}</view>
+        </picker>
+      </view>
+    </view>
+  </view>
+  <view class="q-cells">
+    <view class="q-cell q-cell--hd">
+      <view class="q-cell__hd">
+        <text class="icon icon-flag orange" />
+      </view>
+      <view class="q-cell__bd">优先级</view>
+      <view class="q-cell__ft">
+        <label class="q-radio-text {{post.important ? 'checked' : ''}}" data-name="important" catchtap="bindCheck">
+          <icon type="success_no_circle" size="12" color="#212121"></icon>
+          <text>重要</text>
+        </label>
+        <label class="q-radio-text {{post.urgent ? 'checked' : ''}}" data-name="urgent" catchtap="bindCheck">
+          <icon type="success_no_circle" size="12" color="#212121"></icon>
+          <text>紧急</text>
+        </label>
+      </view>
+    </view>
+    <navigator class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover" url="/pages/todo/class/select">
+      <view class="q-cell__hd">
+        <text class="icon icon-sort green" />
+      </view>
+      <view class="q-cell__bd">列表</view>
+      <view class="q-cell__ft">{{post.class.name}}</view>
+    </navigator>
+    <view class="q-cell q-cell--hd">
+      <view class="q-cell__hd">
+        <text class="icon icon-remind red" />
+      </view>
+      <view class="q-cell__bd">提醒</view>
+      <view class="q-cell__ft">
+        <label class="q-switch {{post.remind ? 'checked' : ''}}" data-name="remind" catchtap="bindCheck" />
+      </view>
+    </view>
+  </view>
+
+  <view class="q-cell-btn">
+    <button type="primary" bindtap="onSubmit" loading="{{post.status === 0 ? '' : 'loading'}}" disabled="{{post.status === 0 ? '' : 'disabled'}}">{{post.status === 0 ? '' : '正在'}}{{action === 'post' ? '创建' : '保存'}}</button>
+  </view>
+  <view class="q-cell-error" wx:if="{{post.error.length > 0}}">
+    <text class="tit">错误信息：</text> {{post.error}}
+  </view>
+
+</view>

@@ -1,0 +1,45 @@
+
+.q-bottom{
+  display: flex; align-items: stretch;
+  position: fixed; left: 0; bottom: 0; right: 0; z-index: 90;
+  height: 112rpx;
+  background-color: white;
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, .06);
+
+  .q-bottom-btn{
+    position: relative;
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    text-align: center; font-size: 16px;
+    &::after{
+      content: "";
+      position: absolute; top: 25%; bottom: 25%; right: 0;
+      border-right: 1rpx solid $color-border;
+      transform-origin: 0 50%;
+      transform: scaleX(0.5);
+    }
+    &:last-child::after{
+      display: none;
+    }
+    &-hover{
+      background-color: $color-background-hover;
+    }
+    &.disabled{
+      color: $color-disabled;
+      opacity: .79;
+      &.q-bottom-btn-hover{
+        background-color: transparent;
+      }
+
+      .icon{
+        color: $color-disabled;
+      }
+    }
+
+    .icon{
+      font-size: 24px;
+      margin-right: 18rpx;
+    }
+  }
+}
+
+

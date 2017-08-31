@@ -1,6 +1,5 @@
 const app = getApp()
 import Util from '../../../utils/util'
-import User, { checkUser, updateUser, saveLocalUser } from '../../../utils/user'
 
 Page({
 
@@ -49,22 +48,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    const USER = app.globalData.user
-    if (USER && USER['sessionToken']) {
-      // 已登录
-      console.log('用户已登录', USER)
-      this.setData({
-        username: USER.nickName
-      })
-    } else {
-      checkUser({
-        success: () => {
-          this.setData({
-            username: app.globalData.user.nickName
-          })
-        }
-      })
-    }
   },
 
   /**
@@ -130,36 +113,6 @@ Page({
         minuteRotate,
         secondRotate
       }
-    })
-  },
-  setBornDate(e) {
-    console.log(e)
-    this.setData({
-      bornAt: e.detail.value
-    })
-    const { hour, minute, second } = this.data.clock
-    const bornAt = {
-      '__type': 'Date',
-      'iso': new Date(e.detail.value + ' ' + hour + ':' + minute + ':' + second)
-    }
-    updateUser({
-      id: app.globalData.user.objectId,
-      data: { bornAt },
-      success(res) {
-        if (res.statusCode === 200) {
-          console.log('res : ', res)
-          let _data = Object.assign({}, app.globalData.user, { bornAt })
-          saveLocalUser(_data)
-        } else {
-          console.error('更新失败 : ', res)
-        }
-      }
-    })
-  },
-  setDieDate(e) {
-    console.log(e)
-    this.setData({
-      dieAt: e.detail.value
     })
   }
 })

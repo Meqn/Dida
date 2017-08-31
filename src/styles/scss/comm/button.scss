@@ -1,0 +1,93 @@
+@import './var';
+
+.q-btn{
+  box-sizing: border-box;
+  display: inline-block;
+  margin: 0; padding: 10px 15px;
+  font-size: 14px; color: $color-content; line-height: 1; white-space: nowrap; text-align: center;
+  border:1px solid $color-border; border-radius: 4px;
+  background-color: #fff; outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  user-select: none;
+  transition: background-color .3s ease;
+
+  &.disabled,&[disabled]{
+    color: $color-disabled;
+    opacity: .79;
+  }
+
+  .icon{
+    color: #fff;
+  }
+}
+
+.q-btn--default{
+  color: $color-content;
+  background-color: white;
+  border-color: $color-border;
+  
+  &.q-btn-hover{
+    background-color: $color-disabled;
+  }
+
+  .iconfont{
+    color: $color-content;
+  }
+}
+
+.q-btn--primary{
+  color: #fff;
+  background-color: $color-btn;
+  border-color: $color-btn;
+  
+  &.q-btn-hover{
+    background-color: $color-btn-hover;
+  }
+}
+
+.q-btn--success{
+  color: #fff;
+  background-color: $color-success;
+  border-color: $color-success;
+  
+  &.q-btn-hover{
+    background-color: $color-success-hover;
+  }
+}
+
+.q-btn--error{
+  color: #fff;
+  background-color: $color-error;
+  border-color: $color-error;
+  
+  &.q-btn-hover{
+    background-color: $color-error-hover;
+  }
+}
+
+.q-btn--warning{
+  color: #fff;
+  background-color: $color-warning;
+  border-color: $color-warning;
+  
+  &.q-btn-hover{
+    background-color: $color-warning-hover;
+  }
+}
+.q-btn--info{
+  color: #fff;
+  background-color: $color-info;
+  border-color: $color-info;
+  
+  &.q-btn-hover{
+    background-color: $color-info-hover;
+  }
+}
+
+
+
+
+
+
+

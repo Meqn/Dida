@@ -1,0 +1,41 @@
+<view class="container">
+  <view class="q-cells q-cells--avatar">
+    <view class="q-cell q-cell-swipe" wx:for="{{users}}">
+      <view class="q-cell__bd {{item.isMove ? 'swiped' : ''}}">
+        <view class="q-cell" hover-class="q-cell-hover">
+          <view class="q-cell__hd">
+            <image mode="aspectFill" src="{{item.avatar}}" />
+          </view>
+          <view class="q-cell__bd">
+            <view class="q-cell__text">{{item.name}}</view>
+            <view class="q-cell__text--sub">{{item.badge}}</view>
+          </view>
+          <view class="q-cell__ft">已接受</view>
+        </view>
+      </view>
+      <view class="q-cell__ft">
+        <view class="q-btn q-btn--error" hover-class="q-btn-hover">删除</view>
+      </view>
+    </view>
+
+    <view class="q-cell q-cell-swipe">
+        <view class="q-cell__bd">
+          <view class="q-cell" hover-class="q-cell-hover">
+            <view class="q-cell__hd">
+              <image mode="aspectFill" src="http://static.mengqing.org/src/pic_360_360@1.jpg" />
+            </view>
+            <view class="q-cell__bd">
+              <view class="q-cell__text">Morven</view>
+              <view class="q-cell__text--sub">月亮高高云中藏</view>
+            </view>
+            <view class="q-cell__ft">已接受</view>
+          </view>
+        </view>
+        <view class="q-cell__ft">
+          <view class="q-btn q-btn--error" hover-class="q-btn-hover">删除</view>
+        </view>
+      </view>
+  </view>
+
+
+</view>

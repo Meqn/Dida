@@ -1,3 +1,5 @@
-{
-  "navigationBarTitleText": "我的人生"
+{ 
+  "navigationBarBackgroundColor": "#f8f8f9",
+  "navigationBarTextStyle": "black",
+  "navigationBarTitleText": "余生Time"
 }

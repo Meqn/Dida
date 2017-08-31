@@ -1,0 +1,34 @@
+<view class="container">
+  <swiper class="swiper" indicator-dots autoplay>
+    <swiper-item wx:for="{{sliders}}">
+      <navigator url="{{item.link}}">
+        <image src="{{item.image}}" class="slide-image" />
+    </navigator>
+    </swiper-item>
+  </swiper>
+
+  <view class="q-grids">
+    <view class="q-grid">
+      <view class="q-grid__icon">
+        <text class="icon icon-goods orange" />
+      </view>
+      <view class="q-grid__label">钱包</view>
+    </view>
+    <view class="q-grid">2</view>
+    <view class="q-grid">3</view>
+    <view class="q-grid">4</view>
+    <view class="q-grid">5</view>
+    <view class="q-grid">6</view>
+    <view class="q-grid">7</view>
+    <view class="q-grid">8</view>
+    <view class="q-grid">9</view>
+    <view class="q-grid">10</view>
+  </view>
+
+  <view class="q-cell">
+    放松一下
+  </view>
+  <view class="q-cells">
+    笑话列表
+  </view>
+</view>

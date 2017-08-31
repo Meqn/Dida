@@ -1,0 +1,118 @@
+
+.weui-flex__middle{
+  align-items: center;
+}
+
+
+
+.q-cells{
+  margin-bottom: 20rpx;
+  background-color: #fff;
+
+  &--min{
+    .q-cell{
+      padding: 12rpx 32rpx;
+    }
+  }
+  // 头像列表
+  &--avatar{
+    .q-cell{
+      &::after{
+        left: 136rpx;
+      }
+
+      &__hd{
+        width: 72rpx;
+        margin-right: 36rpx;
+
+        image{
+          width: 72rpx; height: 72rpx;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+}
+
+.q-cell{
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  font-size: 14px;
+
+  &--link{
+    .q-cell__ft{
+      padding-right: 18px;
+      background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAvklEQVQ4T6XTyw3CMAwAUHsj7s2lROmZEegEiA1gg25ANuAeUdoD4QoTxSiIShFNXCNyjl8cfxD+PPgd7643C4RjoysrsedA77eIdCLCVoLMgPiq+yCAeDB1deQyyQIpQgS20aotIUUgBlyG+4ZCsARwLiEs8M5k8CsMNJaQRSBFAOFh1qpOvyMDpqIS7I1W3U/A1JFSW9kMloJjJoI28gPFDpJkGnOj3CHSThKc/YLrfazyU7IHbA0kmxjvvACRyWgRORQV3wAAAABJRU5ErkJggg==) no-repeat center right;
+    }
+  }
+  &::after{
+    content: "";
+    position: absolute; left: 32rpx; bottom: 0; right: 0;
+    border-bottom: 1rpx solid $color-divider;
+    transform-origin: 0 50%;
+    transform: scaleY(0.5);
+  }
+  &--hd::after{
+    left: 96rpx;
+  }
+  &:last-child::after{
+    display: none;
+  }
+  &.q-cell-hover{
+    background-color: $color-background;
+  }
+  .weui-input, .weui-textarea{
+    width: 100%;
+  }
+  .sub-text{
+    font-size: 12px; color: $color-sub;
+    margin-top: -6rpx;
+  }
+}
+.q-cell__hd{
+  width: 48rpx;
+  margin-right: 16rpx;
+
+  icon{
+    font-size: 20px;
+  }
+}
+.q-cell__bd{
+  flex: 1;
+}
+.q-cell__ft{
+  margin-left: 24rpx;
+  color: $color-sub; text-align: right;
+}
+
+// 一排小头像
+.q-cell__avatars{
+  display: flex; align-items: center;
+
+  image{
+    overflow: hidden;
+    width: 72rpx; height: 72rpx;
+    border-radius: 50%;
+    transform: scale(.833333);
+  }
+}
+
+.q-cell__btn{
+  margin: 80rpx 32rpx 40rpx;
+}
+.q-cell__error{
+  margin: 40rpx 32rpx;
+  color: $color-error; font-size: 13px;
+  .tit{
+    font-size: 14px;
+  }
+  .item{
+    margin-left: 28rpx;
+  }
+}
+
+
+
+

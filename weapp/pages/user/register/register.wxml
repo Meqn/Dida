@@ -1,27 +1,24 @@
-<text>注册</text>
-
-<view class="weui-cells weui-cells_after-title">
-  <view class="weui-cell weui-cell_input">
-    <view class="weui-cell__bd">
-      <input class="weui-input" id="username" placeholder="用户名 [字母或数字]" bindblur="bindInput" />
+  <view class="container">
+    <view class="signup">
+      <view class="weui-cells__title">用于登录其他设备</view>
+      <view class="weui-cells">
+        <view class="weui-cell">
+          <view class="weui-cell__bd">
+            <input type="text" class="weui-input" id="username" placeholder="用户名 (4-12位)" bindblur="bindInput" />
+          </view>
+        </view>
+        <view class="weui-cell">
+          <view class="weui-cell__bd">
+            <input type="text" class="weui-input" id="password" placeholder="密码 (至少6位)" bindblur="bindInput" />
+          </view>
+        </view>
+      </view>
+      <view class="weui-btn-area">
+        <button type="primary" open-type="getUserInfo" bindgetuserinfo="register" loading="{{status === 0 ? '' : 'loading'}}" disabled="{{status === 0 ? '' : 'disabled'}}">{{status === 0 ? '授权并注册' : '正在提交...'}}</button>
+      </view>
+      <view class="signup-error" wx:if="{{error.length > 0}}">
+        <view>错误信息：</view>
+        <view class="signup-error-item" wx:for="{{error}}" wx:key="{{index}}">{{index + 1}}. {{item}}</view>
+      </view>
     </view>
   </view>
-</view>
-<view class="weui-cells weui-cells_after-title">
-  <view class="weui-cell weui-cell_input">
-    <view class="weui-cell__bd">
-      <input class="weui-input" id="password" placeholder="密码 [6-18位字符]" bindblur="bindInput" />
-    </view>
-  </view>
-</view>
-<view>
-  <button class="weui-btn" type="default" open-type="getUserInfo" bindgetuserinfo="register">授权并注册</button>
-</view>
-
-<view wx:if="{{authDeny}}">
-  <text>你的生命又少了10秒 [➡️允许授权]</text>
-</view>
-<view wx:if="{{valid.length > 0}}" style="border-bottom:2px solid #ddd; color: #f00;">
-  <text>错误信息：</text>
-  <view wx:for="{{valid}}"><text>{{item}}</text></view>
-</view>

@@ -1,11 +1,11 @@
 const app = getApp()
 import Util from '../../utils/util'
-import Clock from 'clock'
-import md5 from '../../libs/md5.min'
-import {ageRange, logged, setLife, checkUserName, postUser} from 'user'
 import { checkUser } from '../../utils/user'
+import Register from '../../utils/register'
+import Clock from './clock'
+import { ageRange, logged, checkDate, setLife } from 'user'
 
-let timer = null
+let timer = null, regFlag = false
 
 Page({
   data: {
@@ -69,7 +69,7 @@ Page({
       logged.call(this, USER)
     } else {
       checkUser({
-        register() {
+        onSign() {
           wx.setNavigationBarTitle({
             title: '注册',
           })
@@ -77,26 +77,41 @@ Page({
             status: 'register'
           })
         },
-        success(data) {
+        onSuccess(data) {
           logged.call(context, data)
+        },
+        onError(error, errmsg) {
+          // ❌ 错误提示信息待完善
+          console.error(errmsg, error)
         }
       })
     }
-    
+
     // Clock
     this.setData({
       points: Clock.point(150)
     })
-    Clock.tick.apply(this)
+    // Clock.tick.apply(this)
+    this.interval()
 
     // 设置年龄段
-    ageRange.call(this, 20, 120);
-
-
+    this.setData({
+      'ages.value': ageRange(20, 120)
+    })
+  },
+  interval() {
+    let s1 = this.data.life.prev.second,
+      s2 = this.data.life.next.second
+    let t = (this.data.life.die || s1 !== 0) ? 1 : 0
+    this.setData({
+      clock: Clock.tick(),
+      'life.prev.second': s1 + t,
+      'life.next.second': s2 - t
+    })
   },
   onShow() {
     // 设置时钟定时器
-    timer = setInterval(Clock.tick.bind(this), 1000)
+    timer = setInterval(this.interval, 1000)
   },
   onHide() {
     // 清除定时器
@@ -124,13 +139,13 @@ Page({
       status: 'date'
     })
   },
-  // 提交出生死亡时间
+  // 提交出生/死亡时间
   dateSubmit() {
     const life = this.data.setLife
-    // 请真诚一点，不要诈尸
-    if (life.born === 0 || life.age === 0) {
+    const dateError = checkDate(life.born, life.age)
+    if (dateError) {
       this.setData({
-        'setLife.error': '请设置出生和享年'
+        'setLife.error': dateError
       })
       Util.setData.call(this, {
         'setLife.error': ''
@@ -159,97 +174,35 @@ Page({
   regBindInput(e) {
     this.data.register.fields[e.currentTarget.id] = e.detail.value
   },
-  // 验证注册表单
-  regCheck(fields) {
-    var rules = {
-      username: {
-        regx: /^[a-zA-Z_0-9]{4,16}$/g,
-        tip: '用户名必须是4-16字母或数字组成'
-      },
-      password: {
-        regx: /^[a-zA-Z0-9~!@#$%^&*()-_+]{6,18}$/g,
-        tip: '密码必须是6-18位字符'
-      }
-    }
-    var error = []
-    for (let v in fields) {
-      if (!rules[v]['regx'].test(fields[v])) {
-        error.push(rules[v].tip)
-      }
-    }
-    return error
-  },
-  // 合并用户注册信息
-  regMegerData({ name, pwd, userInfo }) {
-    const password = md5(pwd).slice(5, 25)
-    const umm = md5(pwd).slice(5)
-    let ret = Object.assign({}, userInfo, {
-      openId: app.globalData.user.openId,
-      username: name,
-      password,
-      umm
-    })
-    return ret;
-  },
   // 提交注册
   regSubmit(e) {
-    console.log(e)
+    if (regFlag) return;
+    regFlag = true
     const context = this
+    const userInfo = e.detail.userInfo
+    const fields = this.data.register.fields
+
     this.setData({
       'register.error': [],
       'register.status': 1
     })
-    // 1. 微信授权 (检测用户微信信息)
-    const userInfo = e.detail.userInfo
-    console.log(userInfo)
-    if (!userInfo) {
-      this.setData({
-        'register.error': ['不授权, 你想咋样？'],
-        'register.status': 0
-      })
-      return;
-    }
-    // 验证表单
-    const fields = this.data.register.fields
-    const fieldErr = this.regCheck(fields)
-    if (fieldErr.length > 0) {
-      this.setData({
-        'register.error': fieldErr,
-        'register.status': 0
-      })
-      return;
-    }
-    // 验证用户名
-    checkUserName(fields.username, (res) => {
-      if (res.results.length > 0) {
+
+    Register(fields, userInfo, {
+      onSuccess(res) {
+        regFlag = false
+        wx.setNavigationBarTitle({
+          title: '我的一生',
+        })
         context.setData({
-          'register.error': ['用户名: '+ fields.username +' 已存在'],
+          'status': 'logged',
           'register.status': 0
         })
-        return;
-      } else {
-        // 提交用户信息
-        const postData = context.regMegerData({
-          name: fields.username,
-          pwd: fields.password,
-          userInfo
-        })
-        postUser(postData, {
-          success(res) {
-            wx.setNavigationBarTitle({
-              title: '我的人生',
-            })
-            context.setData({
-              status: 'logged',
-              'register.status': 0
-            })
-          },
-          fail(err) {
-            context.setData({
-              'register.error': ['注册失败, 稍后再试'],
-              'register.status': 0
-            })
-          }
+      },
+      onError(error) {
+        regFlag = false
+        context.setData({
+          'register.error': error,
+          'register.status': 0
         })
       }
     })

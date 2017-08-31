@@ -1,1 +1,1 @@
-/* register.wxss */
+@import "../../../libs/styles/index.wxss";

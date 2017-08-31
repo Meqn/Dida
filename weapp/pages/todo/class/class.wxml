@@ -1,0 +1,40 @@
+<import src="../../includes/page-loading.wxml" />
+
+<template is="loading" data="{{text: 'Loading...'}}" wx:if="{{status === 'loading'}}" />
+<include src="add.wxml" /> 
+
+<view class="container todo-class">
+  <view class="q-cell">
+    <view class="q-cell__bd todo-class-title">列表</view>
+  </view>
+  <view class="q-cells">
+    <navigator class="q-cell q-cell--hd" hover-class="q-cell-hover" wx:for="{{classes}}" wx:key="item.objectId" url="/pages/todo/list/list?classId={{item.id}}">
+      <view class="q-cell__hd"><text class="icon icon-{{item.icon}} {{item.color}}" /></view>
+      <view class="q-cell__bd">{{item.title}}</view>
+      <view class="q-cell__ft count">{{item.count}}</view>
+    </navigator>
+    <view class="q-cell q-cell--hd green" hover-class="q-cell-hover" bindtap="createClass">
+      <view class="q-cell__hd"><text class="icon icon-addition green" /></view>
+      <view class="q-cell__bd">新建列表</view>
+    </view>
+  </view>
+
+  <view class="q-cells todo-invite">
+    <navigator class="q-cell q-cell--hd" url="/pages/todo/list/list?type=invite">
+      <view class="q-cell__hd"><text class="icon icon-group pink" /></view>
+      <view class="q-cell__bd">被邀请</view>
+      <view class="q-cell__ft count">5</view>
+    </navigator>
+  </view>
+
+  <view class="q-cell">
+    <view class="q-cell__bd todo-class-title">归档</view>
+  </view>
+  <view class="q-cells">
+    <navigator class="q-cell q-cell--hd" wx:for="{{inbox}}" url="/pages/todo/list/list?type={{item.type}}" wx:key="item.type">
+      <view class="q-cell__hd"><text class="icon icon-{{item.icon}} {{item.color}}" /></view>
+      <view class="q-cell__bd">{{item.title}}</view>
+      <view class="q-cell__ft count">{{item.count}}</view>
+    </navigator>
+  </view>
+</view>

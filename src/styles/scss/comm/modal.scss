@@ -1,0 +1,49 @@
+
+.q-modal{
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 990;
+  background-color: rgba(0, 0, 0, .1);
+
+  &-main{
+    position: absolute; top: 50%; left: 50%;
+    transform: translate3d(-50%, -60%, 0);
+    animation: modalIn .6s ease;
+
+    box-sizing: border-box;
+    width: 92%;
+    padding: 30rpx 40rpx;
+    background-color: #fff;
+    border-radius: 4rpx;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .14), 0 3px 4px rgba(0, 0, 0, .12), 0 1px 5px rgba(0, 0, 0, .2);
+  }
+  &-hd,&-bd{
+    margin-bottom: 32rpx;
+  }
+  &-ft{
+    margin-top: 60rpx;
+    text-align: right;
+
+    button{
+      min-width: 200rpx;
+      margin-left: 30rpx;
+      display: inline-block;
+    }
+  }
+  &-close{
+    position: absolute; top: 30rpx; right: 50rpx;
+    width: 48rpx; height: 48rpx;
+    font-size: 48rpx; line-height: 48rpx; color: $color-disabled;
+  }
+  &-title{
+    font-size: 18px; color: $color-title;
+  }
+}
+
+
+@keyframes modalIn{
+  from{
+    transform: translate3d(-50%, -75%, 0); opacity: 0;
+  }
+  to{
+    transform: translate3d(-50%, -60%, 0); opacity: 1;
+  }
+}

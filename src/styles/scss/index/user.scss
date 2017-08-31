@@ -10,7 +10,7 @@
   }
   .weui-flex{
     margin-bottom: 60rpx;
-    color: $grey;
+    color: $color-sub;
   }
 
   .item-hd{
@@ -20,17 +20,17 @@
 
   .select{
     line-height: 28px; text-align: center;
-    border: 1px solid $bordercolor; border-radius: 40rpx;
+    border: 1px solid $color-border; border-radius: 40rpx;
 
     &-hover{
-      background-color: $grey300;
-      color: $grey700;
+      background-color: $color-disabled;
+      color: $color-content;
     }
   }
   .error{
     min-height: 22px;
     margin: 20rpx 0 0 30rpx;
-    color: #C00;
+    color: $red;
   }
 }
 
@@ -55,7 +55,7 @@
   .cell{
     margin-left: -1rpx; padding: 10rpx 0;
     text-align: center;
-    border: 1rpx solid $bordercolor;
+    border: 1rpx solid $color-border;
 
     &:nth-child(1) {
       width: 15%;
@@ -78,7 +78,7 @@
     margin-bottom: 20rpx;
   }
   .name{
-    font-size: 12px;
+    font-size: 12px; color: $color-sub;
   }
 }
 
@@ -93,13 +93,13 @@
     display: inline-block;
     width: 40%;
     padding: 8rpx 0;
-    color: $primarycolor;
-    border: 1rpx solid $primarycolor; border-radius: 36rpx;
-    background-color: $bgcolor;
+    color: $color-title;
+    border: 1rpx solid $color-btn; border-radius: 36rpx;
+    background-color: $color-background;
 
     &.hover{
       color: #fff;
-      background-color: $primarycolor;
+      background-color: $color-btn;
     }
   }
 }

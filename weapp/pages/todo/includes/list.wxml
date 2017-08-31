@@ -1,0 +1,21 @@
+<view class="q-cell q-cell--hd q-cell-swipe" wx:for="{{todoList}}" wx:key="{{index}}" bind:tap="view">
+  <view class="q-cell__bd">
+    <view class="q-cell" hover-class="q-cell-hover">
+      <view class="line bg-{{item.color}}"></view>
+      <view class="q-cell__hd">
+        <label class="q-radio p{{item.priority}}"><icon type="success_no_circle" size="12" color="#212121" /></label>
+      </view>
+      <view class="q-cell__bd title">{{item.title}}</view>
+      <view class="q-cell__ft">{{item.time}}</view>
+    </view>
+  </view>
+  <view class="q-cell__ft">
+    <view class="q-btn q-btn--error" hover-class="q-btn-hover">
+      删除
+      <text class="icon icon-trash" />
+    </view>
+    <view class="q-btn q-btn--primary" hover-class="q-btn-hover">
+      <text class="icon icon-brush" />
+    </view>
+  </view>
+</view>

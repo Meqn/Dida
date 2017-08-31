@@ -1,21 +1,6 @@
 import Sign from './lcSign'
 import config from '../config'
-
-Date.prototype.format = function (fmt) {
-  var o = {
-    "M+": this.getMonth() + 1, //月份 
-    "d+": this.getDate(), //日 
-    "h+": this.getHours(), //小时 
-    "m+": this.getMinutes(), //分 
-    "s+": this.getSeconds(), //秒 
-    "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
-    "S": this.getMilliseconds() //毫秒 
-  };
-  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-  for (var k in o)
-    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-  return fmt;
-}
+ 
 
 function formatTime(date) {
   var date = typeof date === 'string' ? new Date(date) : date
@@ -34,32 +19,11 @@ function formatNumber(n) {
   n = n.toString()
   return n[1] ? n : '0' + n
 }
-function diffTime(startTime, endTime) {
-  let start, end, diff, diffYear, diffMonth, diffDay, diffHour, diffMinute, diffSecond, diffWeek
-
-  start = startTime instanceof Date ? startTime : new Date(startTime)
-  end = endTime instanceof Date ? endTime : new Date(endTime)
-
-  diff = end - start
-  diffYear = end.getFullYear() - start.getFullYear()
-  // 月 ＝ 相差年 * 12 + 相差月(天数之差)
-  diffMonth = diffYear * 12 + (end.getMonth() - start.getMonth()) - ((end.getDate() - start.getDate()) < 0 ? 1 : 0)
-  diffSecond = diff/1000
-  diffMinute = diffSecond/60
-  diffHour = diffMinute/60
-  diffDay = diffHour/24
-  diffWeek = diffDay/7
-
-  let ret = diff > 0 ? {
-    year: Math.floor(diffYear),
-    month: Math.floor(diffMonth),
-    week: Math.floor(diffWeek),
-    day: Math.floor(diffDay),
-    hour: Math.floor(diffHour),
-    minute: Math.floor(diffMinute),
-    second: Math.floor(diffSecond)
-  } : 0
-  return ret
+function subFloat(val, num) {
+  var str = val.toString()
+  var i = str.indexOf('.')
+  if (typeof val !== 'number' || i === -1) return val;
+  return parseFloat(str.slice(0, i + num + 1))
 }
 
 /**
@@ -99,8 +63,18 @@ function xhr({ url, method = 'GET', dataType = 'json', contentType = 'applicatio
 /**
  * 设置 ACL 权限
  */
-function setACL({ user = [], role = [] }) {
-  const act = { "*": { read: true, write: false } }
+function setACL({ all = ['read'], user = [], role = [] }) {
+  const act = {}
+  switch (all.length) {
+    case 1:
+      act['*'] = { read: true, write: false }
+      break;
+    case 2:
+      act['*'] = { read: true, write: true }
+      break;
+    default:
+      act['*'] = { read: false, write: false }
+  }
   if (user.length > 0) {
     user.forEach(function (v) {
       act[v] = { "write": true }
@@ -126,9 +100,8 @@ function setData(options = {}, time = 0, cb = null) {
 }
 
 module.exports = {
-  formatTime,
-  diffTime,
   xhr,
   setACL,
-  setData
+  setData,
+  subFloat
 }

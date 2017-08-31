@@ -1,0 +1,192 @@
+<view class="container">
+  <view class="q-cells q-cells--avatar q-cells--avatar-l todo-detail-hd bg-red todo-detail">
+    <view class="q-cell">
+      <view class="q-cell__hd">
+        <image mode="aspectFill" src="http://static.mengqing.org/src/pic_360_360@1.jpg" />
+      </view>
+      <view class="q-cell__bd info">
+        <view class="q-cell__text">Morven 创建</view>
+        <view class="q-cell__text--sub text">2人参与</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="q-cells">
+    <view class="q-cell" hover-class="q-cell-hover">
+      今天把Todo添加分类功能完善，并进一步优化
+    </view>
+    <view class="q-cell" hover-class="q-cell-hover">
+      这里就随便填写的啥。撒地方看见啊时刻地方撒地方啊圣诞节发三六九等粉啦时间大幅拉升拉屎
+    </view>
+  </view>
+
+  <view class="q-cells">
+    <view class="q-cell q-cell--hd" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-time" />
+      </view>
+      <view class="q-cell__bd">2017/08/23 周五 16:25</view>
+    </view>
+    <view class="q-cell q-cell--hd" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-flag" />
+      </view>
+      <view class="q-cell__bd">紧急且重要</view>
+    </view>
+  </view>
+
+  <view class="q-cells">
+
+      <view class="q-cell q-cell--hd" hover-class="q-cell-hover" bind:touchstart="" bind:touchend="">
+          <view class="q-cell__hd">
+            <label class="q-radio">
+              <icon type="success_no_circle" size="12" color="#212121"></icon>
+            </label>
+          </view>
+          <view class="q-cell__bd ellipsis">这是一个任务，我的第一件事还没有做呢？</view>
+          <view class="q-cell__ft">2小时后</view>
+        </view>
+
+
+    <view class="q-cell q-cell--hd q-cell-swipe">
+      <view class="q-cell__bd swiped-2">
+        <view class="q-cell" hover-class="q-cell-hover">
+          <view class="q-cell__hd">
+            <label class="q-radio checked">
+              <icon type="success_no_circle" size="12" color="#212121"></icon>
+            </label>
+          </view>
+          <view class="q-cell__bd ellipsis">这是一个任务，我的第一件事还没有做呢？</view>
+          <view class="q-cell__ft">2小时后</view>
+        </view>
+      </view>
+      <view class="q-cell__ft">
+        <view class="q-btn q-btn--error" hover-class="q-btn-hover">删除</view>
+        <view class="q-btn q-btn--primary" hover-class="q-btn-hover">取消关注</view>
+      </view>
+    </view>
+
+    <view class="q-cell q-cell--hd q-cell-swipe">
+        <view class="q-cell__bd swiped">
+          <view class="q-cell" hover-class="q-cell-hover">
+            <view class="q-cell__hd">
+              <label class="q-radio checked">
+                <icon type="success_no_circle" size="12" color="#212121"></icon>
+              </label>
+            </view>
+            <view class="q-cell__bd ellipsis">这是一个任务，我的第一件事还没有做呢？</view>
+            <view class="q-cell__ft">2小时后</view>
+          </view>
+        </view>
+        <view class="q-cell__ft">
+          <view class="q-btn q-btn--primary" hover-class="q-btn-hover">取消关注</view>
+          <view class="q-btn q-btn--error" hover-class="q-btn-hover">删除</view>
+        </view>
+      </view>
+
+
+    <view class="q-cell q-cell--hd">
+      <view class="q-cell__hd">
+        <label class="q-radio checked">
+              <icon type="success_no_circle" size="12" color="#212121"></icon>
+            </label>
+      </view>
+      <view class="q-cell__bd ellipsis">这是一个任务，我的第一件事还没有做呢？</view>
+      <view class="q-cell__ft">2小时后</view>
+    </view>
+    <view class="q-cell q-cell--hd" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+      </view>
+      <view class="q-cell__bd ellipsis">这是一个任务</view>
+      <view class="q-cell__ft">
+          <label class="q-radio checked">
+              <icon type="success_no_circle" size="12" color="#212121"></icon>
+            </label>
+        <label class="q-radio-text checked">
+              <text>喜欢</text>
+              <icon type="success_no_circle" size="12" color="#212121"></icon>
+            </label>
+        <label class="q-radio-text">
+                <text>不喜欢</text>
+                <icon type="success_no_circle" size="12" color="#212121"></icon>
+              </label>
+        <label class="q-switch"></label>
+        <label class="q-switch checked"></label>
+      </view>
+    </view>
+  </view>
+
+  <view class="q-cells q-cells--avatar">
+    <view class="q-cell" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <image mode="aspectFill" src="http://static.mengqing.org/src/pic_360_360@1.jpg" />
+      </view>
+      <view class="q-cell__bd">
+        <view class="q-cell__text">Morven</view>
+        <view class="q-cell__text--sub">月亮高高云中藏...</view>
+      </view>
+      <view class="q-cell__ft avatars">
+        已接受
+      </view>
+    </view>
+    <view class="q-cell" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <image mode="aspectFill" src="http://static.mengqing.org/src/pic_360_360@1.jpg" />
+      </view>
+      <view class="q-cell__bd">
+        <view class="q-cell__text">Morven</view>
+        <view class="q-cell__text--sub">月亮高高云中藏</view>
+      </view>
+      <view class="q-cell__ft avatars">
+        已接受
+      </view>
+    </view>
+    <view class="q-cell" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <image mode="aspectFill" src="http://static.mengqing.org/src/pic_360_360@1.jpg" />
+      </view>
+      <view class="q-cell__bd">
+        <view class="q-cell__text">Morven</view>
+        <view class="q-cell__text--sub">月亮高高云中藏</view>
+      </view>
+      <view class="q-cell__ft avatars">
+        已接受
+      </view>
+    </view>
+  </view>
+
+  <view class="q-cells q-cells--min">
+    <view class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover" catchtap="allUsers">
+      <view class="q-cell__hd">
+        <text class="icon icon-group" />
+      </view>
+      <view class="q-cell__bd">1人参与</view>
+      <view class="q-cell__ft q-cell__avatars">
+        <image mode="aspectFill" src="http://static.mengqing.org/src/pic_360_360@1.jpg" />
+        <image mode="aspectFill" src="http://static.mengqing.org/src/pic_300_450@2.jpg" />
+        <image mode="aspectFill" src="http://static.mengqing.org/src/pic_360_360@4.jpg" />
+      </view>
+    </view>
+  </view>
+
+  <view class="q-cell-btn">
+    <button type="primary">保存</button>
+  </view>
+  <view class="q-cell-error">
+    <text class="tit">错误信息：</text> 用户名已被赞用
+  </view>
+
+  <view style="height:56px;"></view>
+</view>
+
+
+<view class="q-bottom">
+  <view class="q-bottom-btn" hover-class="q-bottom-btn-hover" catchtap="setBarColor">
+    <text class="icon icon-invite blue" />
+    <text>邀请好友</text>
+  </view>
+  <view class="q-bottom-btn" hover-class="q-bottom-btn-hover">
+    <text class="icon icon-editor blue" />
+    <text>编辑清单</text>
+  </view>
+</view>

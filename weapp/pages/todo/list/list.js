@@ -1,40 +1,22 @@
-
 const app = getApp()
-// import getSystemInfo from '../../../utils/system'
-// import { getUser } from '../../../utils/user'
-// import Crypt from '../../libs/WXBizDataCrypt'
 
 Page({
   data: {
-    user: {
-      avatarUrl: 'http://static.mengqing.org/extension/avatar.png',
-      nickName: '昵称'
-    }
+    users: []
   },
   onLoad: function () {
-    this.wxUserInfo()
+    let lists = []
+    for (let i = 0; i < 8; i++) {
+      lists[i] = {
+        title: '这是一个任务，我的第一件事还没有做呢？',
+        time: i+ '小时后',
+        color: 'red',
+        priority: 2,
+      }
+    }
+    this.setData({todoList: lists})
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
   onReady: function () {
-  },
-  wxLogin (cb) {
-    wx.login({
-      success(res) {
-        console.log(res)
-        cb && cb(res)
-      }
-    })
-  },
-  wxUserInfo(res) {
-    wx.getUserInfo({
-      withCredentials: true,
-      success(res) {
-        console.log(res)
-      }
-    })
   }
-
 })

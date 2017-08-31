@@ -1,0 +1,24 @@
+<view class="contaner">
+  <view>日历 📅</view>
+  <view class="calendar">
+    
+    <!-- day视图 -->
+    <view class="days">
+      <view class="weui-flex days-hd">
+        <view bind:tap="prevMonth">《 </view>
+        <view class="weui-flex__item tac">{{calendar.month}}</view>
+        <view bind:tap="nextMonth"> 》</view>
+      </view>
+      <view class="days-bd">
+        <view class="weui-flex week">
+          <view class="weui-flex__item" wx:for="{{calendar.week}}" wx:key="{{index}}">{{item}}</view>
+        </view>
+        <view class="days q-flex" style="flex-wrap:wrap;">
+            <view class="" wx:for="{{calendar.day}}" wx:key="" style="width:calc(100%/7);">{{item}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- month视图 -->
+</view>

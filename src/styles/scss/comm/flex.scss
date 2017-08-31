@@ -1,14 +1,38 @@
 
-.weui-flex__middle{
+.q-flex{
+  display: flex;
+}
+
+.q-flex--row{
+  flex-direction: row;
+}
+.q-flex--column{
+  flex-direction: column;
+}
+.q-flex--wrap{
+  flex-wrap: wrap;
+}
+
+.q-flex--left{
+  justify-content: flex-start;
+}
+.q-flex--center{
+  justify-content: center;
+}
+.q-flex--right{
+  justify-content: flex-end;
+}
+.q-flex--between{
+  justify-content: space-between;
+}
+.q-flex--around{
+  justify-content: space-around;
+}
+
+.q-flex--middle{
   align-items: center;
 }
 
-
-
-
-
-
-
-
-
-
+.q-flex__item{
+  flex: 1;
+}

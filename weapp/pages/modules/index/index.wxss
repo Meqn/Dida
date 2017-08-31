@@ -1,0 +1,9 @@
+/* home.wxss */
+.swiper{
+  height: 360rpx;
+  margin-bottom: 24rpx;
+}
+.swiper navigator, .swiper image{
+    width: 100%; height: 100%
+}
+

@@ -35,8 +35,8 @@
           <view class="name">时</view>
         </view>
         <view class="cell">
-          <view class="value">{{life.prev.minute}}</view>
-          <view class="name">分</view>
+          <view class="value">{{life.prev.second}}</view>
+          <view class="name">秒</view>
         </view>
       </view>
     </view>
@@ -61,13 +61,13 @@
           <view class="name">时</view>
         </view>
         <view class="cell">
-          <view class="value">{{life.next.minute}}</view>
-          <view class="name">分</view>
+          <view class="value">{{life.next.second}}</view>
+          <view class="name">秒</view>
         </view>
       </view>
     </view>
   </view>
   <view class="user-go">
-     <navigator url="/pages/todo/home" open-type="switchTab" hover-class="hover">未了心愿...</navigator> 
+      <navigator url="/pages/todo/index" open-type="switchTab" hover-class="hover">未了心愿...</navigator>
   </view>
 </block>

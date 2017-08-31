@@ -1,25 +1,60 @@
 
-/** 主色：灰色grey */
-$grey50: #FAFAFA;
-$grey300: #E0E0E0;
-$grey: #9E9E9E;
-$grey700: #616161;
-$grey900: #212121;
 
-$green: #1DB954;
-$red: #C00;
+/************************************************************
+ * 蓝色主题  来源：https://www.iviewui.com/components/color
+ */
 
-/** 颜色设置 */
+/** 主色 */
 $primarycolor: #212121;
-$bgcolor: #FAFAFA;
-$bordercolor: #E0E0E0;
-
-$btnBgColor: #212121;
-$btnBgColorHover: #282828;
+$primarycolor-light: #303030;
+$primarycolor-dark: #0c0d0f;
 
 
 
+/** 辅助色 */
+$color-info: #20a0ff;       // info
+$color-info-hover: #73ccff;
+$color-success: #13ce66;    // success
+$color-success-hover: #42d885;
+$color-warning: #f7ba2a;    // warning
+$color-warning-hover: #f9c855;
+$color-error: #ff4949;      // error
+$color-error-hover: #ff6d6d;
+
+/** 中性色 */
+$color-title: #1c2438;      // 标题
+$color-content: #495060;    // 正文
+$color-sub: #80848f;        // 辅助／图标
+$color-disabled: #bbbec4;   // 无效
+
+$color-border: #dddee1;         // 边框
+$color-divider: #e9eaec;        // 分隔线
+$color-background: #f8f8f9;     // 背景色
+$color-background-hover: #EFEFEF;
+$color-background-disabled: #EFEFEF;
+
+$color-btn: #212121;
+$color-btn-hover: #303030;
 
 
 
+/** 优先级 */
+$color-p1: #ffeb3b;
+$color-p2: #ff9800;
+$color-p3: #f44336;
 
+
+/** 彩色 */
+$red: #f44336;
+$orange: #ff9800;
+$yellow: #ffd422;   // ffeb3b
+$green: #04BE02;
+$blue: #2196f3;
+$indigo: #3f51b5;
+$purple: #9c27b0;
+
+
+$pink: #e91e63;
+$cyan: #00bcd4;
+$teal: #009688;
+$brown: #795548;

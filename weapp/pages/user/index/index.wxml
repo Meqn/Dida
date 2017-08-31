@@ -1,0 +1,72 @@
+<view class="container">
+  <view class="q-cells q-cells--avatar q-cells--avatar-l" style="padding:20rpx 0;">
+    <view class="q-cell q-cell--link" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <image mode="aspectFill" src="http://static.mengqing.org/src/pic_360_360@1.jpg" />
+      </view>
+      <view class="q-cell__bd">
+        <view class="q-cell__text">Morven</view>
+        <view class="q-cell__text--sub text">月亮高高云中藏</view>
+      </view>
+      <view class="q-cell__ft"></view>
+    </view>
+  </view>
+
+  <view class="q-cells">
+    <navigator url="/pages/index/index" class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-feedback red" />
+      </view>
+      <view class="q-cell__bd">一生</view>
+      <view class="q-cell__ft"></view>
+    </navigator>
+  </view>
+
+  <view class="q-cells">
+    <view class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-goods orange" />
+      </view>
+      <view class="q-cell__bd">钱包</view>
+      <view class="q-cell__ft"></view>
+    </view>
+    <view class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-camera green" />
+      </view>
+      <view class="q-cell__bd">相册</view>
+      <view class="q-cell__ft"></view>
+    </view>
+    <view class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-label blue" />
+      </view>
+      <view class="q-cell__bd">卡包</view>
+      <view class="q-cell__ft"></view>
+    </view>
+    <view class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-eit purple" />
+      </view>
+      <view class="q-cell__bd">表情</view>
+      <view class="q-cell__ft"></view>
+    </view>
+  </view>
+
+  <view class="q-cells">
+    <view class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-time pink" />
+      </view>
+      <view class="q-cell__bd">关于</view>
+      <view class="q-cell__ft"></view>
+    </view>
+    <view class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover">
+      <view class="q-cell__hd">
+        <text class="icon icon-setup blue" />
+      </view>
+      <view class="q-cell__bd">设置</view>
+      <view class="q-cell__ft"></view>
+    </view>
+  </view>
+</view>

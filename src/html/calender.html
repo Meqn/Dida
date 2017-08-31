@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="../styles/weui.css">
+  <script src="../libs/moment.js"></script>
+  <script src="https://cdn.bootcss.com/handlebars.js/4.0.10/handlebars.js"></script>
+  <style>
+    .calender {
+      width: 500px;
+    }
+    .calender table{width: 100%; text-align: center;}
+  </style>
+</head>
+
+<body>
+
+
+  <div class="calender">
+    <div>
+      <input type="button" value="<< 上月">
+      <span>2017-07-08</span>
+      <input type="button" value="下月 >>">
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>日</th>
+          <th>一</th>
+          <th>二</th>
+          <th>三</th>
+          <th>四</th>
+          <th>五</th>
+          <th>六</th>
+        </tr>
+      </thead>
+      <tbody id="calender">
+        <script id="tpl_days" type="text/x-handlebars-template">
+        {{#each days}}
+        <tr>
+          {{#each this}}
+          <td>{{this}}</td>
+          {{/each}}
+        </tr>
+        {{/each}}
+        </script>
+      </tbody>
+    </table>
+
+  </div>
+
+
+
+  <script>
+    function getMonthDays(date) {
+      var dates = []
+      for (var i = 0; i < 42; i++) {
+        var startDate = moment(date).date(1)
+        dates[i] = startDate.weekday(i).date()
+      }
+      return dates
+    }
+    function getDays(date) {
+      var days = getMonthDays(date)
+      var arr = []
+      for (var i = 0; i < 6; i++) {
+        arr[i] = days.slice(i * 7, i * 7 + 7)
+      }
+      return arr
+    }
+
+    function daysCompile(date) {
+      var source = document.querySelector('#tpl_days').innerHTML
+      var html = Handlebars.compile(source)({
+        days: getDays(date)
+      })
+      document.querySelector('#calender').innerHTML = html
+    }
+    window.onload = function() {
+      daysCompile('2017-08-15')
+    }
+  </script>
+</body>
+
+</html>

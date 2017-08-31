@@ -1,30 +1,52 @@
 const app = getApp()
 import { xhr, setACL } from './util'
 
+const TodoUrl = '/classes/Todo'
+const todoClassUrl = '/classes/TodoClass'
+
+const addTodoClass = function (data = {}, { success, fail }) {
+  xhr({
+    url: todoClassUrl + '?fetchWhenSave=true',
+    method: 'POST',
+    data,
+    success,
+    fail
+  })
+}
+
+const getTodoClass = function (condition, { success, fail }) {
+  xhr({
+    url: todoClassUrl + '?' + condition,
+    success,
+    fail
+  })
+}
+
+const getTodos = function (condition, { success, fail }) {
+  xhr({
+    url: TodoUrl + '?' + condition,
+    success,
+    fail
+  })
+}
+
+const addTodo = function (data = {}, { success, fail }) {
+  xhr({
+    url: TodoUrl + '?fetchWhenSave=true',
+    method: 'POST',
+    data,
+    success,
+    fail
+  })
+}
+
+
+
 module.exports = {
-  getTodo({ url = '/Todo', data = {}, success, fail }) {
-    xhr({
-      url,
-      data,
-      success,
-      fail
-    })
-  },
-  addTodo({ url = '/Todo?fetchWhenSave=true', data = {}, success, fail }) {
-    const userId = app.globalData.user['objectId']
-    const ACL = setACL({
-      user: [userId],
-      role: ['admin']
-    })
-    let request = Object.assign({}, { ACL, user: userId }, data)
-    xhr({
-      url,
-      method: 'POST',
-      data: JSON.stringify(request),
-      success,
-      fail
-    })
-  }
+  addTodoClass,
+  getTodoClass,
+  getTodos,
+  addTodo
 }
 
 

@@ -1,0 +1,17 @@
+<import src="../../includes/page-loading.wxml" />
+
+<view class="container">
+  <template is="loading" data="{{text: 'Loading...'}}" wx:if="{{status === 'loading'}}" />
+
+  <view class="q-cells">
+    <view class="q-cell q-cell--hd" wx:for="{{classes}}" wx:key="{{item.objectId}}" data-id="{{item.objectId}}" data-name="{{item.title}}" catchtap="onSelect">
+      <view class="q-cell__hd">
+        <text class="icon icon-{{item.icon}} {{item.color}}" />
+      </view>
+      <view class="q-cell__bd">{{item.title}}</view>
+      <view class="q-cell__ft">
+        <icon type="success_no_circle" size="14" color="#2196f3" wx:if="{{item.objectId === currentClass}}" />
+      </view>
+    </view>
+  </view>
+</view>

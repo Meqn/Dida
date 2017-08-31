@@ -1,23 +1,29 @@
-@import 'var';
+@import "var";
 
 
-
+/************************** 修改默认 weui
+*/
 button{
   font-size: 16px;
 }
 
-button[loading][type="primary"],button[type="primary"]{
-  background-color: $btnBgColor;
+button[loading][type="primary"], button[type="primary"]{
+  background-color: $color-btn;
 }
 .button-hover[loading][type="primary"],.button-hover[type="primary"]{
-  background-color: $btnBgColorHover;
+  background-color: $color-btn-hover;
 }
 
-.weui-input{
+.weui-textarea{
+  min-height:2.58823529em;
+}
+.weui-input, .weui-textarea{
+  display:block;
+  box-sizing: border-box;
   font-size: 14px;
 }
-.input-placeholder{
-  color: $grey;
+.input-placeholder,.textarea-placeholder{
+  color: $color-disabled;
 }
   
 .weui-cell:before {
@@ -28,13 +34,140 @@ button[loading][type="primary"],button[type="primary"]{
 }
 
 
-
+/************************** 自定义
+*/
 .q-btn-mini{
   font-size: 14px;
-  border:1px solid $grey300; border-radius: 40rpx;
+  border:1px solid $color-border; border-radius: 40rpx;
 
   &::after{
     display: none;
   }
 }
+
+/******** check radio switch
+*/
+$radio: 22px;
+.q-radio,.q-radio-text{
+  display: inline-block;
+  position: relative;
+  height: $radio;
+  vertical-align: middle;
+
+  &::before{
+    content: ""; box-sizing: border-box;
+    position: absolute; top: 2px; left: 2px;
+    width: $radio - 4px; height: $radio - 4px;
+    border: 1px solid $color-border;
+    border-radius: 2px;
+    background-color: #fff;
+  }
+  &.radio::before{
+    border-radius: 50%;
+  }
+  &.disabled,&[disabled]{
+    color: $color-disabled;
+    opacity: .79;
+    
+    &::before{
+      background-color: $color-background-disabled;
+    }
+  }
+  icon{
+    display: none;
+    position: absolute; top: ($radio - 12px)/2; left: ($radio - 12px)/2;
+  }
+  &.checked icon,&[checked] icon{
+    display: block;
+  }
+}
+.q-radio{
+  width: $radio;
+}
+.q-radio-text{
+  padding-left: $radio + 5px;
+  font-size: 14px; line-height: $radio;
+}
+
+
+$switch: 22px;
+$switchWidth: $switch * 2 + 6px;
+.q-switch{
+  display: inline-block; vertical-align: middle; overflow: hidden;
+  position: relative;
+  width: $switchWidth; height: $switch;
+  background-color: $color-disabled;
+  border-radius: $switch / 2;
+  transition: all .3s ease;
+
+  &::before{
+    position: absolute; top: 2px; left: 2px;
+    content: ""; box-sizing: border-box;
+    width: $switch - 4px; height: $switch - 4px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: all .3s ease;
+  }
+  &.checked,&[checked]{
+    background-color: $color-title;
+    &::before{
+      transform: translateX($switchWidth - $switch);
+    }
+    text{
+      transform: translateX(-15%);
+    }
+  }
+  text{
+    display: block;
+    font-size: 14px; color: #fff; line-height: $switch - 2px; text-align: center;
+    opacity: .89;
+    transform: translateX(15%);
+  }
+}
+
+
+.q-fab{
+  display: flex; align-items: center; justify-content: center;
+  width: 96rpx; height: 96rpx;
+  margin-top: 24rpx;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .14),
+    0 3px 4px rgba(0, 0, 0, .12),
+    0 1px 5px rgba(0, 0, 0, .2);
+  
+  .icon{
+    color: $color-title; font-size:20px;
+  }
+
+  &--max{
+    .q-fab{
+      width: 112rpx; height: 112rpx;
+      line-height: 112rpx;
+
+      .icon{
+        font-size:24px;
+      }
+    }
+  }
+  &--min{
+    .q-fab{
+      width: 80rpx; height: 80rpx;
+      line-height: 80rpx;
+
+      .icon{
+        font-size:18px;
+      }
+    }
+  }
+  &-wrap{
+    position: fixed; right: 32rpx; bottom: 48rpx; z-index: 9;
+  }
+}
+
+
+
+
+
+
   

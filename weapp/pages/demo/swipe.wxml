@@ -1,0 +1,32 @@
+<view class="container">
+  <view class="q-cell q-cell--hd q-cell-swipe" wx:for="{{list}}" wx:key="{{index}}" data-index="{{index}}" bind:tap="onTap" bind:touchstart="onTouchStart" bind:touchend="onTouchEnd">
+    <view class="q-cell__bd {{item.isMove ? 'swiped-2' : ''}}">
+      <view class="q-cell" hover-class="q-cell-hover">
+        <view class="q-cell__hd">
+          <label class="q-radio {{item.checked ? 'checked' : ''}}" catch:tap="markChecked" data-index="{{index}}"><icon type="success_no_circle" size="12" color="#212121" /></label>
+        </view>
+        <view class="q-cell__bd ellipsis">{{item.text}}</view>
+        <view class="q-cell__ft">2小时后</view>
+      </view>
+    </view>
+    <view class="q-cell__ft">
+      <view class="q-btn q-btn--error" hover-class="q-btn-hover">
+        删除 <text class="icon icon-trash" />
+      </view>
+      <view class="q-btn q-btn--primary" hover-class="q-btn-hover">
+        <text class="icon icon-brush" />
+      </view>
+    </view>
+  </view>
+</view>
+
+
+
+<view class="q-fab-wrap">
+  <navigator class="q-fab" url="/pages/todo/create/index">
+    <text class="icon icon-add" />
+  </navigator>
+  <navigator class="q-fab" url="/pages/todo/class/index">
+    <text class="icon icon-sort" />
+  </navigator>
+</view>
