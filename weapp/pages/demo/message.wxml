@@ -1,0 +1,6 @@
+<view class="container">
+  <form bindsubmit="onSend" report-submit>
+    <view><input type="text" name="username" value="aaaa" /></view>
+    <view><button type="primary" formType="submit">发送消息</button></view>
+  </form>
+</view>

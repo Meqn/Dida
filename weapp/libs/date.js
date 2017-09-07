@@ -51,9 +51,14 @@ function zero(num) {
 
 /**
  * [转换成时间格式 datetime]
+ * 1. 不存在，返回当前时间
+ * 2. 如果是时间格式，直接返回
+ * 3. 如果是字符串
+ *    3.1 存在 '000Z' 直接返回 new Date
+ *    3.2 否者将 '-' 替换 '/', 返回 new Date 
  */
 function toDate(date) {
-  return !date ? new Date() : date instanceof Date ? date : typeof date === 'string' ? new Date(date.replace(/-/g, '/')) : new Date(date)
+  return !date ? new Date() : date instanceof Date ? date : typeof date === 'string' ? date.indexOf('000Z') > -1 ? new Date(date) : new Date(date.replace(/-/g, '/')) : new Date(date)
 }
 
 /**
@@ -61,7 +66,7 @@ function toDate(date) {
  */
 function get(date) {
   const dt = toDate(date)
-  let year, month, day, hour, minute, second, week
+  let year, month, day, hour, minute, second, week, timestamp
 
   year = dt.getFullYear()
   month = dt.getMonth() + 1
@@ -70,9 +75,10 @@ function get(date) {
   minute = dt.getMinutes()
   second = dt.getSeconds()
   week = dt.getDay()
+  timestamp = dt.getTime()
 
   return {
-    year, month, day, hour, minute, second, week, date: dt
+    year, month, day, hour, minute, second, week, timestamp, date: dt
   }
 }
 

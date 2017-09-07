@@ -1,0 +1,54 @@
+var units = ["year", "month", "week", "day", "hour", "minute"]
+
+var times = {
+  year: 31557600000, // 1000 ms * 60 s * 60 m * 24 h * 365.25 d
+  month: 2629800000, // 31557600000 ms / 12 m
+  week: 604800000, // 1000 ms * 60 s * 60 m * 24 h * 7 d
+  day: 86400000, // 1000 ms * 60 s * 60 m * 24 h
+  hour: 3600000, // 1000 ms * 60 s * 60 m
+  minute: 60000 // 1000 ms * 60 s
+}
+
+var languages = {
+  year: '年',
+  month: '个月',
+  week: '周',
+  day: '天',
+  hour: '小时',
+  minute: '分钟',
+
+  past: function (vagueTime, unit) {
+    return vagueTime + unit + '前';
+  },
+
+  future: function (vagueTime, unit) {
+    return vagueTime + unit + "后";
+  },
+
+  defaults: {
+    past: '刚刚',
+    future: '马上'
+  }
+}
+
+// 不能使用 for in 语句
+function now(date) {
+  var diff = getDate().getTime() - getDate(date).getTime()
+  var diffTime = Math.abs(diff)
+  var type = diff < 0 ? 'future' : 'past'
+  var i = 0, len = units.length
+  for (; i < len; i++) {
+    var unit = units[i]
+    if (diffTime >= times[unit]) {
+      var vagueTime = Math.floor(diffTime / times[unit])
+      return languages[type](vagueTime, languages[unit])
+      break;
+    }
+  }
+  return languages.defaults[type]
+}
+
+
+module.exports = {
+  now: now
+}

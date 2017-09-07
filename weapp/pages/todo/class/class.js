@@ -6,37 +6,14 @@ Page({
 
   /**
    * 页面的初始数据
+   * class,mode
    */
   data: {
     status: 'loading',
-    classes: [],
-    inbox: [
-      {
-        type: 'today',
-        title: '今天',
-        count: 21,
-        icon: 'calendar',
-        color: ''
-      }, {
-        type: 'expired',
-        title: '已过期',
-        count: 21,
-        icon: 'time',
-        color: 'red'
-      }, {
-        type: 'do',
-        title: '进行中',
-        count: 21,
-        icon: 'waiting',
-        color: 'blue'
-      }, {
-        type: 'done',
-        title: '已完成',
-        count: 21,
-        icon: 'done',
-        color: 'green'
-      }
-    ],
+    archive: {},
+    classList: [],
+    modeList: [],
+    invite: 0,
     posts: {
       status: 0,
       error: '',
@@ -66,17 +43,18 @@ Page({
    */
   onLoad: function (options) {
     const ctx = this
-    TodoClass.getClass().then(res => {
+    TodoClass.getTodoArchive().then(res => {
       console.log(res)
       this.setData({
         status: 'end',
-        classes: res.results
+        archive: res.archive,
+        classList: res.classList.results,
+        modeList: res.modeList
       })
-    }).catch((e, msg) => {
-      console.error(msg)
     })
 
-    TodoClass.getAllTodo().then(res => console.log('getAllTodo : ', res))
+    // 被邀请
+    TodoClass.getFollowCount().then(res => this.setData({invite: res.count}))
 
   },
 

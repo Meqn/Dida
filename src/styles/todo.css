@@ -13,19 +13,22 @@
   text-overflow: ellipsis; }
 
 .todo-calendar {
-  padding: 24rpx 32rpx;
   text-align: center;
   background-color: white;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.07); }
   .todo-calendar .month {
-    margin-bottom: 16rpx;
-    font-size: 15px;
-    color: #1c2438;
-    font-weight: bold; }
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.89);
+    font-weight: bold;
+    background-color: #212121; }
   .todo-calendar .week {
-    font-size: 13px; }
+    padding: 16rpx 0;
+    color: rgba(255, 255, 255, 0.68);
+    background-color: #212121; }
   .todo-calendar .day {
-    color: #80848f; }
+    padding: 24rpx 0;
+    color: #80848f;
+    font-size: 16px; }
     .todo-calendar .day .before {
       color: #bbbec4; }
     .todo-calendar .day .today {
@@ -57,10 +60,10 @@
     font-size: 16px; }
   .todo-scroll .time {
     font-size: 12px; }
-  .todo-scroll .q-cell .done .title, .todo-scroll .q-cell .done .time {
+  .todo-scroll .q-cell.done .title, .todo-scroll .q-cell.done .time {
     color: #bbbec4;
     text-decoration: line-through; }
-  .todo-scroll .q-cell .expired .time {
+  .todo-scroll .q-cell.expired .time {
     color: #ed3f14; }
 
 .todo-class-title {

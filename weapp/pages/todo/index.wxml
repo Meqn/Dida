@@ -1,3 +1,7 @@
+<import src="../includes/page-loading.wxml" />
+<import src="includes/list.wxml" />
+
+<template is="loading" data="{{text: 'Loading...'}}" wx:if="{{status === 'loading'}}" />
 <view class="container">
   <scroll-view class="todo-scroll" enable-back-to-top="true">
 
@@ -6,27 +10,31 @@
           <view class="q-flex__item month">{{calendar.month}}</view>
       </view>
       <view class="q-flex week">
-        <view wx:for="{{calendar.week}}" class="q-flex__item {{item.status}}">{{item.val}}</view>
+        <view wx:for="{{calendar.week}}" wx:key="val+status" class="q-flex__item {{item.status}}">{{item.val}}</view>
       </view>
       <view class="q-flex day">
-        <view wx:for="{{calendar.day}}" class="q-flex__item {{item.status}}">{{item.val}}</view>
+        <view wx:for="{{calendar.day}}" wx:key="val+status" class="q-flex__item {{item.status}}">{{item.val}}</view>
       </view>
     </view>
 
     <view class="q-cell todo-head">
       <view class="q-cell__bd">本周</view>
-      <view class="q-cell__ft">2017/08/15</view>
+      <view class="q-cell__ft">{{dateText[0]}}</view>
     </view>
-    <include src="includes/list.wxml" />
-    <view class="q-cell todo-head">
-      <view class="q-cell__bd">接下来...</view>
-      <view class="q-cell__ft">2017/08/09</view>
-    </view>
-    <include src="includes/list.wxml" />
+    <template is="todos" data="{{todo: todo.week}}" />
+
+    <block wx:if="{{todo.after.length > 0}}">
+      <view class="q-cell todo-head">
+        <view class="q-cell__bd">接下来...</view>
+        <view class="q-cell__ft">{{dateText[1]}}</view>
+      </view>
+      <template is="todos" data="{{todo: todo.after}}" />
+    </block>
+
     <view class="q-cell todo-head">
       <view class="q-cell__bd">已过期</view>
     </view>
-    <include src="includes/list.wxml" />
+    <template is="todos" data="{{todo: todo.expired}}" />
   </scroll-view>
 
   <view class="q-fab-wrap">

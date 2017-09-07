@@ -16,7 +16,8 @@
     "pages/user/register/register",
     "pages/modules/index/index",
     "pages/modules/calendar/index/index",
-    "pages/error/error"
+    "pages/error/error",
+    "pages/demo/message"
   ],
   "window": {
     "navigationBarBackgroundColor": "#212121",

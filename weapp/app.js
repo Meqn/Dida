@@ -11,13 +11,12 @@ App({
     try {
       this.globalData.user = wx.getStorageSync('user') || null
       if (!this.globalData.user) {
-        wx.redirectTo({url: '/pages/index/index'})
+        wx.navigateTo({
+          url: '/pages/index/index'
+        })
       }
     } catch (error) {
-      console.error('getStorageSync error : ', error)
-      wx.redirectTo({
-        url: '/pages/index/index'
-      })
+      console.error(error)
     }
   },
   globalData: {

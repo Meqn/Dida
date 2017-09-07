@@ -2,20 +2,23 @@
 .ellipsis{overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 
 .todo-calendar{
-  padding: 24rpx 32rpx;
+  // padding: 24rpx 32rpx;
   text-align: center;
   background-color: white;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, .07);
 
   .month{
-    margin-bottom: 16rpx;
-    font-size: 15px; color: $color-title; font-weight: bold;
+    font-size: 16px; color: rgba(255, 255, 255, .89); font-weight: bold;
+    background-color: $primarycolor;
   }
   .week{
-    font-size: 13px;
+    padding: 16rpx 0;
+    color: rgba(255, 255, 255, .68);
+    background-color: $primarycolor;
   }
   .day{
-    color: $color-sub;
+    padding: 24rpx 0;
+    color: $color-sub; font-size: 16px;
     
     .before{
       color: $color-disabled;
@@ -65,12 +68,12 @@
     &.do{
       //
     }
-    .done{
+    &.done{
       .title, .time{
         color: $color-disabled; text-decoration: line-through;
       }
     }
-    .expired{
+    &.expired{
       .time{
         color: #ed3f14;
       }

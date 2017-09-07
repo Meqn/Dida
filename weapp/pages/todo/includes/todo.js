@@ -1,14 +1,20 @@
 const app = getApp()
 import Util from '../../../utils/util'
 import Todo from '../../../utils/todo'
-
-
-const postClass = function ({ title, color }, { success, fail }) {
+import Qdate from '../../../libs/date'
+import ModeList from './archive'
+/* 
+try {
   const userId = app.globalData.user.objectId
-  const ACL = Util.setACL({
-    user: [userId]
-  })
-  Todo.addTodoClass({ title, color, owner: userId, ACL }, {
+} catch (error) {
+  wx.navigateTo({url: '/pages/index/index'})
+}
+ */
+/**
+ * 创建 Todo Class
+ */
+const postClass = function ({ title, color }, { success, fail }) {
+  Todo.addTodoClass({ title, color, owner: app.globalData.user.objectId }, {
     success(res) {
       if (res.statusCode === 201) {
         typeof success === 'function' && success(res)
@@ -22,17 +28,17 @@ const postClass = function ({ title, color }, { success, fail }) {
     }
   })
 }
-
+/**
+ * 获取 Todo Class
+ */
 const getClass = function () {
   return new Promise((resolve, reject) => {
     try {
-      const localClass = wx.getStorageSync('todoClass')
+      const localClass = wx.getStorageSync('todoClass') || null
       if (localClass && !localClass.updated) {
         resolve(localClass)
       } else {
-        const where = 'where={"$or":[{"owner":"0"},{"owner":"' + app.globalData.user.objectId + '"}]}'
-        const order = 'order=-orderBy,createdAt'
-        const condition = where + '&' + order
+        const condition = `?where={"$or":[{"owner":"0"},{"owner":"${app.globalData.user.objectId}"}]}&order=-orderBy,createdAt`
         
         Todo.getTodoClass(condition, {
           success(res) {
@@ -64,15 +70,17 @@ const getClass = function () {
     }
   })
 }
-
+/**
+ * 获取所有 Todo
+ */
 const getAllTodo = function () {
   return new Promise((resolve, reject) => {
     try {
-      const localTodo = wx.getStorageSync('todoList')
+      const localTodo = wx.getStorageSync('todoList') || null
       if (localTodo && !localTodo.updated) {
         resolve(localTodo)
       } else {
-        Todo.getTodos('where={"creator":"' + app.globalData.user.objectId + '"}', {
+        Todo.getTodo(`?where={"creator":"${app.globalData.user.objectId}"}&order=endAt,-createAt`, {
           success(res) {
             if (res.statusCode === 200) {
               const result = Object.assign({}, {
@@ -97,7 +105,9 @@ const getAllTodo = function () {
   })
 }
 
-
+/**
+ * 创建 Todo
+ */
 const postTodo = function (data = {}, payload = {}) {
   Todo.addTodo(data, {
     success(res) {
@@ -115,10 +125,125 @@ const postTodo = function (data = {}, payload = {}) {
 }
 
 const editTodo = function (data = {}, payload = {}) {
-  editTodo
+  //
+}
+// 创建 todo分享
+const postTodoFollow = function(todoId) {
+  const request = {
+    follower: app.globalData.user.objectId,
+    todoId: {
+      "__type": "Pointer",
+      "className": "Todo",
+      "objectId": todoId
+    }
+  }
+  return new Promise((resolve, reject) => {
+    Todo.addTodoFollow(request, {
+      success(res) {
+        if (res.statusCode === 201) {
+          resolve(res)
+        } else {
+          reject(res, '列表添加失败')
+          console.error(res)
+        }
+      }, fail(error) {
+        reject(error, '网络繁忙')
+        console.error(error)
+      }
+    })
+  })
 }
 
+// 获取接受邀请Todo总数
+const getFollowCount = function() {
+  return new Promise((resolve, reject) => {
+    try {
+      const localFollow = wx.getStorageSync('todoFollowCount')
+      if (localFollow) {
+        resolve(localFollow)
+      } else {
+        const condition = `?where={"follower":"${app.globalData.user.objectId}"}&count=1&limit=0`
+        Todo.getTodoFollow(condition, {
+          success(res) {
+            if (res.statusCode === 200) {
+              const result = {count: res.data.count}
+              wx.setStorage({key: 'todoFollowCount', data: result})
+              resolve(result)
+            } else {
+              reject(res, '获取列表失败')
+            }
+          },
+          fail(error) {
+            console.error(error)
+            reject(error, '网络繁忙')
+          }
+        })
+      }
+    } catch (error) {
+      reject(error, '获取缓存数据失败')
+    }
+  })
+}
 
+// 归档数量
+const getTodoArchive = function() {
+  let _class = {}
+  let _mode = {}
+  return new Promise((resolve, reject) => {
+    try {
+      const localArchive = wx.getStorageSync('todoArchive') || null
+      const classList = wx.getStorageSync('todoClass') || null
+      const todoList = wx.getStorageSync('todoList') || null
+      if (classList && todoList && localArchive && !localArchive.updated) {
+        resolve({classList, modeList: ModeList.mode, archive: localArchive})
+      } else {
+        Promise.all([getClass(), getAllTodo()]).then(res => {
+          const CL = res[0].results, TL = res[1].results
+          ModeList.mode.reduce((acc, v, k) => {
+            _mode[v.type] = []
+          }, 0)
+          CL.reduce((acc, v, k) => {
+            _class[v.objectId] = []
+          }, 0)
+          TL.reduce((acc, v, k) => {
+            // 分类的数量
+            _class[v.classId].push(v.objectId)
+            // 归档的数量
+            if (v.doneAt) {
+              _mode.done.push(v.objectId)
+            } else {
+              const dt = Qdate.get()
+              const now = dt.timestamp,
+                startAt = new Date(v.startAt.iso).getTime(),
+                endAt = new Date(v.endAt.iso).getTime()
+              const t1 = new Date(dt.year, dt.month - 1, dt.day).getTime()
+              const t2 = t1 + 1000 * 60 * 60 * 24
+
+              if(endAt < now) {
+                _mode.expired.push(v.objectId)
+              } else {
+                if (endAt > now && startAt < now) {
+                  _mode.do.push(v.objectId)
+                }
+                if ((endAt > t1 && endAt < t2) || (startAt > t1 && startAt < t2)) {
+                  _mode.today.push(v.objectId)
+                }
+              }
+            }
+          }, 0)
+
+          let _archive = {class: _class, mode: _mode, updated: false}
+          wx.setStorage({key: 'todoArchive', data: _archive})
+          resolve({classList: res[0], modeList: ModeList.mode, archive: _archive})
+        }).catch(error => {
+          reject(error, '获取列表失败')
+        })
+      }
+    } catch (error) {
+      reject(error, '获取缓存数据失败')
+    }
+  })
+}
 
 
 
@@ -126,5 +251,7 @@ module.exports = {
   postClass,
   getClass,
   getAllTodo,
-  postTodo
+  getTodoArchive,
+  postTodo,
+  getFollowCount
 }
