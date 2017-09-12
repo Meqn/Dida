@@ -1,54 +1,83 @@
-var units = ["year", "month", "week", "day", "hour", "minute"]
 
-var times = {
-  year: 31557600000, // 1000 ms * 60 s * 60 m * 24 h * 365.25 d
-  month: 2629800000, // 31557600000 ms / 12 m
-  week: 604800000, // 1000 ms * 60 s * 60 m * 24 h * 7 d
-  day: 86400000, // 1000 ms * 60 s * 60 m * 24 h
-  hour: 3600000, // 1000 ms * 60 s * 60 m
-  minute: 60000 // 1000 ms * 60 s
+// class 分类下 todo 的数量
+function classCount(id, archive) {
+  return 'Array' === archive.class[id].constructor ? archive.class[id].length : 0
+}
+// mode 归档下 todo 的数量
+function modeCount(type, archive) {
+  return 'Array' === archive.mode[type].constructor ? archive.mode[type].length : 0
 }
 
-var languages = {
-  year: '年',
-  month: '个月',
-  week: '周',
-  day: '天',
-  hour: '小时',
-  minute: '分钟',
 
-  past: function (vagueTime, unit) {
-    return vagueTime + unit + '前';
-  },
+// 获取 todo 当前状态
+function getStatus(todo) {
+  var now = getDate().getTime()
+  var start = getDate(todo.startAt.iso).getTime()
+  var end = getDate(todo.endAt.iso)
 
-  future: function (vagueTime, unit) {
-    return vagueTime + unit + "后";
-  },
-
-  defaults: {
-    past: '刚刚',
-    future: '马上'
+  return todo.doneAt ? {
+    code: 'done',
+    text: '已完成'
+  } : end <= now ? {
+    code: 'expired',
+    text: '已过期'
+  } : start > now ? {
+    code: 'do',
+    text: '未开始'
+  } : {
+    code: 'doing',
+    text: '进行中'
   }
 }
 
-// 不能使用 for in 语句
-function now(date) {
-  var diff = getDate().getTime() - getDate(date).getTime()
-  var diffTime = Math.abs(diff)
-  var type = diff < 0 ? 'future' : 'past'
-  var i = 0, len = units.length
-  for (; i < len; i++) {
-    var unit = units[i]
-    if (diffTime >= times[unit]) {
-      var vagueTime = Math.floor(diffTime / times[unit])
-      return languages[type](vagueTime, languages[unit])
-      break;
+// 获取 todo 优先级
+function getPriority(num) {
+  return ['普通', '重要', '紧急', '重要且紧急'][parseInt(num, 10)] || '普通'
+}
+
+// 获取 todo follower数量
+function getFollowerCount(follower) {
+  return 'Array' === follower.constructor ? follower.length : 1
+}
+
+function getArchiveTodo(list) {
+  var todos = {
+    "do": [],
+    "doing": [],
+    "done": [],
+    "expired": []
+  }
+  var dt = getDate()
+  var now = dt.getTime()
+  var t1 = getDate(dt.getFullYear(), dt.getMonth(), dt.getDate())
+  var t2 = t1 + 1000 * 60 * 60 * 24
+
+  list.reduce(function(acc, v, k) {
+    if (v.doneAt) {
+      todos['done'].push(v)
+    } else {
+      var startAt = getDate(v.startAt.iso).getTime()
+      var endAt = getDate(v.endAt.iso).getTime()
+      if (endAt < now) {
+        todos['expired'].push(v)
+      } else {
+        if (endAt > now && startAt < now) {
+          todos['doing'].push(v)
+        }
+        if ((endAt > t1 && endAt < t2) || (startAt > t1 && startAt < t2)) {
+          todos['today'].push(v)
+        }
+      }
     }
-  }
-  return languages.defaults[type]
+  }, 0)
+  return todos
 }
-
 
 module.exports = {
-  now: now
+  getStatus: getStatus,
+  getPriority: getPriority,
+  getFollowerCount: getFollowerCount,
+  getArchiveTodo: getArchiveTodo,
+  classCount: classCount,
+  modeCount: modeCount
 }

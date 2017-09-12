@@ -49,7 +49,7 @@ image {
 /** 彩色 */
 @font-face {
   font-family: "iconfont";
-  src: url("//at.alicdn.com/t/font_381469_6rgkk780svr0ms4i.ttf?t=1504078578085") format("truetype"); }
+  src: url("//at.alicdn.com/t/font_381469_4o783q8ktilzncdi.ttf?t=1504867297329") format("truetype"); }
 
 /**
   <text class="iconfont icon-apps" />
@@ -1055,8 +1055,9 @@ button[loading][type="primary"], button[type="primary"] {
   height: 112rpx;
   background-color: white;
   box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.06); }
-  .q-bottom .q-bottom-btn {
+  .q-bottom button {
     position: relative;
+    box-sizing: border-box;
     -webkit-box-flex: 1;
     -webkit-flex: 1;
             flex: 1;
@@ -1069,31 +1070,41 @@ button[loading][type="primary"], button[type="primary"] {
     -webkit-box-pack: center;
     -webkit-justify-content: center;
             justify-content: center;
+    padding: 0;
+    margin: 0;
     text-align: center;
-    font-size: 16px; }
-    .q-bottom .q-bottom-btn::after {
+    font-size: 16px;
+    color: #495060;
+    border: none;
+    border-radius: 0;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease; }
+    .q-bottom button::after {
       content: "";
       position: absolute;
       top: 25%;
       bottom: 25%;
-      right: 0;
+      left: calc(100% - 1px);
+      width: auto;
+      height: auto;
+      border-radius: 0;
       border-right: 1rpx solid #dddee1;
       -webkit-transform-origin: 0 50%;
               transform-origin: 0 50%;
       -webkit-transform: scaleX(0.5);
               transform: scaleX(0.5); }
-    .q-bottom .q-bottom-btn:last-child::after {
+    .q-bottom button:last-child::after {
       display: none; }
-    .q-bottom .q-bottom-btn-hover {
+    .q-bottom button.btn-hover {
       background-color: #EFEFEF; }
-    .q-bottom .q-bottom-btn.disabled {
+    .q-bottom button.disabled {
       color: #bbbec4;
       opacity: .79; }
-      .q-bottom .q-bottom-btn.disabled.q-bottom-btn-hover {
+      .q-bottom button.disabled.btn-hover {
         background-color: transparent; }
-      .q-bottom .q-bottom-btn.disabled .icon {
+      .q-bottom button.disabled .icon {
         color: #bbbec4; }
-    .q-bottom .q-bottom-btn .icon {
+    .q-bottom button .icon {
       font-size: 24px;
       margin-right: 18rpx; }
 

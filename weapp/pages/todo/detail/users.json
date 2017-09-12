@@ -1,3 +1,4 @@
 {
-  "navigationBarTitleText": "查看参与人"
+  "navigationBarTitleText": "所有参与者",
+  "disableScroll": true
 }

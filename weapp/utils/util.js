@@ -1,6 +1,6 @@
 import Sign from './lcSign'
 import config from '../config'
- 
+
 
 function formatTime(date) {
   var date = typeof date === 'string' ? new Date(date) : date
@@ -88,6 +88,24 @@ function setACL({ all = ['read'], user = [], role = [] }) {
   return act;
 }
 
+/**
+ * 发送模版消息
+ * @param {[Obj]} data 模版消息数据
+ */
+function sendMessage(data, payload = {}) {
+  wx.request({
+    url: 'https://api.jiabe.com/weapp/notice',
+    method: 'POST',
+    data: data,
+    success(res) {
+      typeof payload.success === 'function' && payload.success(res)
+    },
+    fail(res) {
+      typeof payload.fail === 'function' && payload.fail(res)
+    }
+  })
+}
+
 function setData(options = {}, time = 0, cb = null) {
   if (time > 0) {
     setTimeout(() => {
@@ -98,10 +116,18 @@ function setData(options = {}, time = 0, cb = null) {
     this.setData(options)
   }
 }
+function setError(err, msg) {
+  return {
+    error: err,
+    errMsg: msg
+  }
+}
 
 module.exports = {
   xhr,
   setACL,
   setData,
-  subFloat
+  subFloat,
+  sendMessage,
+  setError
 }

@@ -1,6 +1,6 @@
 const app = getApp()
 import md5 from '../libs/md5.min'
-import { xhr, setACL } from './util'
+import { xhr, setACL, setError } from './util'
 
 // 该微信用户已存在，直接登录
 function autoLogin(username = '', password = '') {
@@ -14,7 +14,7 @@ function autoLogin(username = '', password = '') {
       fail(error) {
         app.globalData.user = null
         wx.removeStorage({ key: 'user' })
-        reject(error)
+        reject(setError(error, '登录失败!'))
       }
     })
   })
@@ -52,15 +52,15 @@ const getWechatUser = function () {
               resolve(user.data)
             },
             fail(error) {
-              reject(error, '获取用户openId失败')
+              reject(setError(error, '获取用户openId失败!'))
             }
           })
         } else {
-          reject(res, '获取用户登录状态失败')
+          reject(setError(error, '获取用户登录状态失败!'))
         }
       },
       fail(error) {
-        reject(error, '微信授权登录失败')
+        reject(setError(error, '微信登录失败!'))
       }
     })
   })
@@ -74,10 +74,8 @@ const getWechatUser = function () {
  */
 const checkUser = function ({ onSign = null, onSuccess = null, onError = null }) {
   getWechatUser().then(data => {
-    getUsers({
-      where: { openId: data['openid'] },
-      keys: 'username,umm'
-    }).then(user => {
+    const condition = `?where={"openId":"${data['openid']}"}&keys=username,umm`
+    getUsers(condition).then(user => {
       console.log('app.globalData.user : ', app.globalData.user)
       if (user.statusCode === 200) {
         let _user = user.data.results
@@ -86,7 +84,7 @@ const checkUser = function ({ onSign = null, onSuccess = null, onError = null })
           autoLogin(_user[0].username, _user[0].umm).then(res => {
             typeof onSuccess === 'function' && onSuccess(res)
           }).catch(error => {
-            typeof onError === 'function' && onError(error, '用户登录失败')
+            typeof onError === 'function' && onError(error)
           })
         } else {
           // 注册
@@ -100,10 +98,10 @@ const checkUser = function ({ onSign = null, onSuccess = null, onError = null })
         }
       }
     }).catch(error => {
-      typeof onError === 'function' && onError(error, '获取用户信息失败')
+      typeof onError === 'function' && onError(error)
     })
-  }).catch((error, errmsg) => {
-    typeof onError === 'function' && onError(error, errmsg)
+  }).catch((error) => {
+    typeof onError === 'function' && onError(error)
   })
 }
 
@@ -115,32 +113,26 @@ const getUserInfo = function () {
         resolve(res)
       },
       fail(error) {
-        reject(error)
+        reject(setError(error, '微信信息授权失败!'))
       }
     })
   })
 }
 
 /**
- * [获取符合条件的所有用户 (masterKey 查询)]
+ * 获取符合条件的所有用户
  * @param  {[string]} where     [查询条件]
- * @param  {[string]} keys      [返回字段]
  */
-const getUsers = function ({ where, keys }) {
-  let _where = (where && typeof where === 'object') ? '?where=' + encodeURIComponent(JSON.stringify(where)) : ''
-  let _keys = (keys && typeof keys === 'string') ? (_where ? '&' : '?') + 'keys=' + encodeURIComponent(keys) : ''
-  console.log('/users' + _where + _keys)
+const getUsers = function (condition) {
   return new Promise((resolve, reject) => {
     xhr({
-      url: '/users' + _where + _keys,
+      url: '/users' + condition,
       lcSignType: 'master',
-      success: function (res) {
-        console.log('获取所有用户：', res)
+      success(res) {
         resolve(res)
       },
-      fail: function (error) {
-        console.error('获取所有用户：', error)
-        reject(error)
+      fail(error) {
+        reject(setError(error, '获取用户失败'))
       }
     })
   })

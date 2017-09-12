@@ -23,12 +23,12 @@
     </view>
     <template is="todos" data="{{todo: todo.week}}" />
 
-    <block wx:if="{{todo.after.length > 0}}">
+    <block wx:if="{{todo.next.length > 0}}">
       <view class="q-cell todo-head">
         <view class="q-cell__bd">接下来...</view>
         <view class="q-cell__ft">{{dateText[1]}}</view>
       </view>
-      <template is="todos" data="{{todo: todo.after}}" />
+      <template is="todos" data="{{todo: todo.next}}" />
     </block>
 
     <view class="q-cell todo-head">

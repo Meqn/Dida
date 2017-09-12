@@ -32,36 +32,22 @@ Page({
   },
   onSend(e) {
     const ctx = this
-    // return console.log(e, e.detail.formId)
-
 
     let postData = {
       "touser": app.globalData.user.openId,
-      "template_id": "rkAZZ-EzCyRIuz5YvlYWl7AcqkhAp2PqgxUQ3RbX-vI",
-      "page": "/pages/todo/index",
+      "template_id": "f-MLtxrupqo2xhGidxPjlD5-9o7MQ6mY_KDLV_eqFHc",
+      "page": '/pages/todo/index',
       "form_id": e.detail.formId,
       "data": {
         "keyword1": {
-          "value": "2015年01月05日",
+          "value": '是短发阿水发生的粉；离开时地方撒地方发 撒地方撒地方撒地方撒地方啊',
           "color": "#173177"
         },
         "keyword2": {
-          "value": "今天开始或结束的事情",
+          "value": new Date('2017/09/10').format('yyyy/MM/dd 周wCN hh:mm')
         },
         "keyword3": {
-          "value": "粤海喜来登酒店",
-        },
-        "keyword4": {
-          "value": "广州市天河区天河路208号",
-        },
-        "keyword5": {
-          "value": "广州市天河区天河路208号",
-        },
-        "keyword6": {
-          "value": "广州市天河区天河路208号",
-        },
-        "keyword7": {
-          "value": "广州市天河区天河路208号",
+          "value": '该任务已完成✅，请关闭'
         }
       },
       "emphasis_keyword": ""

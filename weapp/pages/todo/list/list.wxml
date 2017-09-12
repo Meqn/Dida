@@ -1,25 +1,33 @@
+<import src="../includes/page-loading.wxml" />
+<import src="../includes/list.wxml" />
+<wxs src="../includes/todo.wxs" module="AC" />
+
+<template is="loading" data="{{text: 'Loading...'}}" wx:if="{{status === 'loading'}}" />
+
 <view class="container">
   <scroll-view class="todo-scroll" enable-back-to-top="true">
-    <view class="q-cell todo-head">
-      <view class="q-cell__bd">进行中</view>
-    </view>
-    <include src="../includes/list.wxml" />
-    <view class="q-cell todo-head">
-      <view class="q-cell__bd">已过期</view>
-    </view>
-    <include src="../includes/list.wxml" />
-    <view class="q-cell todo-head">
-      <view class="q-cell__bd">已完成</view>
-    </view>
-    <include src="../includes/list.wxml" />
+    <block wx:if="{{todoType === 'class' || todoType === 'invite'}}">
+      <view class="q-cell todo-head">
+        <view class="q-cell__bd">进行中</view>
+      </view>
+      <template is="todos" data="{{todo: todoList}}" />
+      <view class="q-cell todo-head">
+        <view class="q-cell__bd">已过期</view>
+      </view>
+      <include src="../includes/list.wxml" />
+      <view class="q-cell todo-head">
+        <view class="q-cell__bd">已完成</view>
+      </view>
+      <include src="../includes/list.wxml" />
+    </block>
+    <block wx:if="{{todoType === 'mode'}}">
+      <template is="todos" data="{{todo: todoList}}" />
+    </block>
   </scroll-view>
 
   <view class="q-fab-wrap">
-    <navigator class="q-fab" url="/pages/todo/create/index">
+    <navigator class="q-fab" url="/pages/todo/create/create">
       <text class="icon icon-add" />
-    </navigator>
-    <navigator class="q-fab" url="/pages/todo/class/index">
-      <text class="icon icon-sort" />
     </navigator>
   </view>
 </view>

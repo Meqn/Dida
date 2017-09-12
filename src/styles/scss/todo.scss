@@ -68,6 +68,9 @@
     &.do{
       //
     }
+    &.doing{
+      //
+    }
     &.done{
       .title, .time{
         color: $color-disabled; text-decoration: line-through;

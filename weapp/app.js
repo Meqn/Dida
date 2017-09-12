@@ -6,7 +6,7 @@ App({
         logs.unshift(Date.now())
         wx.setStorageSync('logs', logs)
      */
-
+    
     console.log('注册小程序 ......')
     try {
       this.globalData.user = wx.getStorageSync('user') || null
@@ -22,6 +22,7 @@ App({
   globalData: {
     user: null,
     system: {},
-    temp: {}
+    temp: {},
+    todo: {}
   }
 })

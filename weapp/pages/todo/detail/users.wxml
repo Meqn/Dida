@@ -1,41 +1,33 @@
-<view class="container">
+<view class="container" style="padding-bottom:56px;">
   <view class="q-cells q-cells--avatar">
-    <view class="q-cell q-cell-swipe" wx:for="{{users}}">
+    <view wx:for="{{users}}" class="q-cell q-cell-swipe" wx:key="objectId" data-index="{{index}}" bind:touchstart="onTouchStart" bind:touchend="onTouchEnd">
       <view class="q-cell__bd {{item.isMove ? 'swiped' : ''}}">
         <view class="q-cell" hover-class="q-cell-hover">
           <view class="q-cell__hd">
-            <image mode="aspectFill" src="{{item.avatar}}" />
+            <image mode="aspectFill" src="{{item.avatarUrl}}" />
           </view>
           <view class="q-cell__bd">
-            <view class="q-cell__text">{{item.name}}</view>
-            <view class="q-cell__text--sub">{{item.badge}}</view>
+            <view class="q-cell__text">{{item.nickName}}</view>
+            <view class="q-cell__text--sub">{{item.signature === '0' ? '这个人很懒，什么事也不做' : item.signature}}</view>
           </view>
-          <view class="q-cell__ft">已接受</view>
+          <view class="q-cell__ft">{{index === 0 ? '发起人' : '已接受'}}</view>
         </view>
       </view>
       <view class="q-cell__ft">
-        <view class="q-btn q-btn--error" hover-class="q-btn-hover">删除</view>
+        <block wx:if="{{isCreator}}">
+            <view class="q-btn q-btn--info" hover-class="q-btn-hover" wx:if="{{index === 0}}">主页</view>
+            <view class="q-btn q-btn--error" hover-class="q-btn-hover" wx:else>删除</view>
+        </block>
+        <block wx:else>
+            <view class="q-btn q-btn--info" hover-class="q-btn-hover">主页</view>
+        </block>
       </view>
     </view>
-
-    <view class="q-cell q-cell-swipe">
-        <view class="q-cell__bd">
-          <view class="q-cell" hover-class="q-cell-hover">
-            <view class="q-cell__hd">
-              <image mode="aspectFill" src="http://static.mengqing.org/src/pic_360_360@1.jpg" />
-            </view>
-            <view class="q-cell__bd">
-              <view class="q-cell__text">Morven</view>
-              <view class="q-cell__text--sub">月亮高高云中藏</view>
-            </view>
-            <view class="q-cell__ft">已接受</view>
-          </view>
-        </view>
-        <view class="q-cell__ft">
-          <view class="q-btn q-btn--error" hover-class="q-btn-hover">删除</view>
-        </view>
-      </view>
   </view>
-
-
+ 
+  <view class="q-bottom" wx:if="{{!isCreator && isFollow}}">
+    <button plain hover-class="btn-hover">
+      <text class="icon icon-end blue" /><text>退出</text>
+    </button>
+  </view>
 </view>

@@ -1,5 +1,6 @@
 import Qdate from '../../libs/date'
 import Todo from './includes/todo'
+import Archive from './includes/archive'
 
 Page({
 
@@ -16,7 +17,7 @@ Page({
     todo: {
       all: [],
       week: [],
-      after: [],
+      next: [],
       expired: []
     },
     dateText: [new Date().format('yyyy/MM/dd'), Qdate.weekDay(8).format('yyyy/MM/dd')]
@@ -37,36 +38,32 @@ Page({
       })
     })
 
-    console.log(Qdate.toDate('2017-09-01T09:37:00.000Z'), Qdate.get('2017-09-01T09:37:00.000Z').timestamp)
-    console.log('本周一：', Qdate.weekDay(1).format('yyyy/MM/dd'), '下周一 ：', Qdate.weekDay(8))
-
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
-
+  onReady () {
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
+  onShow () {
     console.log('page show ...')
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function () {
+  onHide () {
     console.log('page hide ...')
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {
+  onUnload () {
     console.log('page unload ...')
   },
 
@@ -90,9 +87,10 @@ Page({
   onShareAppMessage: function () {
 
   },
-  todoLink() {
+  todoLink(e) {
+    const ds = e.currentTarget.dataset
     wx.navigateTo({
-      url: '/pages/todo/detail/detail'
+      url: `/pages/todo/detail/detail?todoId=${ds.todoid}&classId=${ds.classid}`
     })
   },
   // 获取日历的周
@@ -130,8 +128,35 @@ Page({
       calendar: { month, week, day: context.getdate() }
     })
   },
+  /* getTodo(cb) {
+    const _todos = this.data.todo
+    const _weekTodos = {
+      do: [],
+      doing: [],
+      done: [],
+      expired: []
+    }
+    const now = new Date().getTime(), weekStart = new Date(Qdate.weekDay(1).format('yyyy/MM/dd')).getTime(), weekEnd = new Date(Qdate.weekDay(8).format('yyyy/MM/dd')).getTime()
+    Todo.getAllTodo().then(res => {
+      _todos.all = res.results
+      res.results.reduce((acc, v, k) => {
+        let _week = Archive.ArchiveWeek(v, {now, weekStart, weekEnd})
+        let _state = Archive.ArchiveState(v)
+
+        if (_week) {
+          if (_week === 'week') {
+            _weekTodos[_state].push(v)
+          } else {
+            _todos[_week].push(v)
+          }
+        }
+      }, 0)
+      _todos.week = [..._weekTodos['doing'], ..._weekTodos['do'], ..._weekTodos['expired'], ..._weekTodos['done']]
+      typeof cb === 'function' && cb(_todos)
+    })
+  }, */
   getTodo(cb) {
-    let all = [], week = [], after = [], expired = []
+    let all = [], week = [], next = [], expired = []
     let weekList = {
       do: [],
       done: [],
@@ -150,7 +175,7 @@ Page({
         const end = Qdate.get(v.endAt.iso).timestamp
 
         // 本周
-        if (start < nextweek || end < nextweek) {
+        if ((start < nextweek || end < nextweek) && end > thisweek) {
           // week.push(v)
           if (v.doneAt) {
             weekList.done.push(v)
@@ -164,7 +189,7 @@ Page({
         }
         // 下周及以后
         if (start >= nextweek) {
-          after.push(v)
+          next.push(v)
         }
         // 已过期
         if (now > end) {
@@ -172,8 +197,8 @@ Page({
         }
       }, 0)
 
-      week = [...weekList.do, ...weekList.expired, ...weekList.expired]
-      typeof cb === 'function' && cb({all, week, after, expired})
+      week = [...weekList.do, ...weekList.expired, ...weekList.done]
+      typeof cb === 'function' && cb({all, week, next, expired})
     })
   }
 })

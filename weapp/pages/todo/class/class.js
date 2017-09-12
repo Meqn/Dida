@@ -44,7 +44,6 @@ Page({
   onLoad: function (options) {
     const ctx = this
     TodoClass.getTodoArchive().then(res => {
-      console.log(res)
       this.setData({
         status: 'end',
         archive: res.archive,
@@ -71,13 +70,6 @@ Page({
   onShow: function () {
 
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
   // 显示创建列表窗口
   createClass() {
     this.setData({
@@ -102,12 +94,11 @@ Page({
     if (!title) return this.setData({'posts.error': '名称不能为空'})
     if (app.globalData.user.level < 20) {
       this.modalClose()
-      wx.showModal({
+      return wx.showModal({
         title: '',
         content: '权限不足,无法创建',
         showCancel: false,
       })
-      return
     }
 
     this.setData({

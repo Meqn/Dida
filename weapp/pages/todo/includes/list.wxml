@@ -1,7 +1,8 @@
-<wxs src="todo.wxs" module="Todo"></wxs>
+<wxs src="todo.wxs" module="Todo" />
+<wxs src="now.wxs" module="Now" />
 
 <template name="todos">
-<view class="q-cell q-cell--hd q-cell-swipe" wx:for="{{todo}}" wx:key="objectId" bind:tap="todoLink">
+<view wx:for="{{todo}}" class="q-cell q-cell--hd q-cell-swipe {{Todo.getStatus(item).code}}" wx:key="objectId" bind:tap="todoLink" data-todoid="{{item.objectId}}" data-classid="{{item.classId}}">
   <view class="q-cell__bd">
     <view class="q-cell" hover-class="q-cell-hover">
       <view class="line bg-{{item.color}}"></view>
@@ -9,7 +10,7 @@
         <label class="q-radio p{{item.priority}}"><icon type="success_no_circle" size="12" color="#212121" /></label>
       </view>
       <view class="q-cell__bd title">{{item.title}}</view>
-      <view class="q-cell__ft">{{Todo.now(item.endAt.iso)}}</view>
+      <view class="q-cell__ft time">{{Now(item.endAt.iso)}}</view>
     </view>
   </view>
   <view class="q-cell__ft">

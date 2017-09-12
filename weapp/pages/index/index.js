@@ -62,7 +62,7 @@ Page({
     }
   },
   onLoad: function () {
-    const context = this
+    const ctx = this
     const USER = app.globalData.user
     // 用户登录/注册
     if (USER && USER['sessionToken']) {
@@ -70,19 +70,15 @@ Page({
     } else {
       checkUser({
         onSign() {
-          wx.setNavigationBarTitle({
-            title: '注册',
-          })
-          context.setData({
-            status: 'register'
-          })
+          wx.setNavigationBarTitle({title: '注册'})
+          ctx.setData({status: 'register'})
         },
         onSuccess(data) {
-          logged.call(context, data)
+          logged.call(ctx, data)
         },
-        onError(error, errmsg) {
+        onError(error) {
           // ❌ 错误提示信息待完善
-          console.error(errmsg, error)
+          console.error(error)
         }
       })
     }
@@ -122,15 +118,12 @@ Page({
     timer = null
   },
   onShareAppMessage(res) {
-    if (res.from === 'button') {
+    /* if (res.from === 'button') {
       console.log('来自页面内的转发 ： ', res)
-    }
+    } */
     return {
       title: '人生过半，未来可期?',
-      path: '/pages/index/index',
-      success(data) {
-        console.log('分享成功：', data)
-      }
+      path: '/pages/index/index'
     }
   },
   // 设置出生死亡时间

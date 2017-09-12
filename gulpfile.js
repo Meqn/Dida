@@ -27,7 +27,7 @@ gulp.task('sass', () => {
     .pipe(connect.reload());
 })
 gulp.task('watch', () => {
-  gulp.watch('src/**', ['sass']);
+  gulp.watch('src/styles/scss/**', ['sass']);
 })
 gulp.task('server', function () {
   argv.p = argv.p || 3016;

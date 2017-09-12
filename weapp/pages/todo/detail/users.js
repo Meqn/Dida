@@ -1,29 +1,26 @@
+const app = getApp()
 import Swipe from '../../../libs/swipe'
 
+let TouchXY = {x1: 0, x2: 0, y1: 0, y2: 0}
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-    users: []
+    users: [],
+    isCreator: false,
+    isFollow: false
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-    let lists = []
-    for (var i = 0; i < 8; i++) {
-      lists[i] = {
-        avatar: 'http://static.mengqing.org/src/pic_360_360@1.jpg',
-        name: 'Morven',
-        badge: '月亮高高云中藏',
-        isMove: false
-      }
+  onLoad: function (opts) {
+    if (!opts.todoId) {
+      return wx.showModal({
+        title: '',
+        content: '访问路径错误',
+        showCancel: false,
+        complete() {
+          wx.switchTab({ url: '/pages/todo/index' })
+        }
+      })
     }
-    lists[2].isMove = true
-    this.setData({users: lists})
+    this.getUser(opts.todoId)
   },
 
   /**
@@ -39,50 +36,66 @@ Page({
   onShow: function () {
   
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
-  },
   onTouchStart(e) {
-    console.log('onTouchStart : ', e)
-    let target = e.changedTouches[0]
-    touchXY.x1 = target.pageX
-    touchXY.y1 = target.pageY
+    let eTouch = e.changedTouches[0]
+    TouchXY.x1 = eTouch.pageX
+    TouchXY.y1 = eTouch.pageY
+
+    this.data.users.reduce((acc, v, k) => {
+      if (v.isMove) v.isMove = false
+    }, 0);
+    setTimeout(() => {
+      this.setData({users: this.data.users})
+    }, 100)
   },
   onTouchMove(e) {
     console.log('onTouchMove : ', e)
   },
   onTouchEnd(e) {
+    const ctx = this
+    const index = e.currentTarget.dataset.index
+    let eTouch = e.changedTouches[0]
+    TouchXY.x2 = eTouch.pageX
+    TouchXY.y2 = eTouch.pageY
+
+    Swipe(TouchXY, {
+      swipeLeft(e) {
+        let params = {}
+        params['users['+ index +'].isMove'] = true
+        ctx.setData(params)
+      }
+    })
+  },
+  getUser(id) {
+    if (app.globalData.todo[id]) {
+      const _todo = app.globalData.todo[id]
+      const me = app.globalData.user['objectId']
+      _todo['follower'].reduce((acc, v, k) => {
+        v.isMove = false
+        if (v.objectId === me) this.data.isFollow = true
+      }, 0)
+      this.setData({
+        users: _todo['follower'],
+        isFollow: this.data.isFollow,
+        isCreator: _todo.creatorId === me
+      })
+    } else {
+      wx.redirectTo({
+        url: '/pages/todo/detail/detail?todoId='+id
+      })
+    }
+  },
+  quit(e) {
+    wx.showModal({
+      title: '',
+      content: '确定要退出？',
+      success(res) {
+        if (res.confirm) {
+          console.log('已经退出')
+        } else {
+          console.log('不要退出')
+        }
+      }
+    })
   }
 })

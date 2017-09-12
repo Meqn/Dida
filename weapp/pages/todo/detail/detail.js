@@ -1,18 +1,8 @@
+const app = getApp()
+import {COLOR} from '../includes/const'
+import Todo from '../includes/todo'
 
-const COLOR = {
-  red: '#f44336',
-  orange: '#ff9800',
-  yellow: '#ffd422',
-  green: '#04BE02',
-  blue: '#2196f3',
-  indigo: '#3f51b5',
-  purple: '#9c27b0',
-  pink: '#e91e63',
-  cyan: '#00bcd4',
-  teal: '#009688',
-  brown: '#795548',
-  black: '#212121'
-}
+let todoId
 
 Page({
 
@@ -20,79 +10,128 @@ Page({
    * 页面的初始数据
    */
   data: {
-  
+    status: 'loading',
+    bgColor: 'blue',
+    todo: {   // 防止报错，给默认值
+      creator: { avatarUrl: 'http://static.mengqing.org/dot.png' },
+      follower: []
+    },
+    isCreator: false,
+    isFollow: false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-    setTimeout(this.setBarColor, 250);
-  },
+  onLoad: function (opts) {
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
+    if (!opts.todoId) {
+      return wx.showModal({
+        title: '',
+        content: '访问路径错误',
+        showCancel: false,
+        confirmColor: COLOR.blue,
+        complete() {
+          wx.switchTab({ url: '/pages/todo/index' })
+        }
+      })
+    }
+    todoId = opts.todoId
+    this.setBarColor(opts.classId)
+    this.getTodoDetail(todoId)
+  },
   onReady: function () {
-    // setTimeout(this.setBarColor, 250);
   },
-  setBarColor() {
-    wx.setNavigationBarColor({
-      frontColor: '#ffffff',
-      backgroundColor: COLOR.blue,
-      success(e) {
-        console.log('success : ', e)
-      },
-      fail(e) {
-        console.log('fail : ', e)
-      }
-    })
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow: function () {
-  
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
+  onShareAppMessage () {
+    return {
+      title: `好友 ${app.globalData.user.nickName} 邀请你加入：`,
+      path: `/pages/todo/detail/detail?todoId=${todoId}&classId=${this.data.todo.classId}`
+    }
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
-  },
-  allUsers() {
-    wx.navigateTo({
-      url: './users?todoId='
+  onJoin(e) {
+    let currentTodo = app.globalData.todo[todoId]
+    Todo.postTodoFollow(todoId).then(res => {
+      currentTodo.updated = true
+      currentTodo.follower.push(app.globalData.user)
+      this.setData({
+        todo: currentTodo,
+        isFollow: true
+      })
+      Todo.todoMessage(currentTodo, e.detail.formId)
+    }).catch(err => {
+      wx.showModal({
+        title: '',
+        content: '加入失败',
+        showCancel: false,
+        confirmColor: COLOR.blue,
+        complete() {
+          wx.switchTab({ url: '/pages/todo/index' })
+        }
+      })
     })
+  },
+  setBarColor(id) {
+    if (!id) {
+      wx.setNavigationBarColor({
+        frontColor: '#ffffff',
+        backgroundColor: COLOR.blue
+      })
+    }
+    Todo.getClass().then(res => {
+      let bgColor = 'blue'
+      res.results.reduce((acc, v, k) => {
+        if (v['objectId'] === id) {
+          return bgColor = v.color
+        }
+      }, 0)
+      wx.setNavigationBarColor({
+        frontColor: '#ffffff',
+        backgroundColor: COLOR[bgColor]
+      })
+      this.setData({ bgColor })
+    })
+  },
+  getTodoDetail(id) {
+    const localTodo = app.globalData.todo[id]
+    const me = app.globalData.user['objectId']
+    let isFollow = false
+    if (localTodo && !localTodo.updated) {
+      this.setData({
+        status: 'end',
+        todo: localTodo,
+        isCreator: localTodo.creatorId === me
+      })
+    } else {
+      Todo.getTodo(id).then(res => {
+        const result = Object.assign({}, res, {
+          startTime: new Date(res.startAt.iso).format('M月d 周wCN hh:mm'),
+          endTime: new Date(res.endAt.iso).format('M月d 周wCN hh:mm'),
+          follower: [res.creator],
+          updated: false
+        })
+        this.setData({
+          status: 'end',
+          todo: result,
+          isCreator: res.creatorId === me
+        })
+        Todo.getTodoFollow(id).then(user => {
+          if (user.length > 0) {
+            user.reduce((acc, v, k) => {
+              result.follower.push(v.follower)
+              if(v.followerId === me) isFollow = true
+            }, 0)
+            this.setData({
+              todo: result,
+              isFollow: isFollow
+            })
+          }
+          app.globalData.todo[id] = result
+        })
+      }).catch((err, msg) => {
+        console.log(err, msg)
+      })
+    } 
   }
 })

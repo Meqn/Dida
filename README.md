@@ -70,7 +70,15 @@ const PWD = upwd.slice(0, 20)
  － 1) 过期不能修改
 
 
+## Todo 归档
 
+```javascript
+/*
+ * 分类: classId
+ * 状态分类: 未开始:do | 进行中:doine | 已完成:done | 已过期:expired
+ * 时间分类: 今天:today | 本周:week | 以后:next
+ */
+ ```
 
 
 

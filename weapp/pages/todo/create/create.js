@@ -130,7 +130,12 @@ Page({
     if (startAt > endAt) return this.setData({ 'post.error': '还没开始就结束啦？' })
 
     let request = {
-      creator: app.globalData.user.objectId,
+      creatorId: app.globalData.user.objectId,
+      creator: {
+        "__type": "Pointer",
+        "className": "_User",
+        "objectId": app.globalData.user.objectId
+      },
       classId: postData.class.id,
       title,
       content,

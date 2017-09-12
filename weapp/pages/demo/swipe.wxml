@@ -23,10 +23,10 @@
 
 
 <view class="q-fab-wrap">
-  <navigator class="q-fab" url="/pages/todo/create/index">
+  <navigator class="q-fab" url="/pages/todo/create/create">
     <text class="icon icon-add" />
   </navigator>
-  <navigator class="q-fab" url="/pages/todo/class/index">
+  <navigator class="q-fab" url="/pages/todo/class/class">
     <text class="icon icon-sort" />
   </navigator>
 </view>
