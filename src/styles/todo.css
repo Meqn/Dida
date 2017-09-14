@@ -26,13 +26,28 @@
     color: rgba(255, 255, 255, 0.68);
     background-color: #212121; }
   .todo-calendar .day {
+    position: relative;
     padding: 24rpx 0;
     color: #80848f;
     font-size: 16px; }
+    .todo-calendar .day view {
+      position: relative; }
     .todo-calendar .day .before {
       color: #bbbec4; }
     .todo-calendar .day .today {
       color: #2196f3; }
+    .todo-calendar .day .active::before {
+      content: " ";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate3d(-50%, -40%, 0) rotate(-45deg);
+              transform: translate3d(-50%, -40%, 0) rotate(-45deg);
+      width: 50rpx;
+      height: 36rpx;
+      border-radius: 50%;
+      border: 1px solid #ffd422;
+      opacity: .5; }
 
 .todo-scroll {
   width: 100%;

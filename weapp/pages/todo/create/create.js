@@ -1,7 +1,8 @@
 const app = getApp()
+import Util from '../../../utils/util'
 import Qdate from '../../../libs/date'
 import Handle from './handle'
-import { postTodo } from '../includes/todo'
+import Todo from '../includes/todo'
 
 let defaultTodoClass = {
   name: '生活',
@@ -114,27 +115,29 @@ Page({
     param[key] = e.detail.value
     this.setData(param)
   },
-  onSubmit() {
+  onSubmit(e) {
     this.setData({ 'post.error': '' })
     const context = this
     const postData = this.data.post
+    const userId = app.globalData.user.objectId
 
     const title = postData.title.trim()
     if (!title) return this.setData({ 'post.error': '你还没写要干啥呢!' })
-    if (title.length < 6) return this.setData({ 'post.error': '多写几个字会死呀! o(╯□╰)o' })
+    if (title.length < 5) return this.setData({ 'post.error': '多写几个字会死呀! o(╯□╰)o' })
 
     const content = postData.content.trim()
     const priority = Handle.getPriority(postData.important, postData.urgent)
+    const now = new Date().getTime()
     const startAt = new Date(`${postData.dateTime.date.val[postData.dateTime.start.index]} ${postData.dateTime.start.time}`).getTime()
     const endAt = new Date(`${postData.dateTime.date.val[postData.dateTime.end.index]} ${postData.dateTime.end.time}`).getTime()
-    if (startAt > endAt) return this.setData({ 'post.error': '还没开始就结束啦？' })
+    if (startAt > endAt || (endAt - now) < 1000*60*60) return this.setData({ 'post.error': '还没开始就结束啦？' })
 
     let request = {
-      creatorId: app.globalData.user.objectId,
+      creatorId: userId,
       creator: {
         "__type": "Pointer",
         "className": "_User",
-        "objectId": app.globalData.user.objectId
+        "objectId": userId
       },
       classId: postData.class.id,
       title,
@@ -153,17 +156,19 @@ Page({
     }
     console.log('request : ', request)
 
-    this.setData({
-      'post.status': 1
-    })
-    postTodo(request, {
-      success() {
-        context.setData({
-          'post.status': 0,
-          'post.error': ''
-        })
-      },
-      fail() {}
+    this.setData({'post.status': 1})
+    Todo.postTodo(request).then(res => {
+      console.log('postTodo : ', res)
+
+      this.setData({
+        'post.status': 0,
+        'post.error': ''
+      })
+      Util.storageUpdate('todoList')    // 更新本地缓存
+      if (res.remind) {
+        Todo.TodoMessage(res, e.detail.formId, 'create')    // 发通知
+      }
+      wx.redirectTo({url: `/pages/todo/detail/detail?todoId=${res.objectId}&classId=${res.classId}`})
     })
   }
 })

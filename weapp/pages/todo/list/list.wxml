@@ -1,27 +1,25 @@
 <import src="../includes/page-loading.wxml" />
 <import src="../includes/list.wxml" />
-<wxs src="../includes/todo.wxs" module="AC" />
 
 <template is="loading" data="{{text: 'Loading...'}}" wx:if="{{status === 'loading'}}" />
 
 <view class="container">
   <scroll-view class="todo-scroll" enable-back-to-top="true">
-    <block wx:if="{{todoType === 'class' || todoType === 'invite'}}">
-      <view class="q-cell todo-head">
-        <view class="q-cell__bd">进行中</view>
-      </view>
-      <template is="todos" data="{{todo: todoList}}" />
-      <view class="q-cell todo-head">
-        <view class="q-cell__bd">已过期</view>
-      </view>
-      <include src="../includes/list.wxml" />
-      <view class="q-cell todo-head">
-        <view class="q-cell__bd">已完成</view>
-      </view>
-      <include src="../includes/list.wxml" />
+    <block wx:if="{{data.count > 0}}">
+      <block wx:if="{{data.type === 'class' || data.type === 'invite'}}">
+        <block wx:for="{{data.state}}" wx:if="{{data.todo[item.type].length > 0}}">
+          <view class="q-cell todo-head">
+            <view class="q-cell__bd">{{item.title}}</view>
+          </view>
+          <template is="todos" data="{{todo: data.todo[item.type], type: data.type}}" />
+        </block>
+      </block>
+      <block wx:if="{{data.type === 'mode'}}">
+        <template is="todos" data="{{todo: data.todo, type: data.type}}" />
+      </block>
     </block>
-    <block wx:if="{{todoType === 'mode'}}">
-      <template is="todos" data="{{todo: todoList}}" />
+    <block wx:else>
+      <view class="q-loadmore q-loadmore-line"><text class="text">暂无数据</text></view>
     </block>
   </scroll-view>
 

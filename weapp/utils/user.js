@@ -24,7 +24,7 @@ function autoLogin(username = '', password = '') {
  * @param {*} data 数据
  */
 const saveLocalUser = function (data) {
-  app.globalData.user = Object.assign({}, data)
+  app.globalData.user = Object.assign({}, data, {updated: false})
   wx.setStorage({
     key: 'user',
     data: app.globalData.user

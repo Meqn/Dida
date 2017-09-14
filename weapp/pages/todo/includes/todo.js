@@ -2,7 +2,8 @@ const app = getApp()
 import Util from '../../../utils/util'
 import Todo from '../../../utils/todo'
 import Qdate from '../../../libs/date'
-import {ARCHIVE} from './const'
+import { ALL, ARCHIVE } from './const'
+import { ArchiveState, ArchiveDate } from './archive'
 /* 
 try {
   const userId = app.globalData.user.objectId
@@ -18,10 +19,10 @@ try {
  * @param {[Obj]} todo todo信息
  * @param {[Str]} formId 模版消息授权码
  */
-const todoMessage = function (todo, formId) {
+const TodoMessage = function (todo, formId, type = 'share') {
   let postData = {
     "touser": app.globalData.user.openId,
-    "template_id": "Ieb0x6A5o_mvuw6qfkw9fBl7Etjs3_Pc7d_U-G2HtiY",
+    "template_id": type === 'create' ? "Ieb0x6A5o_mvuw6qfkw9fBl7Etjs3_Pc7d_U-G2HtiY" : "PAnr7AwjZOBLieNAQb1t2g2wN9G_X0UZHTGbPIH9T9Y",
     "page": `/pages/todo/detail/detail?todoId=${todo.objectId}&classId=${todo.classId}`,
     "form_id": formId,
     "data": {
@@ -36,7 +37,7 @@ const todoMessage = function (todo, formId) {
         "value": new Date(todo.startAt.iso).format('M月d日 hh:mm') + ' - ' + new Date(todo.endAt.iso).format('M月d日 hh:mm')
       },
       "keyword4": {
-        "value": todo.creator.nickName
+        "value": type === 'create' ? app.globalData.user.nickName : todo.creator.nickName
       },
       "keyword5": {
         "value": new Date(todo.createdAt).format('yyyy/MM/dd 周wCN hh:mm')
@@ -156,19 +157,20 @@ const getAllTodo = function () {
 /**
  * 创建 Todo
  */
-const postTodo = function (data = {}, payload = {}) {
-  Todo.addTodo(data, {
-    success(res) {
-      console.log(res)
-      if (res.statusCode === 201) {
-        typeof payload.success === 'function' && payload.success(res)
-      } else {
-        typeof payload.fail === 'function' && payload.fail(error, '清单创建失败')
+const postTodo = function (data = {}) {
+  return new Promise((resolve, reject) => {
+    Todo.addTodo(data, {
+      success(res) {
+        if (res.statusCode === 201) {
+          resolve(res.data)
+        } else {
+          reject(Util.setError(res, '清单创建失败'))
+        }
+      },
+      fail(error) {
+        reject(Util.setError(error, '清单创建失败'))
       }
-    }, fail(error) {
-      console.error(error)
-      typeof payload.fail === 'function' && payload.fail(error, '网络繁忙')
-    }
+    })
   })
 }
 
@@ -193,25 +195,49 @@ const getTodo = function (id) {
   })
 }
 
-const editTodo = function (data = {}, payload = {}) {
-  //
+/**
+ * 更新 todo
+ * @param {[Str]} todoId todo id
+ * @param {[Obj]} data 更新的数据
+ */
+const updateTodo = function (todoId, data = {}) {
+  return new Promise((resolve, reject) => {
+    Todo.updateTodo(`/${todoId}`, data, {
+      success(res) {
+        if (res.statusCode === 200) {
+          resolve(res)
+        } else {
+          reject(res)
+        }
+      },
+      fail(error) {
+        reject(error)
+      }
+    })
+  })
 }
 
-// 创建 todo分享
-const postTodoFollow = function (todoId) {
+/**
+ * 加入 todo邀请
+ * @param {[Str]} todoId todo id
+ * @param {[Str]} creatorId todo创建者id
+ */
+const postTodoFollow = function (todoId, creatorId) {
+  const userId = app.globalData.user.objectId
   const request = {
-    followerId: app.globalData.user.objectId,
+    followerId: userId,
     follower: {
       "__type": "Pointer",
       "className": "_User",
-      "objectId": app.globalData.user.objectId
+      "objectId": userId
     },
     todoId: todoId,
     todo: {
       "__type": "Pointer",
       "className": "Todo",
       "objectId": todoId
-    }
+    },
+    'ACL': Util.setACL({user: [userId, creatorId]})
   }
   return new Promise((resolve, reject) => {
     Todo.addTodoFollow(request, {
@@ -227,40 +253,64 @@ const postTodoFollow = function (todoId) {
     })
   })
 }
+/**
+ * 获取邀请加入的todo
+ */
+const getFollow = function () {
+  return new Promise((resolve, reject) => {
+    const localFollow = app.globalData.todoFollow
+    if (localFollow && !localFollow.updated) {
+      resolve(localFollow.results)
+    } else {
+      Todo.getTodoFollow(`?where={"followerId":"${app.globalData.user.objectId}"}&include=todo&keys=todo`, {
+        success(res) {
+          if (res.statusCode === 200) {
+            app.globalData.todoFollow = {results: res.data.results, updated: false}
+            resolve(res.data.results)
+          } else {
+            reject(Util.setError(res, '获取数据失败'))
+          }
+        },
+        fail(error) {
+          reject(Util.setError(error, '网络繁忙'))
+        }
+      })
+    } 
+  })
+}
 
-// 获取接受邀请Todo总数
+/**
+ * 获取接受邀请Todo总数
+ */
 const getFollowCount = function () {
   return new Promise((resolve, reject) => {
-    try {
-      const localFollow = wx.getStorageSync('todoFollowCount')
-      if (localFollow) {
-        resolve(localFollow)
-      } else {
-        const condition = `?where={"followerId":"${app.globalData.user.objectId}"}&count=1&limit=0`
-        Todo.getTodoFollow(condition, {
-          success(res) {
-            if (res.statusCode === 200) {
-              const result = { count: res.data.count }
-              wx.setStorage({ key: 'todoFollowCount', data: result })
-              resolve(result)
-            } else {
-              reject(res, '获取列表失败')
-            }
-          },
-          fail(error) {
-            console.error(error)
-            reject(error, '网络繁忙')
+    const localFollow = app.globalData.todoFollowCount
+    if (localFollow && !localFollow.updated) {
+      resolve(localFollow.count)
+    } else {
+      const condition = `?where={"followerId":"${app.globalData.user.objectId}"}&count=1&limit=0`
+      Todo.getTodoFollow(condition, {
+        success(res) {
+          if (res.statusCode === 200) {
+            app.globalData.todoFollowCount = { count: res.data.count, updated: false }
+            resolve(res.data.count)
+          } else {
+            reject(res, '获取列表失败')
           }
-        })
-      }
-    } catch (error) {
-      reject(error, '获取缓存数据失败')
+        },
+        fail(error) {
+          console.error(error)
+          reject(error, '网络繁忙')
+        }
+      })
     }
   })
 }
 
-// 获取 todo 参加者
-const getTodoFollow = function (todoId) {
+/**
+ * 获取 todo 参加者
+ */
+const getFollower = function (todoId) {
   return new Promise((resolve, reject) => {
     Todo.getTodoFollow(`?where={"todoId":"${todoId}"}&include=follower`, {
       success(res) {
@@ -277,83 +327,86 @@ const getTodoFollow = function (todoId) {
   })
 }
 
-// 归档数量
-const getTodoArchive = function () {
-  let _class = {}
-  let _mode = {}
+/**
+ * 归档信息
+ */
+const todoArchive = function (cb) {
+  Promise.all([getClass(), getAllTodo()]).then(data => {
+    const _classList = data[0].results, _todoList = data[1].results
+    const _class = {}, _mode = {}
 
-  const dt = Qdate.get()
-  const now = dt.timestamp
-  const t1 = new Date(dt.year, dt.month - 1, dt.day).getTime()
-  const t2 = t1 + 1000 * 60 * 60 * 24
+    const dt = new Date()
+    const now = dt.getTime()
+    const dayStart = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime()
+    const dayEnd = dayStart + 1000 * 60 * 60 * 24
 
-  return new Promise((resolve, reject) => {
-    try {
-      const localArchive = wx.getStorageSync('todoArchive') || null
-      const classList = wx.getStorageSync('todoClass') || null
-      const todoList = wx.getStorageSync('todoList') || null
-      if (classList && todoList && localArchive && !localArchive.updated) {
-        resolve({ classList, modeList: ARCHIVE, archive: localArchive })
-      } else {
-        Promise.all([getClass(), getAllTodo()]).then(res => {
-          const CL = res[0].results, TL = res[1].results
-          ARCHIVE.reduce((acc, v, k) => {
-            _mode[v.type] = []
-          }, 0)
-          CL.reduce((acc, v, k) => {
-            _class[v.objectId] = []
-          }, 0)
-          TL.reduce((acc, v, k) => {
-            // 分类的数量
-            _class[v.classId].push(v.objectId)
-            // 归档的数量
-            if (v.doneAt) {
-              _mode.done.push(v.objectId)
-            } else {
-              const startAt = new Date(v.startAt.iso).getTime()
-              const endAt = new Date(v.endAt.iso).getTime()
+    ARCHIVE.reduce((acc, v, k) => {
+      _mode[v.type] = []
+    }, 0)
+    _classList.reduce((acc, v, k) => {
+      _class[v.objectId] = []
+    }, 0)
+    _todoList.reduce((acc, v, k) => {
+      const _state = ArchiveState(v, now), _today = ArchiveDate(v, { dayStart, dayEnd })
+      _class[v.classId].push(v)             // 分类数量
+      _mode[_state].push(v)                 // 状态数量
+      if (_today) _mode['today'].push(v)    // 今日数量
+    }, 0)
 
-              if (endAt < now) {
-                _mode.expired.push(v.objectId)
-              } else {
-                if (endAt > now && startAt < now) {
-                  _mode.doing.push(v.objectId)
-                }
-                if ((endAt > t1 && endAt < t2) || (startAt > t1 && startAt < t2)) {
-                  _mode.today.push(v.objectId)
-                }
-              }
-            }
-          }, 0)
-
-          let _archive = { class: _class, mode: _mode, updated: false }
-          wx.setStorage({ key: 'todoArchive', data: _archive })
-          resolve({ classList: res[0], modeList: ARCHIVE, archive: _archive })
-        }).catch(error => {
-          reject(error, '获取列表失败')
-        })
-      }
-    } catch (error) {
-      reject(error, '获取缓存数据失败')
+    const result = {
+      class: _classList,
+      todo: _todoList,
+      mode: ARCHIVE,
+      size: Object.assign({}, _class, _mode)
     }
+    typeof cb === 'function' && cb(result)
   })
 }
 
-const todoArchive = function() {
-  //
+/**
+ * 获取某天的 Todo [包含刚开始或要结束的]
+ * @param {[Arr]} todo 所有todo列表
+ * @param {[Date]} date 当前日期
+ */
+const getTodoOfDate = function (todo, date) {
+  const dt = Qdate.toDate(date)
+  const dayStart = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime()
+  const dayEnd = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate() + 1).getTime()
+
+  return todo.reduce((acc, v, k) => {
+    if (ArchiveDate(v, {dayStart, dayEnd})) acc.push(v)
+    return acc
+  }, [])
 }
 
-
+/**
+ * 根据完成状态分类Todo
+ * @param {[Arr]} todo Todo列表
+ */
+const getTodoOfState = function (todo) {
+  let ret = {}
+  ALL.state.reduce((acc, v) => { ret[v.type] = [] }, 0)
+  if (todo instanceof Array && todo.length > 0) {
+    todo.reduce((acc, v) => {
+      ret[ArchiveState(v)].push(v)
+    }, 0)
+  }
+  return ret
+}
 
 module.exports = {
   postClass,
   getClass,
   getAllTodo,
-  getTodoArchive,
+  todoArchive,
   postTodo,
   getTodo,
+  updateTodo,
   postTodoFollow,
   getFollowCount,
-  getTodoFollow,
-  todoMessage
+  getFollow,
+  getFollower,
+  TodoMessage,
+  getTodoOfDate,
+  getTodoOfState
 }

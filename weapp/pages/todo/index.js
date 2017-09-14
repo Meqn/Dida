@@ -1,7 +1,18 @@
 import Qdate from '../../libs/date'
 import Todo from './includes/todo'
 import Archive from './includes/archive'
+import CONST from './includes/const'
+import Util from '../../utils/util'
 
+let ThisDataTodo
+/* 
+let DefaultTodo = {
+  all: [],
+  week: [],
+  next: [],
+  expired: []
+}
+ */
 Page({
 
   /**
@@ -14,11 +25,11 @@ Page({
       week: [],
       day: []
     },
-    todo: {
-      all: [],
-      week: [],
-      next: [],
-      expired: []
+    todo: {},
+    dateTodo: {
+      hide: true,
+      date: null,
+      todo: []
     },
     dateText: [new Date().format('yyyy/MM/dd'), Qdate.weekDay(8).format('yyyy/MM/dd')]
   },
@@ -27,43 +38,50 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log('page onLoad ...')
+
     // 设置日历📆
     this.setCalendar()
-
-    this.getTodo(res => {
-      console.log(res)
-      this.setData({
-        status: 'end',
-        todo: res
-      })
-    })
-
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady () {
+  onReady() {
+    console.log('page onReady ...')
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow () {
+  onShow() {
     console.log('page show ...')
+
+    Todo.getAllTodo().then(res => {
+      console.log(res)
+      ThisDataTodo = res.results
+      this.setTodo(ThisDataTodo)
+    })
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide () {
-    console.log('page hide ...')
+  onHide() {
+    console.log('page onHide ...')
+
+    setTimeout(() => {
+      this.setData({
+        'dateTodo.hide': true,
+        'dateTodo.date': null
+      })
+    }, 500)
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload () {
+  onUnload() {
     console.log('page unload ...')
   },
 
@@ -93,11 +111,48 @@ Page({
       url: `/pages/todo/detail/detail?todoId=${ds.todoid}&classId=${ds.classid}`
     })
   },
+  onDone(e) {
+    console.log('已完成', e, e.currentTarget.dataset)
+    const dt = e.currentTarget.dataset
+    if (dt.done === 0) {
+      const requestData = {
+        'doneAt': {
+          '__type': 'Date',
+          'iso': new Date()
+        }
+      }
+      Todo.updateTodo(dt.todoid, requestData).then(res => {
+        console.log('updateTodo : ', res)
+        ThisDataTodo.reduce((acc, v) => {
+          if (v.objectId === dt.todoid) {
+            v.doneAt = requestData.doneAt
+          }
+        })
+        this.setTodo(() => {
+          const date = this.data.dateTodo.date
+          if (!date) return
+          this.setData({
+            'dateTodo.todo': Todo.getTodoOfDate(ThisDataTodo, date)
+          })
+        })
+        Util.storageUpdate('todoList')
+      })
+    }
+  },
+  onCalendar(e) {
+    const _val = e.currentTarget.dataset.val
+    this.setData({
+      'dateTodo.hide': this.data.dateTodo.date === _val ? !this.data.dateTodo.hide : false,
+      'dateTodo.date': _val,
+      'dateTodo.todo': Todo.getTodoOfDate(ThisDataTodo, _val)
+    })
+  },
   // 获取日历的周
   getweek(w, t) {
     let today = t === 0 ? 6 : t - 1
     return {
-      val: ['一', '二', '三', '四', '五', '六', '日'][w],
+      val: w,
+      text: ['一', '二', '三', '四', '五', '六', '日'][w],
       status: today > w ? 'before' : today === w ? 'today' : 'after'
     }
   },
@@ -108,7 +163,8 @@ Page({
     let arr = []
     days.forEach((v, k) => {
       arr.push({
-        val: v.split('/')[2],
+        text: v.split('/')[2],
+        val: v,
         status: now > new Date(v).getTime() ? 'before' : now === new Date(v).getTime() ? 'today' : 'after'
       })
     })
@@ -128,77 +184,37 @@ Page({
       calendar: { month, week, day: context.getdate() }
     })
   },
-  /* getTodo(cb) {
-    const _todos = this.data.todo
-    const _weekTodos = {
-      do: [],
-      doing: [],
-      done: [],
+  setTodo(cb) {
+    // const _todos = JSON.parse(JSON.stringify(DefaultTodo))
+    const _todos = {
+      all: [],
+      week: [],
+      next: [],
       expired: []
     }
+    const _weekTodos = CONST.todoState()
     const now = new Date().getTime(), weekStart = new Date(Qdate.weekDay(1).format('yyyy/MM/dd')).getTime(), weekEnd = new Date(Qdate.weekDay(8).format('yyyy/MM/dd')).getTime()
-    Todo.getAllTodo().then(res => {
-      _todos.all = res.results
-      res.results.reduce((acc, v, k) => {
-        let _week = Archive.ArchiveWeek(v, {now, weekStart, weekEnd})
-        let _state = Archive.ArchiveState(v)
-
-        if (_week) {
-          if (_week === 'week') {
-            _weekTodos[_state].push(v)
-          } else {
-            _todos[_week].push(v)
-          }
-        }
-      }, 0)
-      _todos.week = [..._weekTodos['doing'], ..._weekTodos['do'], ..._weekTodos['expired'], ..._weekTodos['done']]
+    
+    ThisDataTodo.reduce((acc, v, k) => {
+      let _week = Archive.ArchiveWeek(v, { now, weekStart, weekEnd })
+      let _state = Archive.ArchiveState(v)
+      if (_state === 'expired') {
+        _todos['expired'].push(v)
+      }
+      if (_week) {
+        _week === 'week' ? _weekTodos[_state].push(v) : _todos[_week].push(v)
+      }
+    }, 0)
+    _todos['week'] = [..._weekTodos['doing'], ..._weekTodos['do'], ..._weekTodos['expired'], ..._weekTodos['done']]
+    
+    setTimeout(() => {
+      this.setData({
+        status: 'end',
+        'todo.week': _todos.week,
+        'todo.next': _todos.next,
+        'todo.expired': _todos.expired
+      })
       typeof cb === 'function' && cb(_todos)
-    })
-  }, */
-  getTodo(cb) {
-    let all = [], week = [], next = [], expired = []
-    let weekList = {
-      do: [],
-      done: [],
-      expired: []
-    }
-
-    const tw = Qdate.weekDay(1).format('yyyy/MM/dd'), nw = Qdate.weekDay(8).format('yyyy/MM/dd')
-    const thisweek = new Date(tw).getTime()
-    const nextweek = new Date(nw).getTime()
-
-    Todo.getAllTodo().then(res => {
-      all = res.results
-      all.reduce((acc, v, k) => {
-        const now = Qdate.get().timestamp
-        const start = Qdate.get(v.startAt.iso).timestamp
-        const end = Qdate.get(v.endAt.iso).timestamp
-
-        // 本周
-        if ((start < nextweek || end < nextweek) && end > thisweek) {
-          // week.push(v)
-          if (v.doneAt) {
-            weekList.done.push(v)
-          } else {
-            if (now > end) {
-              weekList.expired.push(v)
-            } else {
-              weekList.do.push(v)
-            }
-          }
-        }
-        // 下周及以后
-        if (start >= nextweek) {
-          next.push(v)
-        }
-        // 已过期
-        if (now > end) {
-          expired.push(v)
-        }
-      }, 0)
-
-      week = [...weekList.do, ...weekList.expired, ...weekList.done]
-      typeof cb === 'function' && cb({all, week, next, expired})
-    })
+    }, 0);
   }
 })

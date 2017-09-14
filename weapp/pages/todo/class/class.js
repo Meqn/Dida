@@ -1,5 +1,5 @@
 const app = getApp()
-import TodoClass from '../includes/todo'
+import Todo from '../includes/todo'
 
 // index.js
 Page({
@@ -10,10 +10,12 @@ Page({
    */
   data: {
     status: 'loading',
-    archive: {},
-    classList: [],
-    modeList: [],
-    invite: 0,
+    data: {
+      class: [],
+      mode: [],
+      invite: 0,
+      size: {}
+    },
     posts: {
       status: 0,
       error: '',
@@ -43,17 +45,16 @@ Page({
    */
   onLoad: function (options) {
     const ctx = this
-    TodoClass.getTodoArchive().then(res => {
+    Todo.todoArchive(data => {
       this.setData({
         status: 'end',
-        archive: res.archive,
-        classList: res.classList.results,
-        modeList: res.modeList
+        'data.class': data.class,
+        'data.mode': data.mode,
+        'data.size': data.size,
       })
     })
-
     // 被邀请
-    TodoClass.getFollowCount().then(res => this.setData({invite: res.count}))
+    Todo.getFollowCount().then(data => this.setData({'data.invite': data}))
 
   },
 
@@ -105,7 +106,7 @@ Page({
       'posts.status': 1,
       'posts.error': ''
     })
-    TodoClass.postClass({ title, color }, {
+    Todo.postClass({ title, color }, {
       success(res) {
         context.setData({
           status: 'end',

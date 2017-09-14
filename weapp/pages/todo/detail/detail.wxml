@@ -67,7 +67,7 @@
           <button plain open-type="share" hover-class="btn-hover">
           <text class="icon icon-invite blue" /><text>邀请</text>
         </button>
-        <button plain hover-class="btn-hover">
+          <button plain hover-class="btn-hover">
           <text class="icon icon-editor blue" /><text>编辑</text>
         </button>
         </block>
@@ -86,4 +86,10 @@
       </block>
     </view>
   </form>
+
+  <view class="q-fab-wrap tabBar">
+    <navigator class="q-fab" open-type="switchTab" url="/pages/todo/index">
+      <text class="icon icon-manage" />
+    </navigator>
+  </view>
 </view>

@@ -1,15 +1,21 @@
 const app = getApp()
 import Qdate from '../../../libs/date'
 import Todo from '../includes/todo'
+import { ALL } from '../includes/const'
 
 Page({
   data: {
     status: 'loading',
-    todoList: [],
-    todoType: 'class'
+    data: {
+      todo: [],   // 当前分类 todo 列表
+      count: 0,   // 当前分类 todo 数量
+      type: '',
+      state: ALL.state
+    }
   },
   onLoad: function (opts) {
     console.log(opts)
+    
 
     if (!opts.type || !opts.val) return wx.navigateTo({url: '/pages/todo/class/class'})
 
@@ -19,21 +25,52 @@ Page({
       wx.setNavigationBarTitle({title: res})
     })
     // 获取todo数据
-    this.getTodo(opts, {
-      success(res) {
-        ctx.setData({
-          status: 'end',
-          todoList: res,
-          todoType: opts.type
-        })
-      },
-      fail(err) {
-        wx.navigateTo({url: '/pages/todo/class/class'})
-      }
+    this.getTodo(opts, (data, count) => {
+      console.log('result : ', data)
+      this.setData({
+        status: 'end',
+        'data.todo': data,
+        'data.type': opts.type,
+        'data.count': count
+      })
     })
   },
 
   onReady: function () {
+  },
+  todoLink(e) {
+    const ds = e.currentTarget.dataset
+    wx.navigateTo({
+      url: `/pages/todo/detail/detail?todoId=${ds.todoid}&classId=${ds.classid}`
+    })
+  },
+  onDone(e) {
+    console.log('已完成', e, e.currentTarget.dataset)
+    const dt = e.currentTarget.dataset
+    if (dt.done === 5) {
+      const requestData = {
+        'doneAt': {
+          '__type': 'Date',
+          'iso': new Date()
+        }
+      }
+      Todo.updateTodo(dt.todoid, requestData).then(res => {
+        console.log('updateTodo : ', res)
+        ThisDataTodo.reduce((acc, v) => {
+          if (v.objectId === dt.todoid) {
+            v.doneAt = requestData.doneAt
+          }
+        })
+        this.setTodo(() => {
+          const date = this.data.dateTodo.date
+          if (!date) return
+          this.setData({
+            'dateTodo.todo': Todo.getTodoOfDate(ThisDataTodo, date)
+          })
+        })
+        Util.storageUpdate('todoList')
+      })
+    }
   },
   setTitle({type, val}, cb = null) {
     let ret = '归档'
@@ -53,28 +90,31 @@ Page({
         done: '已完成',
         expired: '已过期',
         invite: '被邀请'
-      }[val]
+      }[val] || '归档'
       typeof cb === 'function' && cb(ret)
     }
   },
-  getTodo({type, val}, {success = null, fail = null}) {
+  getTodo({type, val}, cb = null) {
     if (type === 'invite') {
-      //
-    } else {
-      Todo.getTodoArchive().then(res => {
-        let ret = []
-        try {
-          const results = res.archive[type][val]
-          if (results.length < 1) return ret
-          const todoList = wx.getStorageSync('todoList') || null
-          todoList.results.reduce((acc, v, k) => {
-            if (results.indexOf(v.objectId) !== -1) ret.push(v)
-          }, 0)
-          typeof success === 'function' && success(ret)
-        } catch (err) {
-          typeof fail === 'function' && fail(err)
-        }
+      Todo.getFollow().then(data => {
+        let result = data.length > 0 ? data.reduce((acc, v, k) => {
+          acc.push(v.todo)
+          return acc
+        }, []) : []
+        const count = result.length
+        typeof cb === 'function' && cb(Todo.getTodoOfState(result), count)
       })
-    } 
+    } else {
+      Todo.todoArchive(data => {
+        console.log(data)
+        const _list = data.size[val]
+        let result = (_list && _list instanceof Array) ? _list : []
+        const count = result.length
+        if (type === 'class') {
+          result = Todo.getTodoOfState(result)
+        }
+        typeof cb === 'function' && cb(result, count)
+      })
+    }
   }
 })

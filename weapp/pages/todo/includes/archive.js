@@ -11,30 +11,27 @@
 function ArchiveClass(todo) {
   return todo.classId
 }
-function ArchiveState(todo) {
-  const now = new Date().getTime()
+// 状态分类
+function ArchiveState(todo, nowTime) {
+  const now = nowTime ? nowTime : new Date().getTime()
   const start = new Date(todo.startAt.iso).getTime()
   const end = new Date(todo.endAt.iso).getTime()
 
   return todo.doneAt ? 'done' : end <= now ? 'expired' : start > now ? 'do' : 'doing'
 }
-function ArchiveToday(todo, {now, todayStart, todayEnd}) {
+// 日期分类
+function ArchiveDate(todo, {dayStart, dayEnd}) {
   const start = new Date(todo.startAt.iso).getTime()
   const end = new Date(todo.endAt.iso).getTime()
 
-  return (start > todayStart && end < todayEnd) ? 'today' : null
+  return (!todo.doneAt && start < dayEnd && end > dayStart) ? 'date' : null
 }
-function ArchiveWeek(todo, { now, weekStart, weekEnd }) {
+// 周分类
+function ArchiveWeek(todo, { weekStart, weekEnd }) {
   const start = new Date(todo.startAt.iso).getTime()
   const end = new Date(todo.endAt.iso).getTime()
 
-  if (start >= weekEnd) {
-    return 'next'
-  } else {
-    if ((start < weekEnd || end < weekEnd) && end > weekStart) return 'week'
-    if (end < now) return 'expired'
-  }
-  return null
+  return start >= weekEnd ? 'next' : ((start < weekEnd || end < weekEnd) && end > weekStart) ? 'week' : null
   // return end < now ? 'expired' : start >= weekEnd ? 'next' : ((start < weekEnd || end < weekEnd) && end > weekStart) ? 'week' : null
 }
 
@@ -42,6 +39,6 @@ function ArchiveWeek(todo, { now, weekStart, weekEnd }) {
 module.exports = {
   ArchiveClass,
   ArchiveState,
-  ArchiveToday,
+  ArchiveDate,
   ArchiveWeek
 }

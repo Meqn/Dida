@@ -5,29 +5,52 @@
  * 状态分类: 未开始:do | 进行中:doine | 已完成:done | 已过期:expired
  * 时间分类: 今天:today | 本周:week | 以后:next
  */
-const archive = [
-  {
-    type: 'today',
-    title: '今天',
-    icon: 'calendar',
-    color: ''
-  }, {
-    type: 'expired',
-    title: '已过期',
-    icon: 'time',
-    color: 'red'
-  }, {
-    type: 'doing',
-    title: '进行中',
-    icon: 'waiting',
-    color: 'blue'
-  }, {
-    type: 'done',
-    title: '已完成',
-    icon: 'done',
-    color: 'green'
-  }
-]
+const all = {
+  class: function() {
+    return []
+  },
+  state: [
+    {
+      type: 'doing',
+      title: '进行中',
+      icon: 'waiting',
+      color: 'blue'
+    }, {
+      type: 'expired',
+      title: '已过期',
+      icon: 'time',
+      color: 'red'
+    }, {
+      type: 'do',
+      title: '未开始',
+      icon: 'order',
+      color: 'purple'
+    }, {
+      type: 'done',
+      title: '已完成',
+      icon: 'done',
+      color: 'green'
+    }
+  ],
+  date: [
+    {
+      type: 'today',
+      title: '今天',
+      icon: 'calendar',
+      color: ''
+    },{
+      type: 'week',
+      title: '本周',
+      icon: '',
+      color: ''
+    },{
+      type: 'next',
+      title: '接下来',
+      icon: '',
+      color: ''
+    }
+  ]
+}
 
 /**
  * todo Class 色值
@@ -47,8 +70,19 @@ const color = {
   black: '#212121'
 }
 
+const archive = [all.date[0], ...all.state]
+
+const todoState = function() {
+  const ret = {}
+  all.state.reduce((acc, v) => {
+    ret[v.type] = []
+  }, 0)
+  return ret
+}
 
 module.exports = {
+  ALL: all,
   ARCHIVE: archive,
-  COLOR: color
+  COLOR: color,
+  todoState: todoState
 }

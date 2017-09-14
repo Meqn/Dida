@@ -59,7 +59,7 @@ Page({
         todo: currentTodo,
         isFollow: true
       })
-      Todo.todoMessage(currentTodo, e.detail.formId)
+      Todo.TodoMessage(currentTodo, e.detail.formId, 'share')
     }).catch(err => {
       wx.showModal({
         title: '',
@@ -116,7 +116,7 @@ Page({
           todo: result,
           isCreator: res.creatorId === me
         })
-        Todo.getTodoFollow(id).then(user => {
+        Todo.getFollower(id).then(user => {
           if (user.length > 0) {
             user.reduce((acc, v, k) => {
               result.follower.push(v.follower)

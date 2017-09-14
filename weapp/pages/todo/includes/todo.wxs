@@ -1,13 +1,7 @@
-
-// class 分类下 todo 的数量
-function classCount(id, archive) {
-  return 'Array' === archive.class[id].constructor ? archive.class[id].length : 0
+// todo 归档数量
+function todoCount(key, values) {
+  return 'Array' === values[key].constructor ? values[key].length : 0
 }
-// mode 归档下 todo 的数量
-function modeCount(type, archive) {
-  return 'Array' === archive.mode[type].constructor ? archive.mode[type].length : 0
-}
-
 
 // 获取 todo 当前状态
 function getStatus(todo) {
@@ -78,6 +72,5 @@ module.exports = {
   getPriority: getPriority,
   getFollowerCount: getFollowerCount,
   getArchiveTodo: getArchiveTodo,
-  classCount: classCount,
-  modeCount: modeCount
+  todoCount: todoCount
 }

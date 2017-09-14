@@ -2,12 +2,11 @@
 <wxs src="now.wxs" module="Now" />
 
 <template name="todos">
-<view wx:for="{{todo}}" class="q-cell q-cell--hd q-cell-swipe {{Todo.getStatus(item).code}}" wx:key="objectId" bind:tap="todoLink" data-todoid="{{item.objectId}}" data-classid="{{item.classId}}">
+<view wx:for="{{todo}}" class="q-cell {{type === 'invite' ? '' : 'q-cell--hd'}} q-cell-swipe {{Todo.getStatus(item).code}}" wx:key="objectId" bind:tap="todoLink" data-todoid="{{item.objectId}}" data-classid="{{item.classId}}">
   <view class="q-cell__bd">
     <view class="q-cell" hover-class="q-cell-hover">
-      <view class="line bg-{{item.color}}"></view>
-      <view class="q-cell__hd">
-        <label class="q-radio p{{item.priority}}"><icon type="success_no_circle" size="12" color="#212121" /></label>
+      <view class="q-cell__hd" wx:if="{{type !== 'invite'}}" catch:tap="onDone" data-todoid="{{item.objectId}}" data-done="{{item.doneAt ? 1 : 0}}">
+        <label class="q-radio p{{item.priority}} {{item.doneAt ? 'checked' : ''}}"><icon type="success_no_circle" size="12" color="#212121" /></label>
       </view>
       <view class="q-cell__bd title">{{item.title}}</view>
       <view class="q-cell__ft time">{{Now(item.endAt.iso)}}</view>
@@ -15,8 +14,7 @@
   </view>
   <view class="q-cell__ft">
     <view class="q-btn q-btn--error" hover-class="q-btn-hover">
-      删除
-      <text class="icon icon-trash" />
+      删除 <text class="icon icon-trash" />
     </view>
     <view class="q-btn q-btn--primary" hover-class="q-btn-hover">
       <text class="icon icon-brush" />

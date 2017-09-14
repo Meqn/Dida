@@ -22,7 +22,9 @@ App({
   globalData: {
     user: null,
     system: {},
-    temp: {},
-    todo: {}
+    temp: {},   // 临时数据, 比如选择分类
+    todo: {},               // 缓存todo详情列表
+    todoFollow: null,       // 缓存被邀请todo列表
+    todoFollowCount: null   // 缓存被邀请Todo数量
   }
 })

@@ -10,31 +10,41 @@
           <view class="q-flex__item month">{{calendar.month}}</view>
       </view>
       <view class="q-flex week">
-        <view wx:for="{{calendar.week}}" wx:key="val+status" class="q-flex__item {{item.status}}">{{item.val}}</view>
+        <view wx:for="{{calendar.week}}" wx:key="val+status" class="q-flex__item {{item.status}}" data-val="{{item.val}}">{{item.text}}</view>
       </view>
       <view class="q-flex day">
-        <view wx:for="{{calendar.day}}" wx:key="val+status" class="q-flex__item {{item.status}}">{{item.val}}</view>
+        <view wx:for="{{calendar.day}}" wx:key="val+status" class="q-flex__item {{item.status}} {{!dateTodo.hide && dateTodo.date === item.val ? 'active' : ''}}" data-val="{{item.val}}" bind:tap="onCalendar">{{item.text}}</view>
       </view>
     </view>
+    <block wx:if="{{!dateTodo.hide}}">
+      <block wx:if="{{dateTodo.todo.length > 0}}">
+        <template is="todos" data="{{todo: dateTodo.todo}}" />
+      </block>
+      <block wx:else>
+        <view class="q-cells">
+          <view class="q-cell" style="color: #bbbec4;">暂无事情，好好休息吧</view>
+        </view>
+      </block>
+    </block>
 
     <view class="q-cell todo-head">
       <view class="q-cell__bd">本周</view>
       <view class="q-cell__ft">{{dateText[0]}}</view>
     </view>
-    <template is="todos" data="{{todo: todo.week}}" />
+    <template is="todos" data="{{todo: todo.week, type: 'todoIndex'}}" />
 
     <block wx:if="{{todo.next.length > 0}}">
       <view class="q-cell todo-head">
         <view class="q-cell__bd">接下来...</view>
         <view class="q-cell__ft">{{dateText[1]}}</view>
       </view>
-      <template is="todos" data="{{todo: todo.next}}" />
+      <template is="todos" data="{{todo: todo.next, type: 'todoIndex'}}" />
     </block>
 
     <view class="q-cell todo-head">
       <view class="q-cell__bd">已过期</view>
     </view>
-    <template is="todos" data="{{todo: todo.expired}}" />
+    <template is="todos" data="{{todo: todo.expired, type: 'todoIndex'}}" />
   </scroll-view>
 
   <view class="q-fab-wrap">

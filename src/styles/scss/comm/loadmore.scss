@@ -1,0 +1,33 @@
+@import './var';
+
+.q-loadmore{
+  position: relative;
+  display: block;
+  margin: 0 32rpx; padding: 40rpx 0;
+  text-align: center; color: $color-disabled;
+
+  &-line::before{
+    content: " ";
+    position: absolute; top: 50%; left: 0; right: 0;
+    border-top: 1rpx solid $color-border;
+  }
+  .text{
+    position: relative;
+    padding: 0 8px;
+    background-color: $color-background;
+  }
+  &-loading .text{
+    padding-left: 32px;
+    
+    &::before{
+      content: " ";
+      display: block; box-sizing: border-box;
+      position: absolute; top: 0; left: 8px;
+      width: 18px; height: 18px;
+      border: 3px solid rgba(0, 0, 0, 0.12);
+      border-left-color: rgba(0, 0, 0, .42);
+      border-radius: 50%;
+      animation: rotate360 .5s linear infinite;
+    }
+  }
+}

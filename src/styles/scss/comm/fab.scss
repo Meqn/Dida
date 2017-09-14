@@ -1,0 +1,46 @@
+@import "var";
+
+
+.q-fab{
+  display: flex; align-items: center; justify-content: center;
+  width: 96rpx; height: 96rpx;
+  margin-top: 24rpx;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .14),
+    0 3px 4px rgba(0, 0, 0, .12),
+    0 1px 5px rgba(0, 0, 0, .2);
+
+  .icon{
+    color: $color-title; font-size:22px;
+  }
+
+  &--max{
+    .q-fab{
+      width: 112rpx; height: 112rpx;
+      line-height: 112rpx;
+
+      .icon{
+        font-size:24px;
+      }
+    }
+  }
+  &--min{
+    .q-fab{
+      width: 80rpx; height: 80rpx;
+      line-height: 80rpx;
+
+      .icon{
+        font-size:18px;
+      }
+    }
+  }
+  &-wrap{
+    position: fixed; right: 32rpx; bottom: 48rpx; z-index: 9;
+
+    &.tabBar{
+      bottom: 128rpx;
+    }
+  }
+}
+

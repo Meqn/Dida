@@ -62,27 +62,19 @@ function xhr({ url, method = 'GET', dataType = 'json', contentType = 'applicatio
 }
 /**
  * 设置 ACL 权限
+ * all [0:无读写 1:读 2:写]
  */
-function setACL({ all = ['read'], user = [], role = [] }) {
+function setACL({ all = 1, user = [], role = [] }) {
   const act = {}
-  switch (all.length) {
-    case 1:
-      act['*'] = { read: true, write: false }
-      break;
-    case 2:
-      act['*'] = { read: true, write: true }
-      break;
-    default:
-      act['*'] = { read: false, write: false }
-  }
+  act['*'] = { read: all > 0 ? true : false, write: all > 1 ? true : false }
   if (user.length > 0) {
     user.forEach(function (v) {
-      act[v] = { "write": true }
+      act[v] = { read: true, write: true }
     })
   }
   if (role.length > 0) {
     role.forEach(function (v) {
-      act['role:' + v] = { "write": true }
+      act['role:' + v] = { read: true, write: true }
     });
   }
   return act;
@@ -122,6 +114,18 @@ function setError(err, msg) {
     errMsg: msg
   }
 }
+function storageUpdate(key) {
+  try {
+    const local = wx.getStorageSync(key)
+    local.updated = true
+    wx.setStorage({
+      key: key,
+      data: local
+    })
+  } catch (error) {
+    throw error
+  }
+}
 
 module.exports = {
   xhr,
@@ -129,5 +133,6 @@ module.exports = {
   setData,
   subFloat,
   sendMessage,
-  setError
+  setError,
+  storageUpdate
 }

@@ -1,8 +1,9 @@
 
 .q-bottom{
+  box-sizing: border-box;
   display: flex; align-items: stretch;
   position: fixed; left: 0; bottom: 0; right: 0; z-index: 90;
-  height: 112rpx;
+  height: 96rpx;
   background-color: white;
   box-shadow: 0 -1px 4px rgba(0, 0, 0, .06);
 

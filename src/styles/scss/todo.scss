@@ -17,14 +17,25 @@
     background-color: $primarycolor;
   }
   .day{
+    position: relative;
     padding: 24rpx 0;
     color: $color-sub; font-size: 16px;
-    
+
+    view{
+      position: relative;
+    }
     .before{
       color: $color-disabled;
     }
     .today{
       color: $blue;
+    }
+    .active::before{
+      content: " ";
+      position: absolute; top: 50%; left: 50%; transform: translate3d(-50%, -40%, 0) rotate(-45deg);
+      width: 50rpx; height: 36rpx;
+      border-radius: 50%; border: 1px solid $yellow;
+      opacity: .5;
     }
   }
 }

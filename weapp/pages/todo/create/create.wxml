@@ -26,7 +26,7 @@
     </view>
     <view class="q-cell q-cell--hd" hover-class="q-cell-hover">
       <view class="q-cell__hd">
-        <text class="icon icon-end blue" />
+        <text class="icon icon-end indigo" />
       </view>
       <view class="q-cell__bd">完成时间</view>
       <view class="q-cell__ft todoTime">
@@ -74,10 +74,11 @@
       </view>
     </view>
   </view>
-
-  <view class="q-cell-btn">
-    <button type="primary" bindtap="onSubmit" loading="{{post.status === 0 ? '' : 'loading'}}" disabled="{{post.status === 0 ? '' : 'disabled'}}">{{post.status === 0 ? '' : '正在'}}{{action === 'post' ? '创建' : '保存'}}</button>
-  </view>
+  <form bindsubmit="onSubmit" report-submit>
+    <view class="q-cell-btn">
+      <button type="primary" formType="submit" loading="{{post.status === 0 ? '' : 'loading'}}" disabled="{{post.status === 0 ? '' : 'disabled'}}">{{post.status === 0 ? '' : '正在'}}{{action === 'post' ? '创建' : '保存'}}</button>
+    </view>
+  </form>
   <view class="q-cell-error" wx:if="{{post.error.length > 0}}">
     <text class="tit">错误信息：</text> {{post.error}}
   </view>

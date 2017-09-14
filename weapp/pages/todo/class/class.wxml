@@ -1,5 +1,5 @@
 <import src="../../includes/page-loading.wxml" />
-<wxs src="../includes/todo.wxs" module="AC" />
+<wxs src="../includes/todo.wxs" module="Todo" />
 
 <template is="loading" data="{{text: 'Loading...'}}" wx:if="{{status === 'loading'}}" />
 <include src="add.wxml" /> 
@@ -9,10 +9,10 @@
     <view class="q-cell__bd todo-class-title">列表</view>
   </view>
   <view class="q-cells">
-    <navigator class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover" wx:for="{{classList}}" wx:key="item.objectId" url="/pages/todo/list/list?type=class&val={{item.objectId}}">
+    <navigator class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover" wx:for="{{data.class}}" wx:key="item.objectId" url="/pages/todo/list/list?type=class&val={{item.objectId}}">
       <view class="q-cell__hd"><text class="icon icon-{{item.icon}} {{item.color}}" /></view>
       <view class="q-cell__bd">{{item.title}}</view>
-      <view class="q-cell__ft count">{{AC.classCount(item.objectId, archive)}}</view>
+      <view class="q-cell__ft count">{{Todo.todoCount(item.objectId, data.size)}}</view>
     </navigator>
     <view class="q-cell q-cell--hd green" hover-class="q-cell-hover" bindtap="createClass">
       <view class="q-cell__hd"><text class="icon icon-addition green" /></view>
@@ -24,7 +24,7 @@
     <navigator class="q-cell q-cell--hd q-cell--link" url="/pages/todo/list/list?type=invite&val=invite">
       <view class="q-cell__hd"><text class="icon icon-group pink" /></view>
       <view class="q-cell__bd">被邀请</view>
-      <view class="q-cell__ft count">{{invite}}</view>
+      <view class="q-cell__ft count">{{data.invite}}</view>
     </navigator>
   </view>
 
@@ -32,10 +32,10 @@
     <view class="q-cell__bd todo-class-title">归档</view>
   </view>
   <view class="q-cells">
-    <navigator class="q-cell q-cell--hd q-cell--link" wx:for="{{modeList}}" url="/pages/todo/list/list?type=mode&val={{item.type}}" wx:key="item.type">
+    <navigator class="q-cell q-cell--hd q-cell--link" wx:for="{{data.mode}}" url="/pages/todo/list/list?type=mode&val={{item.type}}" wx:key="item.type" wx:if="{{item.type !== 'do'}}">
       <view class="q-cell__hd"><text class="icon icon-{{item.icon}} {{item.color}}" /></view>
       <view class="q-cell__bd">{{item.title}}</view>
-      <view class="q-cell__ft count">{{AC.modeCount(item.type, archive)}}</view>
+      <view class="q-cell__ft count">{{Todo.todoCount(item.type, data.size)}}</view>
     </navigator>
   </view>
 </view>
