@@ -51,6 +51,13 @@
       <view class="q-cell__bd">表情</view>
       <view class="q-cell__ft"></view>
     </view>
+    <view class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover" catch:tap="onClearCache">
+      <view class="q-cell__hd">
+        <text class="icon icon-trash red" />
+      </view>
+      <view class="q-cell__bd">清除缓存</view>
+      <view class="q-cell__ft"></view>
+    </view>
   </view>
 
   <view class="q-cells">

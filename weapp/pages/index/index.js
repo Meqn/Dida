@@ -1,55 +1,59 @@
 const app = getApp()
 import Util from '../../utils/util'
-import { checkUser } from '../../utils/user'
-import Register from '../../utils/register'
+import { checkUser, updateUserLife } from '../user/includes/user'
+import Register from '../user/includes/register'
 import Clock from './clock'
-import { ageRange, logged, checkDate, setLife } from 'user'
+import User from './user'
 
-let timer = null, regFlag = false
+let Timer = null
 
 Page({
   data: {
-    points: [],
-    clock: {
-      hour: 0,
-      minute: 0,
-      second: 0,
-      hourRotate: 0,
-      minuteRotate: 0,
-      secondRotate: 0
-    },
     status: 'loading',  // 页面状态 loading, register, logged, date, end
-    bornAt: 0,
-    dieAt: 0,
-    ages: {
-      index: 0,
-      value: []
-    },
-    setLife: {
-      born: 0,
-      age: 0,
-      status: 0,
-      error: ''
+    clock: {
+      point: [],
+      time: {
+        hour: 0,
+        minute: 0,
+        second: 0,
+        hourRotate: 0,
+        minuteRotate: 0,
+        secondRotate: 0
+      }
     },
     life: {
-      die: 0,
-      prev: {
-        year: 0,
-        month: 0,
-        day: 0,
-        week: 0,
-        hour: 0,
-        minute: 0,
-        second: 0
+      bornAt: '',
+      dieAt: '',
+      post: {
+        status: 0,
+        error: '',
+        age: {
+          index: 60,
+          array: [],
+          value: 0
+        },
+        born: '',
       },
-      next: {
-        year: 0,
-        month: 0,
-        day: 0,
-        week: 0,
-        hour: 0,
-        minute: 0,
-        second: 0
+      data: {
+        die: false,
+        past: {
+          year: 0,
+          month: 0,
+          day: 0,
+          week: 0,
+          hour: 0,
+          minute: 0,
+          second: 0
+        },
+        later: {
+          year: 0,
+          month: 0,
+          day: 0,
+          week: 0,
+          hour: 0,
+          minute: 0,
+          second: 0
+        }
       }
     },
     register: {
@@ -63,21 +67,20 @@ Page({
   },
   onLoad: function () {
     const ctx = this
-    const USER = app.globalData.user
+    const _user = app.globalData.user
     // 用户登录/注册
-    if (USER && USER['sessionToken']) {
-      logged.call(this, USER)
+    if (_user && _user['sessionToken']) {
+      this.onLogged(_user)
     } else {
       checkUser({
-        onSign() {
-          wx.setNavigationBarTitle({title: '注册'})
-          ctx.setData({status: 'register'})
+        onSuccess(res) {    // 登录成功
+          ctx.onLogged(res)
         },
-        onSuccess(data) {
-          logged.call(ctx, data)
+        onSign() {    // 用户未注册
+          wx.setNavigationBarTitle({ title: '注册' })
+          ctx.setData({ status: 'register' })
         },
-        onError(error) {
-          // ❌ 错误提示信息待完善
+        onError(error) {    // 微信登录错误
           console.error(error)
         }
       })
@@ -85,93 +88,120 @@ Page({
 
     // Clock
     this.setData({
-      points: Clock.point(150)
+      'clock.point': Clock.point(150),          // Clock
+      'life.post.age.array': User.ageRange(20, 120)      // 设置年龄段
     })
-    // Clock.tick.apply(this)
     this.interval()
-
-    // 设置年龄段
-    this.setData({
-      'ages.value': ageRange(20, 120)
-    })
   },
   interval() {
-    let s1 = this.data.life.prev.second,
-      s2 = this.data.life.next.second
-    let t = (this.data.life.die || s1 !== 0) ? 1 : 0
+    const lifeData = this.data.life.data
+    let s1 = lifeData.past.second,
+      s2 = lifeData.later.second
+    let t = (lifeData || s1 !== 0) ? 1 : 0
     this.setData({
-      clock: Clock.tick(),
-      'life.prev.second': s1 + t,
-      'life.next.second': s2 - t
+      'clock.time': Clock.tick(),
+      'life.data.past.second': s1 + t,
+      'life.data.later.second': s2 - t
     })
   },
   onShow() {
     // 设置时钟定时器
-    timer = setInterval(this.interval, 1000)
+    Timer = setInterval(this.interval, 1000)
   },
   onHide() {
     // 清除定时器
-    clearInterval(timer)
+    clearInterval(Timer)
   },
   onUnload() {
     // 销毁定时器
-    timer = null
+    Timer = null
   },
   onShareAppMessage(res) {
-    /* if (res.from === 'button') {
-      console.log('来自页面内的转发 ： ', res)
-    } */
     return {
       title: '人生过半，未来可期?',
       path: '/pages/index/index'
     }
   },
+  // 登录成功回调
+  onLogged(user) {
+    console.log('登录成功 : ', user)
+    if (user.bornAt && user.dieAt) {
+      const bornAt = new Date(user.bornAt.iso)
+      const dieAt = new Date(user.dieAt.iso)
+      this.setData({
+        status: 'logged',
+        'life.bornAt': bornAt,
+        'life.dieAt': dieAt,
+        'life.data': User.getLife(bornAt, dieAt)
+      })
+    } else {
+      this.setData({
+        status: 'logged'
+      })
+    }
+  },
   // 设置出生死亡时间
-  dateBtnClick() {
+  onSetLife() {
     this.setData({
       status: 'date'
     })
   },
-  // 提交出生/死亡时间
-  dateSubmit() {
-    const life = this.data.setLife
-    const dateError = checkDate(life.born, life.age)
-    if (dateError) {
-      this.setData({
-        'setLife.error': dateError
-      })
-      Util.setData.call(this, {
-        'setLife.error': ''
-      }, 2000)
-      return;
-    }
-    this.setData({
-      'setLife.status': 1
-    })
-    setLife.call(this)
-  },
   // 设置出生
-  setBornDate(e) {
+  onSetBorn(e) {
     this.setData({
-      'setLife.born': e.detail.value
+      'life.post.born': e.detail.value
     })
   },
   // 设置死亡
-  setDieDate(e) {
+  onSetDie(e) {
     this.setData({
-      'ages.index': e.detail.value,
-      'setLife.age': this.data.ages.value[e.detail.value]
+      'life.post.age.index': e.detail.value,
+      'life.post.age.value': this.data.life.post.age.array[e.detail.value]
     })
   },
+  // 提交出生/死亡时间
+  onSubmitLife() {
+    const life = this.data.life.post
+    const checkDate = User.checkDate(life.born, life.age.value)
+    switch (typeof checkDate) {
+      case 'string':
+        Util.dataSet.call(this, {
+          'life.post.error': checkDate
+        }, 2500, {
+          'life.post.error': ''
+        })
+        break;
+      case 'object':
+        this.setData({ 'life.post.status': 1 })
+        const {bornAt, dieAt} = checkDate
+        updateUserLife(checkDate).then(res => {
+          this.setData({
+            status: 'end',
+            'life.post.status': 0,
+            'life.bornAt': bornAt,
+            'life.dieAt': dieAt,
+            'life.data': User.getLife(bornAt, dieAt)
+          })
+        }).catch(error => {
+          Util.dataSet.call(this, {
+            'life.post.status': 0,
+            'life.post.error': '设置失败, 请稍后操作'
+          }, 2500, {
+              'life.post.error': ''
+            })
+        })
+        break;
+    }
+  },
   // 注册绑定数据
-  regBindInput(e) {
+  onInputSign(e) {
     this.data.register.fields[e.currentTarget.id] = e.detail.value
   },
   // 提交注册
-  regSubmit(e) {
-    if (regFlag) return;
-    regFlag = true
-    const context = this
+  onRegister(e) {
+    if (this.data.register.status === 1) return
+    
+    const ctx = this
     const userInfo = e.detail.userInfo
     const fields = this.data.register.fields
 
@@ -182,18 +212,14 @@ Page({
 
     Register(fields, userInfo, {
       onSuccess(res) {
-        regFlag = false
-        wx.setNavigationBarTitle({
-          title: '我的一生',
-        })
-        context.setData({
+        wx.setNavigationBarTitle({title: '我的一生'})
+        ctx.setData({
           'status': 'logged',
           'register.status': 0
         })
       },
       onError(error) {
-        regFlag = false
-        context.setData({
+        ctx.setData({
           'register.error': error,
           'register.status': 0
         })

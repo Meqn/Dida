@@ -1,8 +1,5 @@
 // register.js
 const app = getApp()
-import Register from '../../../utils/register'
-
-let regFlag = false
 
 Page({
 
@@ -46,33 +43,5 @@ Page({
   bindInput(e) {
     this.data.fields[e.currentTarget.id] = e.detail.value
   },
-  register(e) {
-    if (regFlag) return;
-    regFlag = true
-    const context = this
-    const userInfo = e.detail.userInfo
-    const fields = this.data.fields
-
-    this.setData({
-      'error': [],
-      'status': 1
-    })
-
-    Register(fields, userInfo, {
-      onSuccess(res) {
-        regFlag = false
-        context.setData({
-          'status': 0
-        })
-        // 注册成功
-      },
-      onError(error) {
-        regFlag = false
-        context.setData({
-          'error': error,
-          'status': 0
-        })
-      }
-    })
-  }
+  register(e) {}
 })

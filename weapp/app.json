@@ -41,7 +41,7 @@
       },
       {
         "pagePath": "pages/user/index/index",
-        "text": "Me",
+        "text": "My",
         "iconPath": "assets/images/me.png",
         "selectedIconPath": "assets/images/me_hover.png"
       }

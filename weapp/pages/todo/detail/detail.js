@@ -2,7 +2,7 @@ const app = getApp()
 import {COLOR} from '../includes/const'
 import Todo from '../includes/todo'
 
-let todoId
+let TodoId
 
 Page({
 
@@ -36,102 +36,83 @@ Page({
         }
       })
     }
-    todoId = opts.todoId
+    TodoId = opts.todoId
     this.setBarColor(opts.classId)
-    this.getTodoDetail(todoId)
   },
   onReady: function () {
   },
   onShow: function () {
+    this.todoDetail(TodoId)
   },
   onShareAppMessage () {
     return {
       title: `好友 ${app.globalData.user.nickName} 邀请你加入：`,
-      path: `/pages/todo/detail/detail?todoId=${todoId}&classId=${this.data.todo.classId}`
+      path: `/pages/todo/detail/detail?todoId=${TodoId}&classId=${this.data.todo.classId}`
     }
   },
   onJoin(e) {
-    let currentTodo = app.globalData.todo[todoId]
-    Todo.postTodoFollow(todoId).then(res => {
-      currentTodo.updated = true
-      currentTodo.follower.push(app.globalData.user)
+    let _todo = app.globalData.todo[TodoId]
+    let _follow = app.globalData.todoFollow
+    let _followCount = app.globalData.todoFollowCount
+
+    Todo.postTodoFollow(TodoId, _todo.creatorId).then(res => {
+      if(_follow) _follow.updated = true
+      if(_followCount) _followCount.updated = true
+      
+      _todo.updated = true
+      _todo.follower.push(app.globalData.user)
       this.setData({
-        todo: currentTodo,
+        todo: _todo,
         isFollow: true
       })
-      Todo.TodoMessage(currentTodo, e.detail.formId, 'share')
+      Todo.TodoMessage(_todo, e.detail.formId, 'share')     // 推送通知
     }).catch(err => {
       wx.showModal({
         title: '',
         content: '加入失败',
         showCancel: false,
-        confirmColor: COLOR.blue,
         complete() {
           wx.switchTab({ url: '/pages/todo/index' })
         }
       })
     })
   },
-  setBarColor(id) {
-    if (!id) {
+  setBarColor(classId) {
+    if (classId) {
+      Todo.getClass().then(res => {
+        let bgColor = 'blue'
+        res.reduce((acc, v) => {
+          if(v.objectId === classId) bgColor = v.color
+        }, 0)
+        wx.setNavigationBarColor({
+          frontColor: '#ffffff',
+          backgroundColor: COLOR[bgColor]
+        })
+        this.setData({ bgColor })
+      })
+    } else {
       wx.setNavigationBarColor({
         frontColor: '#ffffff',
         backgroundColor: COLOR.blue
       })
     }
-    Todo.getClass().then(res => {
-      let bgColor = 'blue'
-      res.results.reduce((acc, v, k) => {
-        if (v['objectId'] === id) {
-          return bgColor = v.color
-        }
-      }, 0)
-      wx.setNavigationBarColor({
-        frontColor: '#ffffff',
-        backgroundColor: COLOR[bgColor]
-      })
-      this.setData({ bgColor })
-    })
   },
-  getTodoDetail(id) {
-    const localTodo = app.globalData.todo[id]
-    const me = app.globalData.user['objectId']
-    let isFollow = false
-    if (localTodo && !localTodo.updated) {
+  todoDetail(id) {
+    Todo.getTodoDetail(id).then(data => {
+      const me = app.globalData.user.objectId
+      data.follower.reduce((acc, v) => {
+        if(v.objectId === me) this.data.isFollow = true
+      }, 0)
+      data.startTime = new Date(data.startAt.iso).format('M月d 周wCN hh:mm')
+      data.endTime = new Date(data.endAt.iso).format('M月d 周wCN hh:mm')
+
       this.setData({
         status: 'end',
-        todo: localTodo,
-        isCreator: localTodo.creatorId === me
+        todo: data,
+        todoClass: app.globalData.todoClass,
+        isCreator: data.creatorId === me,
+        isFollow: this.data.isFollow
       })
-    } else {
-      Todo.getTodo(id).then(res => {
-        const result = Object.assign({}, res, {
-          startTime: new Date(res.startAt.iso).format('M月d 周wCN hh:mm'),
-          endTime: new Date(res.endAt.iso).format('M月d 周wCN hh:mm'),
-          follower: [res.creator],
-          updated: false
-        })
-        this.setData({
-          status: 'end',
-          todo: result,
-          isCreator: res.creatorId === me
-        })
-        Todo.getFollower(id).then(user => {
-          if (user.length > 0) {
-            user.reduce((acc, v, k) => {
-              result.follower.push(v.follower)
-              if(v.followerId === me) isFollow = true
-            }, 0)
-            this.setData({
-              todo: result,
-              isFollow: isFollow
-            })
-          }
-          app.globalData.todo[id] = result
-        })
-      }).catch((err, msg) => {
-        console.log(err, msg)
-      })
-    } 
+    })
   }
 })

@@ -1,4 +1,4 @@
-import Util from '../utils/util'
+import Util from '../../utils/util'
 /**
 
 Qdate()
@@ -58,7 +58,7 @@ function zero(num) {
  *    3.2 否者将 '-' 替换 '/', 返回 new Date 
  */
 function toDate(date) {
-  return !date ? new Date() : date instanceof Date ? date : typeof date === 'string' ? date.indexOf('000Z') > -1 ? new Date(date) : new Date(date.replace(/-/g, '/')) : new Date(date)
+  return !date ? new Date() : date instanceof Date ? new Date(date) : typeof date === 'string' ? date.indexOf('000Z') > -1 ? new Date(date) : new Date(date.replace(/-/g, '/')) : new Date(date)
 }
 
 /**

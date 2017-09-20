@@ -1,9 +1,12 @@
 const app = getApp()
 import Util from '../../../utils/util'
-import Todo from '../../../utils/todo'
-import Qdate from '../../../libs/date'
+import Qdate from '../../../libs/scripts/date'
+import { ACL } from '../../../utils/lean'
+import Todo from '../../../models/todo'
+import Notice from '../../../models/notice'
 import { ALL, ARCHIVE } from './const'
 import { ArchiveState, ArchiveDate } from './archive'
+
 /* 
 try {
   const userId = app.globalData.user.objectId
@@ -17,7 +20,7 @@ try {
 /**
  * 发送模版消息[创建todo成功]
  * @param {[Obj]} todo todo信息
- * @param {[Str]} formId 模版消息授权码
+ * @param {[str]} formId 模版消息授权码
  */
 const TodoMessage = function (todo, formId, type = 'share') {
   let postData = {
@@ -46,12 +49,12 @@ const TodoMessage = function (todo, formId, type = 'share') {
     "emphasis_keyword": ""
   }
   return new Promise((resolve, reject) => {
-    Util.sendMessage(postData, {
+    Notice(postData, {
       success(res) {
         resolve(res)
       },
       fail(err) {
-        reject(err)
+        reject(Util.resetError(err, '消息发送失败'))
       }
     })
   })
@@ -60,19 +63,20 @@ const TodoMessage = function (todo, formId, type = 'share') {
 /**
  * 创建 Todo Class
  */
-const postClass = function ({ title, color }, { success, fail }) {
-  Todo.addTodoClass({ title, color, owner: app.globalData.user.objectId }, {
-    success(res) {
-      if (res.statusCode === 201) {
-        typeof success === 'function' && success(res)
-      } else {
-        typeof fail === 'function' && fail(res, '列表添加失败')
-        console.error(res)
+const postClass = function ({ title, color }) {
+  return new Promise((resolve, reject) => {
+    Todo.postClass({ title, color, owner: app.globalData.user.objectId },{
+      success(res) {
+        if (res.statusCode === 201) {
+          resolve(res)
+        } else {
+          reject(Util.resetError(res, '创建失败'))
+        }
+      },
+      fail(error) {
+        reject(Util.resetError(error, '网络错误，创建失败'))
       }
-    }, fail(error) {
-      typeof fail === 'function' && fail(error, '网络繁忙')
-      console.error(error)
-    }
+    })
   })
 }
 
@@ -84,39 +88,48 @@ const getClass = function () {
     try {
       const localClass = wx.getStorageSync('todoClass') || null
       if (localClass && !localClass.updated) {
-        resolve(localClass)
+        setGlobalClass(localClass.results)
+        resolve(localClass.results)
       } else {
         const condition = `?where={"$or":[{"owner":"0"},{"owner":"${app.globalData.user.objectId}"}]}&order=-orderBy,createdAt`
-
-        Todo.getTodoClass(condition, {
+        Todo.getClass(condition, {
           success(res) {
             if (res.statusCode === 200) {
-              let _classes = []
-              res.data.results.forEach(function (v, k) {
+              let _classList = res.data.results.reduce((acc, v, k) => {
                 let { objectId, title, icon, color, owner } = v
-                if (!icon) icon = 'dot'
-                _classes[k] = { objectId, title, icon, color, owner, count: 0 }
-              })
+                acc[k] = { objectId, title, icon: icon ? icon : 'dot', color, owner, count: 0 }
+                return acc
+              }, [])
               const result = Object.assign({}, {
-                results: _classes,
+                results: _classList,
                 updated: false
               })
+              setGlobalClass(_classList)
               wx.setStorage({ key: 'todoClass', data: result })
-              resolve(result)
+              resolve(_classList)
             } else {
-              reject(res, '获取列表失败')
+              reject(Util.resetError(res, '获取列表失败'))
             }
           },
           fail(error) {
             console.error(error)
-            reject(error, '网络繁忙')
+            reject(Util.resetError(res, '网络错误, 获取失败'))
           }
         })
       }
     } catch (error) {
-      reject(error, '获取缓存数据失败')
+      reject(Util.resetError(error, '获取缓存数据失败'))
     }
   })
+}
+
+function setGlobalClass(list) {
+  if(app.globalData.todoClass) return
+  const _class = {}
+  list.reduce((acc, v) => {
+    _class[v.objectId] = v
+  }, 0)
+  app.globalData.todoClass = _class
 }
 
 /**
@@ -127,7 +140,7 @@ const getAllTodo = function () {
     try {
       const localTodo = wx.getStorageSync('todoList') || null
       if (localTodo && !localTodo.updated) {
-        resolve(localTodo)
+        resolve(localTodo.results)
       } else {
         Todo.getTodo(`?where={"creatorId":"${app.globalData.user.objectId}"}&order=endAt`, {
           success(res) {
@@ -137,19 +150,18 @@ const getAllTodo = function () {
                 updated: false
               })
               wx.setStorage({ key: 'todoList', data: result })
-              resolve(result)
+              resolve(res.data.results)
             } else {
-              reject(res, '获取列表失败')
+              reject(Util.resetError(res, '获取列表失败'))
             }
           },
           fail(error) {
-            console.error(error)
-            reject(error, '网络繁忙')
+            reject(Util.resetError(error, '网络错误，获取失败'))
           }
         })
       }
     } catch (error) {
-      reject(error, '获取缓存数据失败')
+      reject(Util.resetError(error, '获取缓存数据失败'))
     }
   })
 }
@@ -157,18 +169,18 @@ const getAllTodo = function () {
 /**
  * 创建 Todo
  */
-const postTodo = function (data = {}) {
+const postTodo = function (data) {
   return new Promise((resolve, reject) => {
-    Todo.addTodo(data, {
+    Todo.postTodo(data, {
       success(res) {
         if (res.statusCode === 201) {
           resolve(res.data)
         } else {
-          reject(Util.setError(res, '清单创建失败'))
+          reject(Util.resetError(res, '清单创建失败'))
         }
       },
       fail(error) {
-        reject(Util.setError(error, '清单创建失败'))
+        reject(Util.resetError(error, '网络错误，创建失败'))
       }
     })
   })
@@ -176,7 +188,6 @@ const postTodo = function (data = {}) {
 
 /**
  * 获取 todo 详情
- * @param {[Str]} id todo id
  */
 const getTodo = function (id) {
   return new Promise((resolve, reject) => {
@@ -185,11 +196,11 @@ const getTodo = function (id) {
         if (res.statusCode === 200) {
           resolve(res.data)
         } else {
-          reject(res, '获取列表失败')
+          reject(Util.resetError(res, '获取列表失败'))
         }
       },
       fail(error) {
-        reject(error, '网络繁忙')
+        reject(Util.resetError(error, '网络错误，获取失败'))
       }
     })
   })
@@ -197,21 +208,19 @@ const getTodo = function (id) {
 
 /**
  * 更新 todo
- * @param {[Str]} todoId todo id
- * @param {[Obj]} data 更新的数据
  */
-const updateTodo = function (todoId, data = {}) {
+const updateTodo = function (todoId, data) {
   return new Promise((resolve, reject) => {
-    Todo.updateTodo(`/${todoId}`, data, {
+    Todo.updatTodo(`/${todoId}`, data, {
       success(res) {
         if (res.statusCode === 200) {
           resolve(res)
         } else {
-          reject(res)
+          reject(Util.resetError(res, '更新数据失败'))
         }
       },
       fail(error) {
-        reject(error)
+        reject(Util.resetError(error, '网络错误，更新失败'))
       }
     })
   })
@@ -219,12 +228,10 @@ const updateTodo = function (todoId, data = {}) {
 
 /**
  * 加入 todo邀请
- * @param {[Str]} todoId todo id
- * @param {[Str]} creatorId todo创建者id
  */
 const postTodoFollow = function (todoId, creatorId) {
-  const userId = app.globalData.user.objectId
-  const request = {
+  const userId = app.globalData.user['objectId']
+  const requestData = {
     followerId: userId,
     follower: {
       "__type": "Pointer",
@@ -237,18 +244,18 @@ const postTodoFollow = function (todoId, creatorId) {
       "className": "Todo",
       "objectId": todoId
     },
-    'ACL': Util.setACL({user: [userId, creatorId]})
+    ACL: ACL({user: [userId, creatorId]})
   }
   return new Promise((resolve, reject) => {
-    Todo.addTodoFollow(request, {
+    Todo.postFollow(requestData, {
       success(res) {
         if (res.statusCode === 201) {
           resolve(res)
         } else {
-          reject(res, '列表添加失败')
+          reject(Util.resetError(res, '加入失败'))
         }
       }, fail(error) {
-        reject(error, '网络繁忙')
+        reject(Util.resetError(error, '网络错误'))
       }
     })
   })
@@ -262,17 +269,17 @@ const getFollow = function () {
     if (localFollow && !localFollow.updated) {
       resolve(localFollow.results)
     } else {
-      Todo.getTodoFollow(`?where={"followerId":"${app.globalData.user.objectId}"}&include=todo&keys=todo`, {
+      Todo.getFollow(`?where={"followerId":"${app.globalData.user.objectId}"}&include=todo&keys=todo`, {
         success(res) {
           if (res.statusCode === 200) {
             app.globalData.todoFollow = {results: res.data.results, updated: false}
             resolve(res.data.results)
           } else {
-            reject(Util.setError(res, '获取数据失败'))
+            reject(Util.resetError(res, '获取数据失败'))
           }
         },
         fail(error) {
-          reject(Util.setError(error, '网络繁忙'))
+          reject(Util.resetError(error, '网络错误'))
         }
       })
     } 
@@ -289,18 +296,18 @@ const getFollowCount = function () {
       resolve(localFollow.count)
     } else {
       const condition = `?where={"followerId":"${app.globalData.user.objectId}"}&count=1&limit=0`
-      Todo.getTodoFollow(condition, {
+      Todo.getFollow(condition, {
         success(res) {
           if (res.statusCode === 200) {
             app.globalData.todoFollowCount = { count: res.data.count, updated: false }
             resolve(res.data.count)
           } else {
-            reject(res, '获取列表失败')
+            reject(Util.resetError(res, '获取列表失败'))
           }
         },
         fail(error) {
           console.error(error)
-          reject(error, '网络繁忙')
+          reject(Util.resetError(error, '网络错误'))
         }
       })
     }
@@ -312,18 +319,45 @@ const getFollowCount = function () {
  */
 const getFollower = function (todoId) {
   return new Promise((resolve, reject) => {
-    Todo.getTodoFollow(`?where={"todoId":"${todoId}"}&include=follower`, {
+    Todo.getFollow(`?where={"todoId":"${todoId}"}&include=follower`, {
       success(res) {
         if (res.statusCode === 200) {
           resolve(res.data.results)
         } else {
-          reject(res, '获取数据失败')
+          reject(Util.resetError(res, '获取数据失败'))
         }
       },
       fail(error) {
-        reject(error, '网络繁忙')
+        reject(Util.resetError(error, '网络错误'))
       }
     })
+  })
+}
+
+/**
+ * 获取todo详情,[包含所有参与者]
+ * @param {[str]} id todo id
+ */
+const getTodoDetail = function (todoId) {
+  return new Promise((resolve, reject) => {
+    const localTodo = app.globalData.todo[todoId]
+    if (localTodo && !localTodo.updated) {
+      resolve(localTodo)
+    } else {
+      Promise.all([getTodo(todoId), getFollower(todoId), getClass()]).then(res => {
+        let follower = [res[0].creator]
+        if (res[1].length > 0) {
+          res[1].reduce((acc, v) => {
+            follower.push(v.follower)
+          }, 0)
+        }
+        const result = Object.assign({}, res[0], {follower, updated: false})
+        app.globalData.todo[todoId] = result    // 加入缓存
+        resolve(result)
+      }).catch(error => {
+        reject(Util.resetError(error))
+      })
+    }
   })
 }
 
@@ -332,7 +366,7 @@ const getFollower = function (todoId) {
  */
 const todoArchive = function (cb) {
   Promise.all([getClass(), getAllTodo()]).then(data => {
-    const _classList = data[0].results, _todoList = data[1].results
+    const _classList = data[0], _todoList = data[1]
     const _class = {}, _mode = {}
 
     const dt = new Date()
@@ -401,6 +435,7 @@ module.exports = {
   todoArchive,
   postTodo,
   getTodo,
+  getTodoDetail,
   updateTodo,
   postTodoFollow,
   getFollowCount,

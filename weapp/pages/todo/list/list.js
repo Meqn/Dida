@@ -1,11 +1,17 @@
 const app = getApp()
-import Qdate from '../../../libs/date'
+import Qdate from '../../../libs/scripts/date'
+import Swipe from '../../../libs/scripts/swipe'
+import Util from '../../../utils/util'
 import Todo from '../includes/todo'
 import { ALL } from '../includes/const'
+
+let ThisDataTodo
+let TouchXY = {x1: 0, x2: 0, y1: 0, y2: 0}
 
 Page({
   data: {
     status: 'loading',
+    moveId : '',
     data: {
       todo: [],   // 当前分类 todo 列表
       count: 0,   // 当前分类 todo 数量
@@ -14,29 +20,54 @@ Page({
     }
   },
   onLoad: function (opts) {
-    console.log(opts)
+    console.log('onLoad : ', opts)
     
 
     if (!opts.type || !opts.val) return wx.navigateTo({url: '/pages/todo/class/class'})
-
-    const ctx = this
     // 设置标题
     this.setTitle(opts, res => {
       wx.setNavigationBarTitle({title: res})
     })
     // 获取todo数据
-    this.getTodo(opts, (data, count) => {
-      console.log('result : ', data)
-      this.setData({
-        status: 'end',
-        'data.todo': data,
-        'data.type': opts.type,
-        'data.count': count
-      })
+    this.getTodo(opts)
+  },
+  onHide() {
+    this.setData({moveId: ''})
+  },
+  onTouchStart(e) {
+    let eTouch = e.changedTouches[0]
+    TouchXY.x1 = eTouch.pageX
+    TouchXY.y1 = eTouch.pageY
+  },
+  onTouchEnd(e) {
+    const _todoId = e.currentTarget.dataset.todoid
+    const ctx = this
+    let eTouch = e.changedTouches[0]
+    TouchXY.x2 = eTouch.pageX
+    TouchXY.y2 = eTouch.pageY
+
+    Swipe(TouchXY, {
+      swipe(dir) {
+        if (dir !== 'Left') ctx.setData({moveId: ''})
+      },
+      swipeLeft() {
+        if (_todoId !== ctx.data.moveId) ctx.setData({moveId: _todoId})
+      }
     })
   },
-
-  onReady: function () {
+  onDelete(e) {
+    wx.showModal({
+      content: '删除后，就找不回来了',
+      cancelColor: '#80848f',
+      confirmColor: '#ff4949',
+      success(res) {
+        if (res.confirm) {
+          console.log('删除啦')
+        } else {
+          console.log('删除失败')
+        }
+      }
+    })
   },
   todoLink(e) {
     const ds = e.currentTarget.dataset
@@ -45,9 +76,8 @@ Page({
     })
   },
   onDone(e) {
-    console.log('已完成', e, e.currentTarget.dataset)
     const dt = e.currentTarget.dataset
-    if (dt.done === 5) {
+    if (dt.done === 0) {
       const requestData = {
         'doneAt': {
           '__type': 'Date',
@@ -55,19 +85,11 @@ Page({
         }
       }
       Todo.updateTodo(dt.todoid, requestData).then(res => {
-        console.log('updateTodo : ', res)
         ThisDataTodo.reduce((acc, v) => {
-          if (v.objectId === dt.todoid) {
+          if (v.objectId === dt.todoid)
             v.doneAt = requestData.doneAt
-          }
-        })
-        this.setTodo(() => {
-          const date = this.data.dateTodo.date
-          if (!date) return
-          this.setData({
-            'dateTodo.todo': Todo.getTodoOfDate(ThisDataTodo, date)
-          })
-        })
+        }, 0)
+        this.setTodo(ThisDataTodo, this.data.type)
         Util.storageUpdate('todoList')
       })
     }
@@ -76,10 +98,11 @@ Page({
     let ret = '归档'
     if (type === 'class') {
       Todo.getClass().then(res => {
-        res.results.reduce((acc, v, k) => {
+        /* res.reduce((acc, v, k) => {
           if (v.objectId === val)
             ret = v.title
-        }, 0)
+        }, 0) */
+        ret = app.globalData.todoClass[val].title
         typeof cb === 'function' && cb(ret)
       })
     } else {
@@ -94,27 +117,33 @@ Page({
       typeof cb === 'function' && cb(ret)
     }
   },
-  getTodo({type, val}, cb = null) {
+  getTodo({type, val}) {
     if (type === 'invite') {
       Todo.getFollow().then(data => {
         let result = data.length > 0 ? data.reduce((acc, v, k) => {
           acc.push(v.todo)
           return acc
         }, []) : []
-        const count = result.length
-        typeof cb === 'function' && cb(Todo.getTodoOfState(result), count)
+        // result
+        this.setTodo(result, type)
       })
     } else {
       Todo.todoArchive(data => {
-        console.log(data)
         const _list = data.size[val]
         let result = (_list && _list instanceof Array) ? _list : []
-        const count = result.length
-        if (type === 'class') {
-          result = Todo.getTodoOfState(result)
-        }
-        typeof cb === 'function' && cb(result, count)
+        // result
+        this.setTodo(result, type)
       })
     }
+  },
+  setTodo(todo, type) {
+    ThisDataTodo = todo         // 临时缓存
+    const _todo = type === 'mode' ? todo : Todo.getTodoOfState(todo)
+    this.setData({
+      status: 'end',
+      'data.todo': _todo,
+      'data.type': type,
+      'data.count': todo.length
+    })
   }
 })

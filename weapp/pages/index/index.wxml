@@ -4,5 +4,5 @@
   <template is="loading" data="{{text: 'Loading...'}}" wx:if="{{status === 'loading'}}" />
   <include src="register.wxml" wx:if="{{status === 'register'}}" />
   <include src="clock.wxml" />
-  <include src="setDate.wxml" wx:if="{{status === 'date'}}" />
+  <include src="life.wxml" wx:if="{{status === 'date'}}" />
 </view>

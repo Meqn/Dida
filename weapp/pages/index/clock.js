@@ -20,13 +20,13 @@ function tick() {
     minuteRotate = minute * 6,
     hourRotate = hour * 30 + minute / 2;  // hour * (360/12) + minute / 2 
   return {
-      hour,
-      minute,
-      second,
-      hourRotate,
-      minuteRotate,
-      secondRotate
-    }
+    hour,
+    minute,
+    second,
+    hourRotate,
+    minuteRotate,
+    secondRotate
+  }
 }
 
 module.exports = {

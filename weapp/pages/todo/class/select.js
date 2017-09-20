@@ -15,7 +15,7 @@ Page({
       this.setData({
         status: 'success',
         currentClass: app.globalData.temp.todoClass.id,
-        classes: res.results
+        classes: res
       })
     }).catch((error, msg) => {
       console.error(msg)

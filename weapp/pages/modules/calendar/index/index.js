@@ -1,4 +1,4 @@
-import Qdate from '../../../../libs/date'
+import Qdate from '../../../../libs/scripts/date'
 
 // index.js
 Page({

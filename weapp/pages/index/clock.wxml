@@ -1,16 +1,16 @@
 <view class="clock">
   <view class="clock-inner">
     <view class="clock-point">
-      <view wx:for="{{points}}" class="d {{item.classname}}" style="top: {{item.y}}px; left: {{item.x}}px;" wx:key="{{item.x+','+item.y}}"></view>
+      <view wx:for="{{clock.point}}" class="d {{item.classname}}" style="top: {{item.y}}px; left: {{item.x}}px;" wx:key="{{item.x+','+item.y}}"></view>
     </view>
-    <view class="hour" style="-webkit-transform: rotate({{clock.hourRotate}}deg); transform: rotate({{clock.hourRotate}})deg;"></view>
-    <view class="minute" style="-webkit-transform: rotate({{clock.minuteRotate}}deg); transform: rotate({{clock.minuteRotate}})deg;"></view>
-    <view class="second" style="-webkit-transform: rotate({{clock.secondRotate}}deg); transform: rotate({{clock.secondRotate}})deg;"></view>
+    <view class="hour" style="-webkit-transform: rotate({{clock.time.hourRotate}}deg); transform: rotate({{clock.time.hourRotate}})deg;"></view>
+    <view class="minute" style="-webkit-transform: rotate({{clock.time.minuteRotate}}deg); transform: rotate({{clock.time.minuteRotate}})deg;"></view>
+    <view class="second" style="-webkit-transform: rotate({{clock.time.secondRotate}}deg); transform: rotate({{clock.time.secondRotate}})deg;"></view>
     <view class="dot"></view>
   </view>
 </view>
-<view style="margin:100rpx 20% 0;" wx:if="{{bornAt === 0 || dieAt === 0}}">
-  <button class="q-btn-mini" type="default" bindtap="dateBtnClick">设置我的时限</button>
+<view style="margin:100rpx 20% 0;" wx:if="{{!life.bornAt || !life.dieAt}}">
+  <button class="q-btn-mini" type="default" bindtap="onSetLife">设置我的时限</button>
 </view>
 <block wx:else>
   <view class="user-time">
@@ -19,49 +19,49 @@
       <text class="title">已用掉</text>
       <view class="cells">
         <view class="cell">
-          <view class="value">{{life.prev.year}}</view>
+          <view class="value">{{life.data.past.year}}</view>
           <view class="name">年</view>
         </view>
         <view class="cell">
-          <view class="value">{{life.prev.month}}</view>
+          <view class="value">{{life.data.past.month}}</view>
           <view class="name">月</view>
         </view>
         <view class="cell">
-          <view class="value">{{life.prev.day}}</view>
+          <view class="value">{{life.data.past.day}}</view>
           <view class="name">日</view>
         </view>
         <view class="cell">
-          <view class="value">{{life.prev.hour}}</view>
+          <view class="value">{{life.data.past.hour}}</view>
           <view class="name">时</view>
         </view>
         <view class="cell">
-          <view class="value">{{life.prev.second}}</view>
+          <view class="value">{{life.data.past.second}}</view>
           <view class="name">秒</view>
         </view>
       </view>
     </view>
     <view class="column">
-      <text class="title red" wx:if="{{life.die}}">人生终点 我所向往</text>
+      <text class="title red" wx:if="{{life.data.die}}">人生终点 我所向往</text>
       <text class="title" wx:else>只剩下</text>
       <view class="cells">
         <view class="cell">
-          <view class="value">{{life.next.year}}</view>
+          <view class="value">{{life.data.later.year}}</view>
           <view class="name">年</view>
         </view>
         <view class="cell">
-          <view class="value">{{life.next.month}}</view>
+          <view class="value">{{life.data.later.month}}</view>
           <view class="name">月</view>
         </view>
         <view class="cell">
-          <view class="value">{{life.next.day}}</view>
+          <view class="value">{{life.data.later.day}}</view>
           <view class="name">日</view>
         </view>
         <view class="cell">
-          <view class="value">{{life.next.hour}}</view>
+          <view class="value">{{life.data.later.hour}}</view>
           <view class="name">时</view>
         </view>
         <view class="cell">
-          <view class="value">{{life.next.second}}</view>
+          <view class="value">{{life.data.later.second}}</view>
           <view class="name">秒</view>
         </view>
       </view>

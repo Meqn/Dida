@@ -1,4 +1,4 @@
-<import src="../includes/page-loading.wxml" />
+<import src="../../includes/page-loading.wxml" />
 <import src="../includes/list.wxml" />
 
 <template is="loading" data="{{text: 'Loading...'}}" wx:if="{{status === 'loading'}}" />
@@ -11,11 +11,11 @@
           <view class="q-cell todo-head">
             <view class="q-cell__bd">{{item.title}}</view>
           </view>
-          <template is="todos" data="{{todo: data.todo[item.type], type: data.type}}" />
+          <template is="todos" data="{{todo: data.todo[item.type], type: data.type, moveId: moveId}}" />
         </block>
       </block>
       <block wx:if="{{data.type === 'mode'}}">
-        <template is="todos" data="{{todo: data.todo, type: data.type}}" />
+        <template is="todos" data="{{todo: data.todo, type: data.type, moveId: moveId}}" />
       </block>
     </block>
     <block wx:else>

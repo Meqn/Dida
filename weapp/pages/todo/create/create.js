@@ -1,6 +1,6 @@
 const app = getApp()
 import Util from '../../../utils/util'
-import Qdate from '../../../libs/date'
+import Qdate from '../../../libs/scripts/date'
 import Handle from './handle'
 import Todo from '../includes/todo'
 

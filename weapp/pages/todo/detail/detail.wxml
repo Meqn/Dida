@@ -1,5 +1,5 @@
 <import src="../../includes/page-loading.wxml" />
-<wxs src="../includes/todo.wxs" module="todoUtil" />
+<wxs src="../includes/todo.wxs" module="TodoUtil" />
 
 <template is="loading" data="{{text: 'Loading...'}}" wx:if="{{status === 'loading'}}" />
 <view class="container todo-detail">
@@ -10,7 +10,7 @@
       </view>
       <view class="q-cell__bd">
         <view class="q-cell__text">{{todo.creator.nickName}} 创建</view>
-        <view class="q-cell__text--sub text">{{todoUtil.getFollowerCount(todo.follower)}}人参与</view>
+        <view class="q-cell__text--sub text">{{TodoUtil.getFollowerCount(todo.follower)}}人参与</view>
       </view>
     </view>
   </view>
@@ -34,11 +34,18 @@
       <view class="q-cell__bd">{{todo.startTime}}
         <text style="margin:0 10rpx;">－</text> {{todo.endTime}}</view>
     </view>
+    <navigator class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover" url="/pages/todo/list/list?type=class&val={{todo.classId}}">
+      <view class="q-cell__hd">
+        <text class="icon icon-{{todoClass[todo.classId].icon === 'dot' ? 'sort' : todoClass[todo.classId].icon}}" />
+      </view>
+      <view class="q-cell__bd">{{todoClass[todo.classId].title}}</view>
+      <view class="q-cell__ft"></view>
+    </navigator>
     <view class="q-cell q-cell--hd" hover-class="q-cell-hover">
       <view class="q-cell__hd">
         <text class="icon icon-flag" />
       </view>
-      <view class="q-cell__bd">{{todoUtil.getPriority(todo.priority)}}</view>
+      <view class="q-cell__bd">{{TodoUtil.getPriority(todo.priority)}}</view>
     </view>
   </view>
 
@@ -47,9 +54,9 @@
       <view class="q-cell__hd">
         <text class="icon icon-group" />
       </view>
-      <view class="q-cell__bd">{{todoUtil.getFollowerCount(todo.follower)}}人参与</view>
+      <view class="q-cell__bd">{{TodoUtil.getFollowerCount(todo.follower)}}人参与</view>
       <view class="q-cell__ft q-cell__avatars">
-        <image wx:for="{{todo.follower}}" wx:if="{{index < 3}}" mode="aspectFill" src="{{item.avatarUrl}}" />
+        <image wx:for="{{todo.follower}}" wx:key="objectId" wx:if="{{index < 3}}" mode="aspectFill" src="{{item.avatarUrl}}" />
       </view>
     </navigator>
   </view>
@@ -74,7 +81,7 @@
         <block wx:else>
           <block wx:if="{{isFollow}}">
             <button plain open-type="share" hover-class="btn-hover">
-              <text class="icon icon-invite blue" /><text>邀请</text>
+              <text class="icon icon-invite blue" /><text>邀请好友加入</text>
             </button>
           </block>
           <block wx:else>

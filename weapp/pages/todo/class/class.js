@@ -106,21 +106,18 @@ Page({
       'posts.status': 1,
       'posts.error': ''
     })
-    Todo.postClass({ title, color }, {
-      success(res) {
-        context.setData({
-          status: 'end',
-          'posts.status': 0,
-          'posts.error': '',
-          'posts.fields.title': ''
-        })
-      },
-      fail(error, msg) {
-        context.setData({
-          'posts.status': 0,
-          'posts.error': msg
-        })
-      }
+    Todo.postClass({title, color}).then(res => {
+      this.setData({
+        status: 'end',
+        'posts.status': 0,
+        'posts.error': '',
+        'posts.fields.title': ''
+      })
+    }).catch(err => {
+      this.setData({
+        'posts.status': 0,
+        'posts.error': err.errorText
+      })
     })
   },
   // 获取列表名称

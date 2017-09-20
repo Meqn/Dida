@@ -1,4 +1,4 @@
-import Qdate from '../../libs/date'
+import Qdate from '../../libs/scripts/date'
 import Todo from './includes/todo'
 import Archive from './includes/archive'
 import CONST from './includes/const'
@@ -20,6 +20,7 @@ Page({
    */
   data: {
     status: 'loading',
+    moveId: '',
     calendar: {
       month: '',
       week: [],
@@ -58,9 +59,8 @@ Page({
     console.log('page show ...')
 
     Todo.getAllTodo().then(res => {
-      console.log(res)
-      ThisDataTodo = res.results
-      this.setTodo(ThisDataTodo)
+      ThisDataTodo = res
+      this.setTodo(res)
     })
   },
 
@@ -105,6 +105,8 @@ Page({
   onShareAppMessage: function () {
 
   },
+  onTouchStart() {},
+  onTouchEnd() {},
   todoLink(e) {
     const ds = e.currentTarget.dataset
     wx.navigateTo({
@@ -112,7 +114,6 @@ Page({
     })
   },
   onDone(e) {
-    console.log('已完成', e, e.currentTarget.dataset)
     const dt = e.currentTarget.dataset
     if (dt.done === 0) {
       const requestData = {
@@ -122,12 +123,11 @@ Page({
         }
       }
       Todo.updateTodo(dt.todoid, requestData).then(res => {
-        console.log('updateTodo : ', res)
         ThisDataTodo.reduce((acc, v) => {
           if (v.objectId === dt.todoid) {
             v.doneAt = requestData.doneAt
           }
-        })
+        }, 0)
         this.setTodo(() => {
           const date = this.data.dateTodo.date
           if (!date) return

@@ -1,5 +1,5 @@
 const app = getApp()
-import Swipe from '../../../libs/swipe'
+import Swipe from '../../../libs/scripts/swipe'
 
 let TouchXY = {x1: 0, x2: 0, y1: 0, y2: 0}
 
@@ -59,7 +59,7 @@ Page({
     TouchXY.y2 = eTouch.pageY
 
     Swipe(TouchXY, {
-      swipeLeft(e) {
+      swipeLeft() {
         let params = {}
         params['users['+ index +'].isMove'] = true
         ctx.setData(params)

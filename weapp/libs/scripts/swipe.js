@@ -18,11 +18,13 @@ module.exports = function Swipe({ x1, x2, y1, y2 }, cb = {}) {
   const diffY = Math.abs(y1 - y2)
   let evt = 'tap'
   let diff = 0
+  let direction = null
 
   if (diffX > 30 || diffY > 30) {
-    let direction = swipeDirection({x1, x2, y1, y2})
+    direction = swipeDirection({x1, x2, y1, y2})
     evt = 'swipe' + direction
     diff = (direction === 'Left' || direction === 'Right') ? diffX : diffY
   }
+  typeof cb['swipe'] === 'function' && cb['swipe'](direction)
   typeof cb[evt] === 'function' && cb[evt](diff)
 }

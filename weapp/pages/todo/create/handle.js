@@ -1,5 +1,5 @@
 const app = getApp()
-import Qdate from '../../../libs/date'
+import Qdate from '../../../libs/scripts/date'
 
 // 优先级状态
 function priorityStatus(num) {

@@ -1,8 +1,11 @@
 const app = getApp()
-import Util from '../../utils/util'
-import Qdate from '../../libs/date'
-import { updateUser, saveLocalUser } from '../../utils/user'
+import Qdate from '../../libs/scripts/date'
 
+/**
+ * 年龄范围
+ * @param {*} min 
+ * @param {*} max 
+ */
 function ageRange(min, max) {
   let ages = []
   for (let i = min; i <= max; i++) {
@@ -10,29 +13,21 @@ function ageRange(min, max) {
   }
   return ages
 }
-function checkDate(born, age) {
-  let error = null
-  if (born === 0 || age === 0) {
-    error = '请设置出生时间和死亡年龄'
-  } else {
-    const now = new Date()
-    const bornAt = new Date(born.replace(/-/g, '/'))
-    const dieAt = new Date([bornAt.getFullYear() + age, bornAt.getMonth() + 1, bornAt.getDate()].join('/'))
-    if (now > dieAt) {
-      error = '做人要真诚，请不要诈尸'
-    }
-  }
-  return error
-}
+
+/**
+ * 获取用户一生的详细时间
+ * @param {*} bornAt 生于
+ * @param {*} dieAt 死于
+ */
 function getLife(bornAt, dieAt) {
-  let bornDiff = Qdate.diff(bornAt, null),
-    dieDiff = Qdate.diff(null, dieAt)
-  
-  let die = dieDiff.is === 0 ? true : false
+  const bornDiff = Qdate.diff(bornAt)
+  const dieDiff = Qdate.diff(null, dieAt)
+  const die = dieDiff.is === 0 ? true : false
+
   return {
     die,
-    prev: bornDiff,
-    next: die ? {
+    past: bornDiff,
+    later: die ? {
       year: 0,
       month: 0,
       week: 0,
@@ -43,74 +38,32 @@ function getLife(bornAt, dieAt) {
     } : dieDiff
   }
 }
-function logged(user) {
-  console.log('登录成功: ', user)
-  this.setData({
-    status: 'logged'
-  })
-  if (user.bornAt && user.dieAt) {
-    const bornAt = new Date(user.bornAt.iso)
-    const dieAt = new Date(user.dieAt.iso)
-    
-    this.setData({
-      bornAt,
-      dieAt,
-      life: getLife(bornAt, dieAt)
-    })
-  }
-}
-function setLife() {
-  const context = this
-  const lifeData = this.data.setLife
-  let {hour, minute, second} = Qdate.get()
 
-  const born = Qdate.toDate(lifeData.born +' '+ [hour, minute, second].join(':'))
-  const die = Qdate.add({year: parseInt(lifeData.age, 10)}, new Date(born)).date
-
-  const request = {
-    'bornAt': {
-      '__type': 'Date',
-      'iso': born
-    },
-    'dieAt': {
-      '__type': 'Date',
-      'iso': die
+/**
+ * 验证用户设置的时间信息
+ * @param {*} born 出生年月
+ * @param {*} age 死亡年龄
+ */
+function checkDate(born, age) {
+  let ret
+  if (!born || !age) {
+    ret = '请设置出生时间和死亡年龄'
+  } else {
+    const now = Qdate.get()
+    const bornAt = new Date(born.replace(/-/g, '/') +' '+ [now.hour, now.minute, now.second].join(':'))
+    const dieAt = Qdate.add({ year: parseInt(age, 10) }, bornAt).date
+    if (now.timestamp >= dieAt.getTime()) {
+      ret = '做人要真诚，请不要诈尸'
+    } else {
+      ret = { bornAt, dieAt }
     }
   }
-
-  updateUser({
-    id: app.globalData.user.objectId,
-    data: request,
-    success(res) {
-      if (res.statusCode === 200) {
-        console.log('更新成功 : ', res)
-        let _data = Object.assign({}, app.globalData.user, request)
-        saveLocalUser(_data)
-
-        context.setData({
-          status: 'end',
-          'setLife.status': 0,
-          bornAt: born,
-          dieAt: die,
-          life: getLife(born, die)
-        })
-      } else {
-        context.setData({
-          'setLife.status': 0,
-          'setLife.error': '设置失败, 请稍后再试'
-        })
-        Util.setData.call(context, {
-          'setLife.error': ''
-        }, 2000)
-      }
-    }
-  })
+  return ret
 }
 
 
 module.exports = {
   ageRange,
-  logged,
   checkDate,
-  setLife
+  getLife
 }

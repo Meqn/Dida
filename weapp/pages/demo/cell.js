@@ -1,4 +1,4 @@
-import Swipe from '../../libs/swipe'
+import Swipe from '../../libs/scripts/swipe'
 
 let touchXY = {
   x1: 0,

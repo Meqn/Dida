@@ -1,18 +1,4 @@
-
-const COLOR = {
-  red: '#f44336',
-  orange: '#ff9800',
-  yellow: '#ffd422',
-  green: '#04BE02',
-  blue: '#2196f3',
-  indigo: '#3f51b5',
-  purple: '#9c27b0',
-  pink: '#e91e63',
-  cyan: '#00bcd4',
-  teal: '#009688',
-  brown: '#795548',
-  black: '#212121'
-}
+const app = getApp()
 
 Page({
 
@@ -36,18 +22,6 @@ Page({
    */
   onReady: function () {
   
-  },
-  setBarColor() {
-    wx.setNavigationBarColor({
-      frontColor: '#ffffff',
-      backgroundColor: COLOR.blue,
-      success(e) {
-        console.log('success : ', e)
-      },
-      fail(e) {
-        console.log('fail : ', e)
-      }
-    })
   },
 
   /**
@@ -90,5 +64,20 @@ Page({
    */
   onShareAppMessage: function () {
   
+  },
+  onClearCache() {
+    app.globalData = {
+      user: null,
+      system: {},
+      temp: {},
+      todo: {},
+      todoFollow: null,
+      todoFollowCount: null
+    }
+    wx.clearStorage({
+      success() {
+        wx.reLaunch({url: '/pages/index/index'})
+      }
+    })
   }
 })

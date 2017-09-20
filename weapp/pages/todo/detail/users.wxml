@@ -15,11 +15,11 @@
       </view>
       <view class="q-cell__ft">
         <block wx:if="{{isCreator}}">
-            <view class="q-btn q-btn--info" hover-class="q-btn-hover" wx:if="{{index === 0}}">主页</view>
-            <view class="q-btn q-btn--error" hover-class="q-btn-hover" wx:else>删除</view>
+          <view class="q-btn q-btn--info" hover-class="q-btn-hover" wx:if="{{index === 0}}">主页</view>
+          <view class="q-btn q-btn--error" hover-class="q-btn-hover" wx:else>删除</view>
         </block>
         <block wx:else>
-            <view class="q-btn q-btn--info" hover-class="q-btn-hover">主页</view>
+          <view class="q-btn q-btn--info" hover-class="q-btn-hover">主页</view>
         </block>
       </view>
     </view>
