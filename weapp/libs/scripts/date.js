@@ -323,11 +323,10 @@ function getDateAfterDays(num, date, fmt = 'yyyy/MM/dd') {
 /**
  * 获取某个日期的一周的所有日期
  * @param {[Date]} date 某个日期
- * @param {[Num]} start 一周开始 [0:周日 1:周一]
  */
-function getDateInWeek(date, start = 0, fmt = 'yyyy/MM/dd') {
+function getDateInWeek(date, fmt = 'yyyy/MM/dd') {
   let i, arr = []
-  for (i = start; i <= 7; i++) {
+  for (i = 0; i < 7; i++) {
     arr.push(weekDay(i, date).format(fmt))
   }
   return arr
@@ -338,12 +337,11 @@ function getDateInWeek(date, start = 0, fmt = 'yyyy/MM/dd') {
  * @param {Str|Num} year 当前年份
  * @param {Str|Num} month 当前月份
  * @param {Str} fmt 日期格式化
- * @param {Num} start 一周开始 [周日: 0, 周一: 1]
  */
-function getDateInMonth(year, month, fmt = 'yyyy/MM/dd', start = 0) {
+function getDateInMonth(year, month, fmt = 'yyyy/MM/dd') {
   let dt = `${year}/${month}/1`
   return [...Array(42).keys()].reduce((acc, val) => {
-    acc.push(weekDay(val + start, dt).format(fmt))
+    acc.push(weekDay(val, dt).format(fmt))
     return acc
   }, [])
 }

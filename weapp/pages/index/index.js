@@ -28,7 +28,7 @@ Page({
         status: 0,
         error: '',
         age: {
-          index: 60,
+          index: 40,
           array: [],
           value: 0
         },

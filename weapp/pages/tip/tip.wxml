@@ -1,0 +1,16 @@
+<view class="container">
+  <view class="weui-msg">
+    <view class="weui-msg__icon-area">
+      <icon type="{{type}}" size="93"></icon>
+    </view>
+    <view class="weui-msg__text-area">
+      <view class="weui-msg__title" wx:if="{{title}}">{{title}}</view>
+      <view class="weui-msg__desc" wx:if="{{text}}"><text>{{text}}</text></view>
+    </view>
+    <view class="weui-msg__opr-area">
+      <view class="weui-btn-area">
+        <button wx:for="{{btn}}" class="weui-btn" type="{{item.type}}" bindtap="onTap{{index}}">{{item.text}}</button>
+      </view>
+    </view>
+  </view>
+</view>

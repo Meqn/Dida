@@ -7,12 +7,12 @@ import RequestUrl from './url'
  * @param {[obj]} data todo字段数据
  * @param {[obj]} object 数据回调方法
  */
-function postTodo(data = {}, {success, fail}) {
+function postTodo(data = {}, { success, fail }) {
   Request({
     url: RequestUrl.todo.todo + '?fetchWhenSave=true',
     method: 'POST',
     data: Object.assign({}, {
-      ACL: ACL({user: [app.globalData.user.objectId]})
+      ACL: ACL({ user: [app.globalData.user.objectId] })
     }, data),
     success,
     fail
@@ -38,7 +38,7 @@ function getTodo(condition, { success, fail }) {
  * @param {[obj]} data 更新数据
  * @param {[obj]} object 数据回调方法
  */
-function updatTodo(condition, data = {}, {success, fail}) {
+function updatTodo(condition, data = {}, { success, fail }) {
   Request({
     url: RequestUrl.todo.todo + condition,
     method: 'PUT',
@@ -56,7 +56,7 @@ function updatTodo(condition, data = {}, {success, fail}) {
  * @param {[str]} condition 筛选条件
  * @param {[obj]} object 数据回调方法
  */
-function deleteTodo(condition, {success, fail}) {
+function deleteTodo(condition, { success, fail }) {
   Request({
     url: RequestUrl.todo.todo + condition,
     method: 'DELETE',
@@ -78,7 +78,7 @@ function postClass(data = {}, { success, fail }) {
     url: RequestUrl.todo.class + '?fetchWhenSave=true',
     method: 'POST',
     data: Object.assign({}, {
-      ACL: ACL({user: [app.globalData.user.objectId]})
+      ACL: ACL({ user: [app.globalData.user.objectId] })
     }, data),
     success,
     fail
@@ -98,10 +98,41 @@ function getClass(condition, { success, fail }) {
   })
 }
 
-function updateClass() {
+
+/**
+ * 更新todo分类
+ * @param {[str]} condition 筛选条件
+ * @param {[obj]} data 更新数据
+ * @param {[obj]} object 数据回调方法
+ */
+function updateClass(condition, data = {}, { success, fail }) {
+  Request({
+    url: RequestUrl.todo.class + condition,
+    method: 'PUT',
+    header: {
+      'X-LC-Session': app.globalData.user['sessionToken']
+    },
+    data,
+    success,
+    fail
+  })
 }
 
-function deleteClass(params) {
+/**
+ * 删除todo分类
+ * @param {[str]} condition 筛选条件
+ * @param {[obj]} object 数据回调方法
+ */
+function deleteClass(condition, { success, fail }) {
+  Request({
+    url: RequestUrl.todo.class + condition,
+    method: 'DELETE',
+    header: {
+      'X-LC-Session': app.globalData.user['sessionToken']
+    },
+    success,
+    fail
+  })
 }
 
 /**
@@ -109,12 +140,12 @@ function deleteClass(params) {
  * @param {[obj]} data 字段数据
  * @param {[obj]} object 数据回调方法
  */
-function postFollow(data = {}, {success, fail}) {
+function postFollow(data = {}, { success, fail }) {
   Request({
     url: RequestUrl.todo.follow + '?fetchWhenSave=true',
     method: 'POST',
     data: Object.assign({}, {
-      ACL: ACL({user: [app.globalData.user.objectId]})
+      ACL: ACL({ user: [app.globalData.user.objectId] })
     }, data),
     success,
     fail
@@ -126,7 +157,7 @@ function postFollow(data = {}, {success, fail}) {
  * @param {[str]} condition 筛选条件
  * @param {[obj]} object 数据回调方法
  */
-function getFollow(condition, {success, fail}) {
+function getFollow(condition, { success, fail }) {
   Request({
     url: RequestUrl.todo.follow + condition,
     success,
@@ -134,14 +165,22 @@ function getFollow(condition, {success, fail}) {
   })
 }
 
-function deleteFollow(params) {
-  //
+function deleteFollow(condition, {success, fail}) {
+  Request({
+    url: RequestUrl.todo.follow + condition,
+    method: 'DELETE',
+    header: {
+      'X-LC-Session': app.globalData.user['sessionToken']
+    },
+    success,
+    fail
+  })
 }
 
 
 
 module.exports = {
-  postTodo, getTodo, updatTodo,
-  postClass, getClass,
-  postFollow, getFollow
+  postTodo, getTodo, updatTodo, deleteTodo,
+  postClass, getClass, updateClass, deleteClass,
+  postFollow, getFollow, deleteFollow
 }

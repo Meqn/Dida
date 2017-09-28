@@ -43,6 +43,19 @@ function wxLogin() {
   })
 }
 
+function getUserWeInfo() {
+  return new Promise((resolve, reject) => {
+    wx.getUserInfo({
+      success(res) {
+        resolve(res.userInfo)
+      },
+      fail(error) {
+        resolve({})
+      }
+    })
+  })
+}
+
 /**
  * 用户登录
  * @param {[obj]} data 用户名和密码
@@ -95,7 +108,7 @@ function checkUser({ onSign = null, onSuccess = null, onError = null }) {
   wxLogin().then(data => {
     getUsers(`?where={"openId":"${data['openid']}"}&keys=username,umm`).then(user => {
       if (user.length > 0) {
-        userLogin({ username: user[0].username, password: user[0].umm }).then(res => {
+        userLogin({ username: user[0].username, password: user[0].umm.slice(0, 20) }).then(res => {
           typeof onSuccess === 'function' && onSuccess(res)
         })
       } else {

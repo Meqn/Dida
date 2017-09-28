@@ -1,4 +1,5 @@
 <import src="../../includes/page-loading.wxml" />
+<import src="../../components/action-menu/action-menu.wxml" />
 <wxs src="../includes/todo.wxs" module="Todo" />
 
 <template is="loading" data="{{text: 'Loading...'}}" wx:if="{{status === 'loading'}}" />
@@ -6,17 +7,17 @@
 
 <view class="container todo-class">
   <view class="q-cell">
-    <view class="q-cell__bd todo-class-title">列表</view>
+    <view class="q-cell__bd todo-class-title">清单</view>
   </view>
   <view class="q-cells">
-    <navigator class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover" wx:for="{{data.class}}" wx:key="item.objectId" url="/pages/todo/list/list?type=class&val={{item.objectId}}">
-      <view class="q-cell__hd"><text class="icon icon-{{item.icon}} {{item.color}}" /></view>
+    <navigator class="q-cell q-cell--hd q-cell--link" hover-class="q-cell-hover" wx:for="{{data.class}}" wx:key="item.objectId" url="/pages/todo/list/list?type=class&val={{item.objectId}}" data-index="{{index}}" bindlongpress="onHandleClass">
+      <view class="q-cell__hd"><text class="icon icon-{{item.icon ? item.icon : 'dot'}} {{item.color}}" /></view>
       <view class="q-cell__bd">{{item.title}}</view>
       <view class="q-cell__ft count">{{Todo.todoCount(item.objectId, data.size)}}</view>
     </navigator>
-    <view class="q-cell q-cell--hd green" hover-class="q-cell-hover" bindtap="createClass">
+    <view class="q-cell q-cell--hd green" hover-class="q-cell-hover" bindtap="onCreateClass">
       <view class="q-cell__hd"><text class="icon icon-addition green" /></view>
-      <view class="q-cell__bd">新建列表</view>
+      <view class="q-cell__bd">新建清单</view>
     </view>
   </view>
 
@@ -39,3 +40,5 @@
     </navigator>
   </view>
 </view>
+
+<template is="ActionMenu" data="{{...__menu, _}}" />

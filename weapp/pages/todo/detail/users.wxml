@@ -26,7 +26,7 @@
   </view>
  
   <view class="q-bottom" wx:if="{{!isCreator && isFollow}}">
-    <button plain hover-class="btn-hover">
+    <button plain hover-class="btn-hover" bindtap="onQuit">
       <text class="icon icon-end blue" /><text>退出</text>
     </button>
   </view>

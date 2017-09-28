@@ -1,0 +1,6 @@
+<template name="ActionMenu">
+  <view class="q-menu-mask" hidden="{{hidden}}" bindtouchstart="__menu_hide"></view>
+  <view class="q-menu q-anite-fadein" style="{{style}}" hidden="{{hidden}}">
+    <view wx:for="{{list}}" class="q-menu-item" hover-class="q-menu-hover" bindtap="{{item.fn}}"><text wx:if="{{item.icon}}" class="icon icon-{{item.icon}}" />{{item.text}}</view>
+  </view>
+</template>

@@ -1,6 +1,8 @@
 const app = getApp()
+import Util from '../../../utils/util'
 import {COLOR} from '../includes/const'
 import Todo from '../includes/todo'
+import { ArchiveState } from '../includes/archive'
 
 let TodoId
 
@@ -50,6 +52,18 @@ Page({
       path: `/pages/todo/detail/detail?todoId=${TodoId}&classId=${this.data.todo.classId}`
     }
   },
+  onEdit(e) {
+    const _status = ArchiveState(this.data.todo)
+    if (_status === 'done' || _status === 'expired') {
+      return wx.showModal({
+        content: '过期清单,无法修改',
+        showCancel: false
+      })
+    }
+    wx.redirectTo({
+      url: '/pages/todo/create/create?todoId='+ this.data.todo.objectId
+    })
+  },
   onJoin(e) {
     let _todo = app.globalData.todo[TodoId]
     let _follow = app.globalData.todoFollow
@@ -68,7 +82,6 @@ Page({
       Todo.TodoMessage(_todo, e.detail.formId, 'share')     // 推送通知
     }).catch(err => {
       wx.showModal({
-        title: '',
         content: '加入失败',
         showCancel: false,
         complete() {
@@ -113,6 +126,20 @@ Page({
         isCreator: data.creatorId === me,
         isFollow: this.data.isFollow
       })
+    }).catch(error => {
+      app.globalData.temp.tip = {
+        type: 'warn',
+        title: '加载失败',
+        text: '网络错误或数据不存在(或已被删除)',
+        btn: [{
+          text: '返回',
+          type: 'primary',
+          callback(e) {
+            wx.switchTab({url: '/pages/todo/index'})
+          }
+        }]
+      }
+      wx.navigateTo({url: '/pages/tip/tip'})
     })
   }
 })

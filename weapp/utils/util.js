@@ -43,23 +43,51 @@ function dataSet(data = {}, time = 0, cb) {
 function storageUpdate(key) {
   try {
     const local = wx.getStorageSync(key)
-    local.updated = true
-    wx.setStorage({
-      key: key,
-      data: local
-    })
+    if (local) {
+      local.updated = true
+      wx.setStorage({
+        key: key,
+        data: local
+      })
+    }
   } catch (error) {
     throw error
   }
+}
+
+function globalDataUpdate(data) {
+  if (data) data.updated = true
 }
 
 function resetError(error, errorText) {
   return Object.assign({}, error, {errorText})
 }
 
+function toast(title = 'loading...', type = 'loading', options) {
+  let icon = {}
+  switch (type) {
+    case 'loading':
+      icon = {icon: 'loading'}
+      break;
+    case 'success':
+      icon = {icon: 'success'}
+      break;
+    default:
+      icon = {image: '/assets/images/toast_'+ type +'.png'}
+      break;
+  }
+  const params = Object.assign({}, {
+    title,
+    mask: true
+  }, icon, options)
+  wx.showToast(params)
+}
+
 module.exports = {
   subFloat,
   dataSet,
   storageUpdate,
-  resetError
+  globalDataUpdate,
+  resetError,
+  toast
 }

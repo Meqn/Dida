@@ -74,7 +74,7 @@
           <button plain open-type="share" hover-class="btn-hover">
           <text class="icon icon-invite blue" /><text>邀请</text>
         </button>
-          <button plain hover-class="btn-hover">
+        <button plain hover-class="btn-hover" bind:tap="onEdit">
           <text class="icon icon-editor blue" /><text>编辑</text>
         </button>
         </block>

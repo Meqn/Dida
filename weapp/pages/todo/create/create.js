@@ -4,19 +4,13 @@ import Qdate from '../../../libs/scripts/date'
 import Handle from './handle'
 import Todo from '../includes/todo'
 
-let defaultTodoClass = {
-  name: '生活',
-  id: '599145618d6d810058a5a0fc'
-}
 // index.js
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-    action: 'post',
+    status: 'loading',
     post: {
+      todoId: '',
+      action: 'post',
       status: 0,
       error: '',
       title: '',
@@ -24,7 +18,6 @@ Page({
       urgent: false,        // 紧急: 2
       important: false,     // 重要: 1
       remind: true,
-      priority: 0,
       dateTime: {
         start: {
           time: '',
@@ -45,42 +38,15 @@ Page({
       }
     }
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-    if (options.id) {
-      const { urgent, important, priority } = Handle.priorityStatus(2)
-      const params = {
-        action: 'put',
-        post: {
-          status: 0,
-          urgent, important, priority,
-          remind: true
-        }
-      }
-      this.setData(params)
-    } else {
+  onLoad: function (opts) {
+    Handle.setDefaultData(opts.todoId, res => {
+      const _post = Object.assign({}, this.data.post, res)
       this.setData({
-        action: 'post',
-        'post.dateTime': {
-          date: Handle.getDate(),
-          start: Handle.setDate(null, 'start'),
-          end: Handle.setDate(null, 'end')
-        }
+        status: 'loaded',
+        post: _post
       })
-      // 设置临时共享数据
-      app.globalData.temp.todoClass = defaultTodoClass
-    }
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-  },
-
   /**
    * 生命周期函数--监听页面显示
    */
@@ -91,6 +57,10 @@ Page({
   },
   bindInput(e) {
     this.data.post[e.currentTarget.id] = e.detail.value
+    /* 
+    const param = {}, key = 'post['+e.currentTarget.id+']'
+    param[key] = e.detail.value
+    this.setData(param) */
   },
   // check 元素邦定
   bindCheck(e) {
@@ -115,9 +85,56 @@ Page({
     param[key] = e.detail.value
     this.setData(param)
   },
+  // 创建 todo
+  todoPost(request, formId) {
+    Todo.postTodo(request).then(res => {
+      this.setData({
+        'post.status': 0,
+        'post.error': ''
+      })
+      Util.storageUpdate('todoList')    // 更新本地缓存
+      if (res.remind) {
+        Todo.TodoMessage(res, formId, 'create')    // 发通知
+      }
+      wx.redirectTo({url: `/pages/todo/detail/detail?todoId=${res.objectId}&classId=${res.classId}`})
+    }).catch(error => {
+      console.error(error)
+      Util.toast('创建失败', 'error', {
+        duration: 2000,
+        complete() {
+          setTimeout(() => {
+            wx.switchTab({url: '/pages/todo/index'})
+          }, 2000)
+        }
+      })
+    })
+  },
+  // 更新 todo
+  todoUpdate(request) {
+    const todoId = this.data.post.todoId
+    const classId = this.data.post.class.id
+    Todo.updateTodo(todoId, request).then(res => {
+      this.setData({
+        'post.status': 0,
+        'post.error': ''
+      })
+      Util.storageUpdate('todoList')    // 更新本地缓存
+      app.globalData.todo[todoId].updated = true
+      wx.redirectTo({url: `/pages/todo/detail/detail?todoId=${todoId}&classId=${classId}`})
+    }).catch(error => {
+      Util.toast('更新失败', 'error', {
+        duration: 2000,
+        complete() {
+          setTimeout(() => {
+            wx.redirectTo({url: `/pages/todo/detail/detail?todoId=${todoId}&classId=${classId}`})
+          }, 2000)
+        }
+      })
+    })
+  },
+  // 提交 todo
   onSubmit(e) {
     this.setData({ 'post.error': '' })
-    const context = this
     const postData = this.data.post
     const userId = app.globalData.user.objectId
 
@@ -130,7 +147,7 @@ Page({
     const now = new Date().getTime()
     const startAt = new Date(`${postData.dateTime.date.val[postData.dateTime.start.index]} ${postData.dateTime.start.time}`).getTime()
     const endAt = new Date(`${postData.dateTime.date.val[postData.dateTime.end.index]} ${postData.dateTime.end.time}`).getTime()
-    if (startAt > endAt || (endAt - now) < 1000*60*60) return this.setData({ 'post.error': '还没开始就结束啦？' })
+    if (startAt > endAt || (endAt - now) < 1000*60) return this.setData({ 'post.error': '还没开始就结束啦？' })
 
     let request = {
       creatorId: userId,
@@ -154,21 +171,11 @@ Page({
       priority,
       remind: postData.remind
     }
-    console.log('request : ', request)
-
     this.setData({'post.status': 1})
-    Todo.postTodo(request).then(res => {
-      console.log('postTodo : ', res)
-
-      this.setData({
-        'post.status': 0,
-        'post.error': ''
-      })
-      Util.storageUpdate('todoList')    // 更新本地缓存
-      if (res.remind) {
-        Todo.TodoMessage(res, e.detail.formId, 'create')    // 发通知
-      }
-      wx.redirectTo({url: `/pages/todo/detail/detail?todoId=${res.objectId}&classId=${res.classId}`})
-    })
+    if (postData.action === 'post') {
+      this.todoPost(request, e.detail.formId)
+    } else {
+      this.todoUpdate(request)
+    }
   }
 })

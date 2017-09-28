@@ -6,15 +6,17 @@ Page({
    * 页面的初始数据
    */
   data: {
-  
+    user: {avatarUrl: 'http://static.mengqing.org/dot.png'}
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    // setTimeout(this.setBarColor, 250);
-  
+    const {nickName, avatarUrl, signature, gender, dieAt, bornAt} = app.globalData.user
+    this.setData({
+      user: {nickName, avatarUrl, signature, gender, dieAt, bornAt}
+    })
   },
 
   /**
@@ -78,6 +80,16 @@ Page({
       success() {
         wx.reLaunch({url: '/pages/index/index'})
       }
+    })
+  },
+  onViewAvatar(e) {
+    wx.previewImage({
+      urls: [`${e.currentTarget.dataset.avatar}`]
+    })
+  },
+  onProfile(e) {
+    wx.navigateTo({
+      url: '/pages/user/profile/profile'
     })
   }
 })

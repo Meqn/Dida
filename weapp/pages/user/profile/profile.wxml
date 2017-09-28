@@ -1,0 +1,24 @@
+<view class="container">
+  <view class="q-cells">
+    <view class="q-cell">
+      <view class="q-cell__bd">昵称：</view>
+      <view class="q-cell__ft">Morven</view>
+    </view>
+    <view class="q-cell">
+      <view class="q-cell__bd">性别：</view>
+      <view class="q-cell__ft">男</view>
+    </view>
+    <view class="q-cell">
+      <view class="q-cell__bd">始於：</view>
+      <view class="q-cell__ft">2015-08-17</view>
+    </view>
+    <view class="q-cell">
+      <view class="q-cell__bd">卒於：</view>
+      <view class="q-cell__ft">87岁</view>
+    </view>
+    <view class="q-cell q-cell--link">
+      <view class="q-cell__bd">个性签名：</view>
+      <view class="q-cell__ft">三十而死，六旬而葬</view>
+    </view>
+  </view>
+</view>

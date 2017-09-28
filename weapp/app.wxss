@@ -1,5 +1,5 @@
 /**app.wxss**/
-@import "./libs/styles/weui.min.wxss";
+@import "./libs/styles/weui.wxss";
 @import "./libs/styles/q.wxss";
 
 

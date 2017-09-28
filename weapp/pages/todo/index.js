@@ -1,3 +1,4 @@
+const app = getApp()
 import Qdate from '../../libs/scripts/date'
 import Todo from './includes/todo'
 import Archive from './includes/archive'
@@ -128,6 +129,8 @@ Page({
             v.doneAt = requestData.doneAt
           }
         }, 0)
+
+        // 重置数据
         this.setTodo(() => {
           const date = this.data.dateTodo.date
           if (!date) return
@@ -135,7 +138,11 @@ Page({
             'dateTodo.todo': Todo.getTodoOfDate(ThisDataTodo, date)
           })
         })
+        // 更新缓存
         Util.storageUpdate('todoList')
+        if(app.globalData.todo[dt.todoid]) app.globalData.todo[dt.todoid].updated = true
+      }).catch(err => {
+        Util.toast('操作失败', 'error')
       })
     }
   },
@@ -149,17 +156,16 @@ Page({
   },
   // 获取日历的周
   getweek(w, t) {
-    let today = t === 0 ? 6 : t - 1
     return {
       val: w,
-      text: ['一', '二', '三', '四', '五', '六', '日'][w],
-      status: today > w ? 'before' : today === w ? 'today' : 'after'
+      text: ['日', '一', '二', '三', '四', '五', '六'][w],
+      status: t > w ? 'before' : t === w ? 'today' : 'after'
     }
   },
   // 获取日历的天
   getdate(num) {
     const now = new Date(new Date().format('yyyy/M/d')).getTime()
-    const days = Qdate.getDateInWeek(null, 1, 'yyyy/M/d')
+    const days = Qdate.getDateInWeek(null, 'yyyy/M/d')
     let arr = []
     days.forEach((v, k) => {
       arr.push({
@@ -172,16 +178,15 @@ Page({
   },
   // 设置日历 📅
   setCalendar() {
-    const context = this
     const now = Qdate.get()
     const M = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二']
     const month = `${M[now.month - 1]}月 ${now.year}年`
     const week = [...Array(7).keys()].reduce((acc, val) => {
-      acc.push(context.getweek(val, now.week))
+      acc.push(this.getweek(val, now.week))
       return acc
     }, [])
     this.setData({
-      calendar: { month, week, day: context.getdate() }
+      calendar: { month, week, day: this.getdate() }
     })
   },
   setTodo(cb) {

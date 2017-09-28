@@ -1,10 +1,13 @@
+<import src="../../includes/page-loading.wxml" />
+
+<template is="loading" data="{{text: 'Loading...'}}" wx:if="{{status === 'loading'}}" />
 <view class="container todo-create">
   <view class="q-cells">
     <view class="q-cell">
-      <input id="title" class="weui-input" type="text" placeholder="希望做什么？" bindblur="bindInput" />
+      <input id="title" class="weui-input" type="text" value="{{post.title}}" placeholder="希望做什么？" bindblur="bindInput" />
     </view>
     <view class="q-cell">
-      <textarea id="content" class="weui-textarea" auto-height maxlength="-1" placeholder="可以写点描述..." bindblur="bindInput" />
+      <textarea id="content" class="weui-textarea" auto-height="auto" maxlength="-1" value="{{post.content}}" placeholder="可以写点描述..." bindinput="bindInput"></textarea>
     </view>
   </view>
 
@@ -76,7 +79,7 @@
   </view>
   <form bindsubmit="onSubmit" report-submit>
     <view class="q-cell-btn">
-      <button type="primary" formType="submit" loading="{{post.status === 0 ? '' : 'loading'}}" disabled="{{post.status === 0 ? '' : 'disabled'}}">{{post.status === 0 ? '' : '正在'}}{{action === 'post' ? '创建' : '保存'}}</button>
+      <button type="primary" formType="submit" loading="{{post.status === 0 ? '' : 'loading'}}" disabled="{{post.status === 0 ? '' : 'disabled'}}">{{post.status === 0 ? post.action === 'post' ? '创建' : '保存' : '正在提交...'}}</button>
     </view>
   </form>
   <view class="q-cell-error" wx:if="{{post.error.length > 0}}">

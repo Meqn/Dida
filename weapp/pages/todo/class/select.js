@@ -8,8 +8,7 @@ Page({
   },
 
   onLoad: function (options) {
-    console.log('app.globalData : ', app.globalData.temp)
-    if (!app.globalData.temp.todoClass.id) return wx.navigateBack()
+    if (!app.globalData.temp.todoClass) return wx.navigateBack()
 
     TodoClass.getClass().then(res => {
       this.setData({
@@ -23,7 +22,6 @@ Page({
   },
   onSelect(e) {
     let ds = e.currentTarget.dataset
-    console.log(ds)
     app.globalData.temp.todoClass = {
       id: ds.id,
       name: ds.name

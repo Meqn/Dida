@@ -1,6 +1,6 @@
   <view class="q-anite-pageIn q-page-full">
     <view class="user-set">
-      <view class="title">我的人生我做主</view>
+      <view class="title">人始於生而卒於死</view>
       <view class="weui-flex weui-flex__middle">
         <view class="item-hd">出生：</view>
         <view class="weui-flex__item">

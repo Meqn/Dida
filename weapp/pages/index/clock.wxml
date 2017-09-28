@@ -68,6 +68,6 @@
     </view>
   </view>
   <view class="user-go">
-      <navigator url="/pages/todo/index" open-type="switchTab" hover-class="hover">未了心愿...</navigator>
+      <navigator url="/pages/todo/index" open-type="switchTab" hover-class="hover">续写人生...</navigator>
   </view>
 </block>

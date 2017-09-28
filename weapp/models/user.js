@@ -24,7 +24,7 @@ function getUserId(code, { success, fail }) {
  */
 function login({ username, password }, { success, fail }) {
   Request({
-    url: `${RequestUrl.user.login}?username=${username}&password=${password.slice(0, 20)}`,
+    url: `${RequestUrl.user.login}?username=${username}&password=${password}`,
     success,
     fail
   })

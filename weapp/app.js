@@ -18,10 +18,29 @@ App({
     } catch (error) {
       console.error(error)
     }
+    
+    // 获取设备信息
+    if (!this.globalData.systemInfo) {
+      wx.getSystemInfo({
+        success: res => {
+          this.globalData.systemInfo = res
+        }
+      })
+    }
   },
+  onShow() {
+  },
+  /**
+   * 全局数据
+   * 
+   * 1. temp 临时数据
+   *    1.1 todoClass: {id: '', name: ''}     // 选择todo分类
+   *    1.2 tip: {type:'warn', title: '', text: '', btn: [{text: '推荐操作', url: ''}, {text: '辅助操作', url: ''}]}    // 结果信息提示页
+   * 
+   */
   globalData: {
     user: null,
-    system: {},
+    systemInfo: null,
     temp: {},   // 临时数据, 比如选择分类
     todo: {},               // 缓存todo详情列表
     todoFollow: null,       // 缓存被邀请todo列表

@@ -68,12 +68,13 @@ const postClass = function ({ title, color }) {
     Todo.postClass({ title, color, owner: app.globalData.user.objectId },{
       success(res) {
         if (res.statusCode === 201) {
-          resolve(res)
+          resolve(res.data)
         } else {
           reject(Util.resetError(res, '创建失败'))
         }
       },
       fail(error) {
+        console.error(error)
         reject(Util.resetError(error, '网络错误，创建失败'))
       }
     })
@@ -97,7 +98,7 @@ const getClass = function () {
             if (res.statusCode === 200) {
               let _classList = res.data.results.reduce((acc, v, k) => {
                 let { objectId, title, icon, color, owner } = v
-                acc[k] = { objectId, title, icon: icon ? icon : 'dot', color, owner, count: 0 }
+                acc[k] = { objectId, title, icon: icon ? icon : 'dot', color, owner}
                 return acc
               }, [])
               const result = Object.assign({}, {
@@ -113,11 +114,12 @@ const getClass = function () {
           },
           fail(error) {
             console.error(error)
-            reject(Util.resetError(res, '网络错误, 获取失败'))
+            reject(Util.resetError(error, '网络错误, 获取失败'))
           }
         })
       }
     } catch (error) {
+      console.error(error)
       reject(Util.resetError(error, '获取缓存数据失败'))
     }
   })
@@ -130,6 +132,51 @@ function setGlobalClass(list) {
     _class[v.objectId] = v
   }, 0)
   app.globalData.todoClass = _class
+}
+
+/**
+ * 更新todo分类
+ * @param {[str]} classId Todo class
+ * @param {[obj]} data 更新数据 
+ */
+const updateClass = function(classId, {title, color}) {
+  return new Promise((resolve, reject) => {
+    Todo.updateClass(`/${classId}`, {title, color}, {
+      success(res) {
+        if (res.statusCode === 200) {
+          resolve(res.data)
+        } else {
+          reject(Util.resetError(res, '更新失败'))
+        }
+      },
+      fail(error) {
+        console.error(error)
+        reject(Util.resetError(error, '网络错误，更新失败'))
+      }
+    })
+  })
+}
+
+/**
+ * 删除 todo 分类
+ * @param {[str]} classId todo class Id
+ */
+const deleteClass = function(classId) {
+  return new Promise((resolve, reject) => {
+    Todo.deleteClass(`/${classId}`, {
+      success(res) {
+        if (res.statusCode === 200) {
+          resolve(classId)
+        } else {
+          reject(Util.resetError(res, '删除失败'))
+        }
+      },
+      fail(error) {
+        console.error(error)
+        reject(Util.resetError(error, '网络错误，删除失败'))
+      }
+    })
+  })
 }
 
 /**
@@ -214,13 +261,34 @@ const updateTodo = function (todoId, data) {
     Todo.updatTodo(`/${todoId}`, data, {
       success(res) {
         if (res.statusCode === 200) {
-          resolve(res)
+          resolve(res.data)
         } else {
           reject(Util.resetError(res, '更新数据失败'))
         }
       },
       fail(error) {
         reject(Util.resetError(error, '网络错误，更新失败'))
+      }
+    })
+  })
+}
+
+/**
+ * 删除todo
+ * @param {*} todoId 
+ */
+function deleteTodo(todoId) {
+  return new Promise((resolve, reject) => {
+    Todo.deleteTodo('/'+ todoId, {
+      success(res) {
+        if (res.statusCode === 200) {
+          resolve(todoId)
+        } else {
+          reject(Util.resetError(res, '删除失败'))
+        }
+      },
+      fail(error) {
+        reject(Util.resetError(error, '网络错误，删除失败'))
       }
     })
   })
@@ -260,6 +328,24 @@ const postTodoFollow = function (todoId, creatorId) {
     })
   })
 }
+
+const getFollowByTodo = function(todoId) {
+  return new Promise((resolve, reject) => {
+    Todo.getFollow(`?where={"todoId":"${todoId}"}&keys=objectId`, {
+      success(res) {
+        if (res.statusCode === 200) {
+          resolve(res.data.results)
+        } else {
+          reject(res)
+        }
+      },
+      fail(error) {
+        resolve(error)
+      }
+    })
+  })
+}
+
 /**
  * 获取邀请加入的todo
  */
@@ -283,6 +369,28 @@ const getFollow = function () {
         }
       })
     } 
+  })
+}
+
+/**
+ * 获取符合条件的follow Id列表
+ * @param {*} todoId 
+ * @param {*} followerId 
+ */
+function getFollowId(todoId, followerId) {
+  return new Promise((resolve, reject) => {
+    Todo.getFollow(`?where={"todoId":"${todoId}","followerId":"${followerId}"}&keys=objectId`, {
+      success(res) {
+        if (res.statusCode === 200) {
+          resolve(res.data.results)
+        } else {
+          reject(Util.resetError(res, '获取数据失败'))
+        }
+      },
+      fail(error) {
+        reject(Util.resetError(error, '网络错误'))
+      }
+    })
   })
 }
 
@@ -335,6 +443,27 @@ const getFollower = function (todoId) {
 }
 
 /**
+ * 删除todoFollow
+ * @param {*} followId 
+ */
+function deleteFollow(followId) {
+  return new Promise((resolve, reject) => {
+    Todo.deleteFollow('/'+ followId, {
+      success(res) {
+        if (res.statusCode === 200) {
+          resolve(followId)
+        } else {
+          reject(Util.resetError(res, '删除失败'))
+        }
+      },
+      fail(error) {
+        reject(Util.resetError(res, '网络错误，删除失败'))
+      }
+    })
+  })
+}
+
+/**
  * 获取todo详情,[包含所有参与者]
  * @param {[str]} id todo id
  */
@@ -351,7 +480,7 @@ const getTodoDetail = function (todoId) {
             follower.push(v.follower)
           }, 0)
         }
-        const result = Object.assign({}, res[0], {follower, updated: false})
+        const result = {...res[0], follower, updated: false}
         app.globalData.todo[todoId] = result    // 加入缓存
         resolve(result)
       }).catch(error => {
@@ -391,7 +520,7 @@ const todoArchive = function (cb) {
       class: _classList,
       todo: _todoList,
       mode: ARCHIVE,
-      size: Object.assign({}, _class, _mode)
+      size: {..._class, ..._mode}
     }
     typeof cb === 'function' && cb(result)
   })
@@ -429,18 +558,10 @@ const getTodoOfState = function (todo) {
 }
 
 module.exports = {
-  postClass,
-  getClass,
-  getAllTodo,
+  postClass, updateClass, deleteClass, getClass,
   todoArchive,
-  postTodo,
-  getTodo,
-  getTodoDetail,
-  updateTodo,
-  postTodoFollow,
-  getFollowCount,
-  getFollow,
-  getFollower,
+  postTodo, getTodo, getAllTodo, getTodoDetail, deleteTodo, updateTodo,
+  postTodoFollow, getFollow, getFollowCount, getFollowByTodo, getFollower, getFollowId, deleteFollow,
   TodoMessage,
   getTodoOfDate,
   getTodoOfState

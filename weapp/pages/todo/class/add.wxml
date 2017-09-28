@@ -1,21 +1,21 @@
-<view class="q-anite-fadein q-modal todo-class-add" style="display: {{status === 'add' ? 'block' : 'none'}}">
+<view class="q-anite-fadein q-modal todo-class-add" style="display: {{status === 'add' || status === 'edit' ? 'block' : 'none'}}">
   <view class="q-modal-main">
-    <text class="icon icon-close q-modal-close" bindtap="modalClose" />
+    <text class="icon icon-close q-modal-close" bindtap="onCloseModal" />
     <view class="q-modal-hd">
-      <text class="q-modal-title">添加列表</text>
+      <text class="q-modal-title">{{status === 'add' ? '创建' : '修改'}}清单</text>
     </view>
     <view class="q-modal-bd">
       <view class="name">
-        <input class="weui-input" type="text" value="{{posts.fields.title}}" placeholder="名称" bindblur="bindClassTitle" />
+        <input class="weui-input" type="text" value="{{posts.fields.title}}" placeholder="名称" bindblur="onInput" />
       </view>
       <view class="color">
-        <label wx:for="{{posts.fields.color.value}}" class="q-radio radio {{item.name}} {{posts.fields.color.index === index ? 'checked' : ''}}" wx:key="{{item.name}}" data-index="{{index}}" bindtap="selectColor"><icon type="success_no_circle" size="12" color="white" /></label>
+        <label wx:for="{{posts.fields.color.array}}" class="q-radio radio {{item}} {{posts.fields.color.value === index ? 'checked' : ''}}" wx:key="{{item}}" data-index="{{index}}" bindtap="onSelectColor"><icon type="success_no_circle" size="12" color="white" /></label>
       </view>
     </view>
     
     <view class="q-modal-ft">
-      <button type="default" class="q-btn-mini" bindtap="modalClose">取消</button>
-      <button type="primary" class="q-btn-mini" loading="" bindtap="submitClass" loading="{{posts.status === 0 ? '' : 'loading'}}" disabled="{{posts.status === 0 ? '' : 'disabled'}}">{{posts.status === 0 ? '保存' : '正在提交...'}}</button>
+      <button type="default" class="q-btn-mini" bindtap="onCloseModal">取消</button>
+      <button type="primary" class="q-btn-mini" loading="" bindtap="onSubmitClass" loading="{{posts.status === 0 ? '' : 'loading'}}" disabled="{{posts.status === 0 ? '' : 'disabled'}}">{{posts.status === 0 ? status === 'add' ? '提交' : '保存' : '正在提交...'}}</button>
       <view class="error" wx:if="{{posts.error}}">错误提示：{{posts.error}}</view>
     </view>
   </view>

@@ -1,4 +1,4 @@
-// error.js
+// pages/user/profile/profile.js
 Page({
 
   /**

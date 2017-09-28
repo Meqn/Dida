@@ -1,7 +1,10 @@
 const app = getApp()
 import Swipe from '../../../libs/scripts/swipe'
+import Todo from '../includes/todo'
+import Util from '../../../utils/util'
 
 let TouchXY = {x1: 0, x2: 0, y1: 0, y2: 0}
+let TodoId
 
 Page({
   data: {
@@ -20,6 +23,7 @@ Page({
         }
       })
     }
+    TodoId = opts.todoId
     this.getUser(opts.todoId)
   },
 
@@ -66,6 +70,34 @@ Page({
       }
     })
   },
+  onQuit(e) {
+    wx.showModal({
+      title: '',
+      content: '确定要退出？',
+      success(res) {
+        if (res.confirm) {
+          Todo.getFollowId(TodoId, app.globalData.user['objectId']).then(follows => {
+            if (follows.length > 0) {
+              Todo.deleteFollow(follows[0]['objectId']).then(data => {
+                Util.globalDataUpdate(app.globalData.todo[TodoId])
+                Util.globalDataUpdate(app.globalData.todoFollow)
+                Util.globalDataUpdate(app.globalData.todoFollowCount)
+                Util.toast('退出成功', 'success')
+                setTimeout(function() {
+                  wx.switchTab({url: '/pages/todo/index'})
+                }, 1500);
+              }).catch(error => {
+                Util.toast('退出失败', 'error')
+                setTimeout(function() {
+                  wx.switchTab({url: '/pages/todo/index'})
+                }, 1500);
+              })
+            }
+          })
+        }
+      }
+    })
+  },
   getUser(id) {
     if (app.globalData.todo[id]) {
       const _todo = app.globalData.todo[id]
@@ -84,18 +116,5 @@ Page({
         url: '/pages/todo/detail/detail?todoId='+id
       })
     }
-  },
-  quit(e) {
-    wx.showModal({
-      title: '',
-      content: '确定要退出？',
-      success(res) {
-        if (res.confirm) {
-          console.log('已经退出')
-        } else {
-          console.log('不要退出')
-        }
-      }
-    })
   }
 })

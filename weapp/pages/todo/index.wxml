@@ -22,7 +22,7 @@
       </block>
       <block wx:else>
         <view class="q-cells">
-          <view class="q-cell" style="color: #bbbec4;">暂无事情，好好休息吧</view>
+          <view class="q-cell" style="color: #bbbec4;">暂无事情，安心休息...</view>
         </view>
       </block>
     </block>
@@ -49,10 +49,10 @@
 
   <view class="q-fab-wrap">
     <navigator class="q-fab" url="/pages/todo/create/create">
-      <text class="icon icon-add" />
+      <text class="icon icon-add yellow" />
     </navigator>
     <navigator class="q-fab" url="/pages/todo/class/class">
-      <text class="icon icon-sort" />
+      <text class="icon icon-sort yellow" />
     </navigator>
   </view>
 </view>

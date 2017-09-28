@@ -16,8 +16,9 @@
     "pages/user/register/register",
     "pages/modules/index/index",
     "pages/modules/calendar/index/index",
-    "pages/error/error",
-    "pages/demo/message"
+    "pages/demo/message",
+    "pages/tip/tip",
+    "pages/user/profile/profile"
   ],
   "window": {
     "navigationBarBackgroundColor": "#212121",
@@ -29,7 +30,7 @@
   },
   "tabBar": {
     "color": "#80848f",
-    "selectedColor": "#1c2438",
+    "selectedColor": "#281614",
     "backgroundColor": "#ffffff",
     "borderStyle": "black",
     "list": [

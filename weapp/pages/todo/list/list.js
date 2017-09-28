@@ -3,9 +3,12 @@ import Qdate from '../../../libs/scripts/date'
 import Swipe from '../../../libs/scripts/swipe'
 import Util from '../../../utils/util'
 import Todo from '../includes/todo'
+import { ArchiveState } from '../includes/archive'
 import { ALL } from '../includes/const'
+import Batch from '../../../models/batch'
+import RequestUrl from '../../../models/url'
 
-let ThisDataTodo
+let ThisDataTodo, PageParams = {}
 let TouchXY = {x1: 0, x2: 0, y1: 0, y2: 0}
 
 Page({
@@ -20,16 +23,16 @@ Page({
     }
   },
   onLoad: function (opts) {
-    console.log('onLoad : ', opts)
-    
-
     if (!opts.type || !opts.val) return wx.navigateTo({url: '/pages/todo/class/class'})
+    PageParams = opts
     // 设置标题
     this.setTitle(opts, res => {
       wx.setNavigationBarTitle({title: res})
     })
+  },
+  onShow() {
     // 获取todo数据
-    this.getTodo(opts)
+    this.getTodo(PageParams)
   },
   onHide() {
     this.setData({moveId: ''})
@@ -55,16 +58,65 @@ Page({
       }
     })
   },
+  onEdit(e) {
+    console.log('编辑： ', e)
+    const _todo = e.currentTarget.dataset.todo
+    const _status = ArchiveState(_todo)
+    if (_status === 'done' || _status === 'expired') {
+      const _text = _status === 'expired' ? '过期清单' : '清单已完成'
+      return wx.showModal({
+        content: _text +',无法修改',
+        showCancel: false
+      })
+    }
+    wx.navigateTo({
+      url: '/pages/todo/create/create?todoId='+ _todo.objectId
+    })
+  },
+  deleteFollow(todoId, cb) {
+    Todo.getFollowByTodo(todoId).then(data => {
+      if (data.length === 1) {
+        Todo.deleteFollow(data[0]['objectId']).then(res => {
+          typeof cb === 'function' && cb(res)
+        })
+      }
+      if (data.length > 1) {
+        let reqs = data.reduce((acc, v) => {
+          acc.push({
+            "method": 'DELETE',
+            "path": RequestUrl.batch.todoFollow + '/' + v.objectId
+          })
+          return acc
+        }, [])
+        Batch(reqs).then(res => {
+          typeof cb === 'function' && cb(res)
+        })
+      }
+    })
+  },
   onDelete(e) {
+    const ctx = this
+    const todoId = e.currentTarget.dataset.todoid
     wx.showModal({
       content: '删除后，就找不回来了',
       cancelColor: '#80848f',
+      confirmText: '删除',
       confirmColor: '#ff4949',
       success(res) {
         if (res.confirm) {
-          console.log('删除啦')
-        } else {
-          console.log('删除失败')
+          Todo.deleteTodo(todoId).then(res => {
+            // 更新缓存
+            Util.storageUpdate('todoList')
+            if(app.globalData.todo[todoId]) app.globalData.todo[todoId].updated = true
+            // 重置数据
+            ctx.getTodo(PageParams)
+            // ctx.setTodo(ThisDataTodo, ctx.data.type)
+            // 删除参与者
+            ctx.deleteFollow(todoId)
+          }).catch(error => {
+            console.error(error)
+            Util.toast('删除失败', 'error')
+          })
         }
       }
     })
@@ -89,8 +141,13 @@ Page({
           if (v.objectId === dt.todoid)
             v.doneAt = requestData.doneAt
         }, 0)
-        this.setTodo(ThisDataTodo, this.data.type)
+        // 更新缓存
         Util.storageUpdate('todoList')
+        if(app.globalData.todo[dt.todoid]) app.globalData.todo[dt.todoid].updated = true
+        // 重置数据
+        this.setTodo(ThisDataTodo, this.data.type)
+      }).catch(err => {
+        Util.toast('操作失败', 'error')
       })
     }
   },
@@ -98,10 +155,6 @@ Page({
     let ret = '归档'
     if (type === 'class') {
       Todo.getClass().then(res => {
-        /* res.reduce((acc, v, k) => {
-          if (v.objectId === val)
-            ret = v.title
-        }, 0) */
         ret = app.globalData.todoClass[val].title
         typeof cb === 'function' && cb(ret)
       })
@@ -120,8 +173,13 @@ Page({
   getTodo({type, val}) {
     if (type === 'invite') {
       Todo.getFollow().then(data => {
+        console.log('getFollow: ', data)
         let result = data.length > 0 ? data.reduce((acc, v, k) => {
-          acc.push(v.todo)
+          if (v.todo) {
+            acc.push(v.todo)
+          } else {
+            Todo.deleteFollow(v.objectId)
+          }
           return acc
         }, []) : []
         // result
