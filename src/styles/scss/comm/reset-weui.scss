@@ -1,0 +1,45 @@
+@import 'var';
+
+/************************** loadmore
+*/
+.weui-loadmore__tips_in-line{
+  background-color: $color-background;
+}
+
+/************************** button
+*/
+button{
+  font-size: 16px;
+}
+
+button[loading][type="primary"], button[type="primary"]{
+  background-color: $color-btn;
+}
+.button-hover[loading][type="primary"],.button-hover[type="primary"]{
+  background-color: $color-btn-hover;
+}
+
+.weui-textarea{
+  min-height:2.58823529em;
+}
+.weui-input, .weui-textarea{
+  display:block;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.input-placeholder,.textarea-placeholder{
+  color: $color-disabled;
+}
+  
+.weui-cell:before {
+  -webkit-transform-origin: 0 0;
+          transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+          transform: scaleY(0.5);
+}
+
+/************************** flex 新增
+*/
+.weui-flex__middle{
+  align-items: center;
+}

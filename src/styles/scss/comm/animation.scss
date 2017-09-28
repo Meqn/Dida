@@ -82,6 +82,15 @@
   }
 }
 
+@keyframes zoomIn {
+  from {
+    transform: scale3d(.3, .3, .3); opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 
 // 自定义
 .q-anite-pageIn{

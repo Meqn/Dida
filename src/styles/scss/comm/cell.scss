@@ -1,10 +1,4 @@
-
-.weui-flex__middle{
-  align-items: center;
-}
-
-
-/****************************************************************/
+@import './var';
 
 .q-cells{
   margin-bottom: 20rpx;
@@ -164,10 +158,10 @@
     background-color: white;
     transition: transform .3s ease;
     &.swiped{
-      transform: translateX(-150rpx);
+      transform: translateX(-128rpx);
     }
     &.swiped-2{
-      transform: translateX(-300rpx);
+      transform: translateX(-256rpx);
     }
   }
   >.q-cell__ft{
@@ -177,7 +171,7 @@
     .q-btn{
       flex: 1;
       display: flex; justify-content: center; align-items: center;
-      width: 150rpx;
+      width: 128rpx;
       padding: 0; margin: 0;
       border-radius: 0;
     }

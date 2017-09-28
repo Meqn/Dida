@@ -47,9 +47,57 @@ image {
 /** 中性色 */
 /** 优先级 */
 /** 彩色 */
+/************************** loadmore
+*/
+.weui-loadmore__tips_in-line {
+  background-color: #f8f8f9; }
+
+/************************** button
+*/
+button {
+  font-size: 16px; }
+
+button[loading][type="primary"], button[type="primary"] {
+  background-color: #212121; }
+
+.button-hover[loading][type="primary"], .button-hover[type="primary"] {
+  background-color: #303030; }
+
+.weui-textarea {
+  min-height: 2.58823529em; }
+
+.weui-input, .weui-textarea {
+  display: block;
+  box-sizing: border-box;
+  font-size: 14px; }
+
+.input-placeholder, .textarea-placeholder {
+  color: #bbbec4; }
+
+.weui-cell:before {
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5); }
+
+/************************** flex 新增
+*/
+.weui-flex__middle {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center; }
+
+/************************************************************
+ * 蓝色主题  来源：https://www.iviewui.com/components/color
+ */
+/** 主色 */
+/** 辅助色 */
+/** 中性色 */
+/** 优先级 */
+/** 彩色 */
 @font-face {
   font-family: "iconfont";
-  src: url("//at.alicdn.com/t/font_381469_4o783q8ktilzncdi.ttf?t=1504867297329") format("truetype"); }
+  src: url("//at.alicdn.com/t/font_381469_c72qgasr51w6ogvi.ttf?t=1506564382661") format("truetype"); }
 
 /**
   <text class="iconfont icon-apps" />
@@ -156,9 +204,6 @@ image {
 .icon-music:before {
   content: "\e6f1"; }
 
-.icon-document:before {
-  content: "\e6f3"; }
-
 .icon-editor:before {
   content: "\e6f6"; }
 
@@ -173,6 +218,9 @@ image {
 
 .icon-group:before {
   content: "\e6ff"; }
+
+.icon-home:before {
+  content: "\e702"; }
 
 .icon-label:before {
   content: "\e706"; }
@@ -385,6 +433,22 @@ image {
             transform: translate3d(0, 0, 0);
     opacity: 1; } }
 
+@-webkit-keyframes zoomIn {
+  from {
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+            transform: scale3d(0.3, 0.3, 0.3);
+    opacity: 0; }
+  to {
+    opacity: 1; } }
+
+@keyframes zoomIn {
+  from {
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+            transform: scale3d(0.3, 0.3, 0.3);
+    opacity: 0; }
+  to {
+    opacity: 1; } }
+
 .q-anite-pageIn {
   -webkit-animation: pageIn .2s ease-out;
           animation: pageIn .2s ease-out; }
@@ -464,12 +528,14 @@ image {
   -webkit-flex: 1;
           flex: 1; }
 
-.weui-flex__middle {
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-          align-items: center; }
-
-/****************************************************************/
+/************************************************************
+ * 蓝色主题  来源：https://www.iviewui.com/components/color
+ */
+/** 主色 */
+/** 辅助色 */
+/** 中性色 */
+/** 优先级 */
+/** 彩色 */
 .q-cells {
   margin-bottom: 20rpx;
   background-color: #fff; }
@@ -615,11 +681,11 @@ image {
     transition: transform .3s ease;
     transition: transform .3s ease, -webkit-transform .3s ease; }
     .q-cell-swipe > .q-cell__bd.swiped {
-      -webkit-transform: translateX(-150rpx);
-              transform: translateX(-150rpx); }
+      -webkit-transform: translateX(-128rpx);
+              transform: translateX(-128rpx); }
     .q-cell-swipe > .q-cell__bd.swiped-2 {
-      -webkit-transform: translateX(-300rpx);
-              transform: translateX(-300rpx); }
+      -webkit-transform: translateX(-256rpx);
+              transform: translateX(-256rpx); }
   .q-cell-swipe > .q-cell__ft {
     position: absolute;
     top: 0;
@@ -644,7 +710,7 @@ image {
       -webkit-box-align: center;
       -webkit-align-items: center;
               align-items: center;
-      width: 150rpx;
+      width: 128rpx;
       padding: 0;
       margin: 0;
       border-radius: 0; }
@@ -742,34 +808,6 @@ image {
 /** 中性色 */
 /** 优先级 */
 /** 彩色 */
-/************************** 修改默认 weui
-*/
-button {
-  font-size: 16px; }
-
-button[loading][type="primary"], button[type="primary"] {
-  background-color: #212121; }
-
-.button-hover[loading][type="primary"], .button-hover[type="primary"] {
-  background-color: #303030; }
-
-.weui-textarea {
-  min-height: 2.58823529em; }
-
-.weui-input, .weui-textarea {
-  display: block;
-  box-sizing: border-box;
-  font-size: 14px; }
-
-.input-placeholder, .textarea-placeholder {
-  color: #bbbec4; }
-
-.weui-cell:before {
-  -webkit-transform-origin: 0 0;
-  transform-origin: 0 0;
-  -webkit-transform: scaleY(0.5);
-  transform: scaleY(0.5); }
-
 /************************** 自定义
 */
 .q-btn-mini {
@@ -997,9 +1035,9 @@ button[loading][type="primary"], button[type="primary"] {
   .q-modal-main {
     position: absolute;
     top: 50%;
-    left: 50%;
-    -webkit-transform: translate3d(-50%, -60%, 0);
-            transform: translate3d(-50%, -60%, 0);
+    left: 4%;
+    -webkit-transform: translate3d(0, -60%, 0);
+            transform: translate3d(0, -60%, 0);
     -webkit-animation: modalIn .6s ease;
             animation: modalIn .6s ease;
     box-sizing: border-box;
@@ -1032,22 +1070,22 @@ button[loading][type="primary"], button[type="primary"] {
 
 @-webkit-keyframes modalIn {
   from {
-    -webkit-transform: translate3d(-50%, -75%, 0);
-            transform: translate3d(-50%, -75%, 0);
+    -webkit-transform: translate3d(0, -75%, 0);
+            transform: translate3d(0, -75%, 0);
     opacity: 0; }
   to {
-    -webkit-transform: translate3d(-50%, -60%, 0);
-            transform: translate3d(-50%, -60%, 0);
+    -webkit-transform: translate3d(0, -60%, 0);
+            transform: translate3d(0, -60%, 0);
     opacity: 1; } }
 
 @keyframes modalIn {
   from {
-    -webkit-transform: translate3d(-50%, -75%, 0);
-            transform: translate3d(-50%, -75%, 0);
+    -webkit-transform: translate3d(0, -75%, 0);
+            transform: translate3d(0, -75%, 0);
     opacity: 0; }
   to {
-    -webkit-transform: translate3d(-50%, -60%, 0);
-            transform: translate3d(-50%, -60%, 0);
+    -webkit-transform: translate3d(0, -60%, 0);
+            transform: translate3d(0, -60%, 0);
     opacity: 1; } }
 
 .q-bottom {
@@ -1127,40 +1165,36 @@ button[loading][type="primary"], button[type="primary"] {
 /** 中性色 */
 /** 优先级 */
 /** 彩色 */
-.q-loadmore {
-  position: relative;
-  display: block;
-  margin: 0 32rpx;
-  padding: 40rpx 0;
-  text-align: center;
-  color: #bbbec4; }
-  .q-loadmore-line::before {
-    content: " ";
-    position: absolute;
-    top: 50%;
-    left: 0;
+.q-menu {
+  box-sizing: border-box;
+  position: fixed;
+  z-index: 90;
+  min-width: 240rpx;
+  padding: 8rpx 0;
+  background-color: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.12), 0 0 2px 0 rgba(0, 0, 0, 0.14);
+  -webkit-animation: zoomIn .15s ease-in;
+          animation: zoomIn .15s ease-in; }
+  .q-menu-mask {
+    position: fixed;
+    z-index: 90;
+    top: 0;
     right: 0;
-    border-top: 1rpx solid #dddee1; }
-  .q-loadmore .text {
-    position: relative;
-    padding: 0 8px;
-    background-color: #f8f8f9; }
-  .q-loadmore-loading .text {
-    padding-left: 32px; }
-    .q-loadmore-loading .text::before {
-      content: " ";
-      display: block;
-      box-sizing: border-box;
-      position: absolute;
-      top: 0;
-      left: 8px;
-      width: 18px;
-      height: 18px;
-      border: 3px solid rgba(0, 0, 0, 0.12);
-      border-left-color: rgba(0, 0, 0, 0.42);
-      border-radius: 50%;
-      -webkit-animation: rotate360 .5s linear infinite;
-              animation: rotate360 .5s linear infinite; }
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.01); }
+  .q-menu-item {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+            align-items: center;
+    padding: 20rpx 32rpx; }
+    .q-menu-item .icon {
+      margin-right: 16rpx; }
+  .q-menu-hover {
+    background-color: #EFEFEF; }
 
 /************************************************************
  * 蓝色主题  来源：https://www.iviewui.com/components/color

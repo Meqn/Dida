@@ -1,7 +1,7 @@
 @import 'var';
 
 @font-face {font-family: "iconfont";
-  src: url('//at.alicdn.com/t/font_381469_4o783q8ktilzncdi.ttf?t=1504867297329') format('truetype');
+  src: url('//at.alicdn.com/t/font_381469_c72qgasr51w6ogvi.ttf?t=1506564382661') format('truetype');
 }
 
 /**
@@ -80,8 +80,6 @@
 
 .icon-music:before { content: "\e6f1"; }
 
-.icon-document:before { content: "\e6f3"; }
-
 .icon-editor:before { content: "\e6f6"; }
 
 .icon-eit:before { content: "\e6f5"; }
@@ -91,6 +89,8 @@
 .icon-flag:before { content: "\e6fb"; }
 
 .icon-group:before { content: "\e6ff"; }
+
+.icon-home:before { content: "\e702"; }
 
 .icon-label:before { content: "\e706"; }
 
